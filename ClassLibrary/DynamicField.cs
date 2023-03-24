@@ -118,7 +118,7 @@ namespace ClassLibrary
         }
         public void check_delegate()
         {
-            GameStrategy(player1.Str, player2.Strategy4);
+            GameStrategy(player1.StrategySimple, player2.StrategySimple);
         }
         public void Strategy24()
         {

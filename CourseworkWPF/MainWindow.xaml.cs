@@ -26,7 +26,7 @@ namespace CourseworkWPF
             new BitmapImage(new Uri("Assets/EmptySquare.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/newWhiteKing.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/whiteKing.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/backKing.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/blackKing.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/blackKing.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/Orange.png", UriKind.Relative))
         };
@@ -78,7 +78,7 @@ namespace CourseworkWPF
 
         private void DrawFigure(ClassLibrary.Figure figure)
         {
-            images[figure.offset.Row, figure.offset.Column].Source = detailsImages[figure.Id];
+            images[figure.offset.Row, figure.offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
         }
 
         private void Draw(DynamicField field)
@@ -108,7 +108,27 @@ namespace CourseworkWPF
         {
             // field = new DynamicField();
             field.check_delegate();
+            
             Draw(field);
+            
+            slider1.Maximum = field.player1.history.Keys.Count;
+            // this.Title = "Value: " + value.ToString("0.0") + "/" + slider1.Maximum;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            //var slider = sender as Slider;
+            //double value = slider.Value;
+            //slider.Maximum = field.player1.history.Keys.Count;
+            //this.Title = "Value: " + value.ToString("0.0") + "/" + slider.Maximum;
+            
+            //foreach (int motion in field.player1.history.Keys)
+            //{
+            //    if (value == motion)
+            //        this.Title = value.ToString("0.0");
+                
+            //}
+            
         }
     }
 }

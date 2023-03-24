@@ -15,7 +15,7 @@ namespace ClassLibrary
             this.GameField = GameField;
             if (color == Color.White)
             {
-                Id = 1;
+                Id = -1;
                 GameField[0, 4] = Id;
                 offset = new Position(0, 4);
                 endingPosition = new Position(7, 4);
@@ -23,7 +23,7 @@ namespace ClassLibrary
             }
             else
             {
-                Id = 3;
+                Id = -3;
                 GameField[7, 4] = Id;
                 offset = new Position(7, 4);
                 endingPosition = new Position(0, 4);
