@@ -8,10 +8,12 @@
         Foreground="White"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Canvas x:Name="GameCanvas" Background="Red" HorizontalAlignment="Left" Height="334" Margin="58,34,0,0" VerticalAlignment="Top" Width="346" Loaded="GameCanvas_Loaded_1"/>
+        <Canvas x:Name="GameCanvas" Background="BlanchedAlmond" HorizontalAlignment="Left" Height="334" Margin="58,34,0,0" VerticalAlignment="Top" Width="346" Loaded="GameCanvas_Loaded_1"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="583,63,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="530,187,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Slider x:Name="slider1" HorizontalAlignment="Left" Minimum="1" Maximum="10" Margin="448,285,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="233"/>
+        <Label x:Name="labelMotion" Content="Текущий motion: " HorizontalAlignment="Left" Margin="450,332,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="448,368,0,0" TextWrapping="Wrap" Text="1jnmklkmjnhb" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

@@ -27,7 +27,7 @@ namespace CourseworkWPF
             new BitmapImage(new Uri("Assets/newWhiteKing.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/whiteKing.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/blackKing.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/blackKing.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/black_queen.jpg", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/Orange.png", UriKind.Relative))
         };
 
@@ -71,7 +71,9 @@ namespace CourseworkWPF
                 for (int c = 0; c < field.Columns; c++)
                 {
                     int id = field[r, c];
-                    images[r, c].Source = detailsImages[Math.Abs(id)];
+                    if (id != -1 && id != -2 && id != -3 && id != -4)
+                        images[r, c].Source = detailsImages[Math.Abs(id)];
+                    else images[r, c].Source = detailsImages[0];
                 }
             }
         }
@@ -79,6 +81,21 @@ namespace CourseworkWPF
         private void DrawFigure(ClassLibrary.Figure figure)
         {
             images[figure.offset.Row, figure.offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
+        }
+
+        private void DrawFigure(Position position, int id)
+        {
+            if (position != null)
+                images[position.Row, position.Column].Source = detailsImages[Math.Abs(id)];
+        }
+
+        private void Draw(DynamicField field, Position position, int id)
+        {
+            DrawField(field.GameField);
+            DrawFigure(position, id);
+            //DrawFigure(field.player1.queen);
+            //DrawFigure(field.player2.king);
+            //DrawFigure(field.player2.queen);
         }
 
         private void Draw(DynamicField field)
@@ -106,7 +123,6 @@ namespace CourseworkWPF
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // field = new DynamicField();
             field.check_delegate();
             
             Draw(field);
@@ -117,18 +133,33 @@ namespace CourseworkWPF
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //var slider = sender as Slider;
-            //double value = slider.Value;
+            var slider = sender as Slider;
+            double value = slider.Value;
+            
+            if (text1 != null)
+            {
+                text1.Text = "" + value.ToString("0");
+            }
+            
             //slider.Maximum = field.player1.history.Keys.Count;
-            //this.Title = "Value: " + value.ToString("0.0") + "/" + slider.Maximum;
+            this.Title = "Value: " + value.ToString("0") + "/" + slider.Maximum;
+            if (value > 1)
+                DrawMotion((int)value);
             
-            //foreach (int motion in field.player1.history.Keys)
-            //{
-            //    if (value == motion)
-            //        this.Title = value.ToString("0.0");
-                
-            //}
+        }
+
+        private void DrawMotion(int motion)
+        {
+            (int, Position) value1;
+            field.player1.history.TryGetValue(motion, out value1);
             
+            //DrawFigure(value1.Item2, value1.Item1);
+            Draw(field, value1.Item2, value1.Item1);
+            //Draw(field);
+            (int, Position) value2;
+            field.player2.history.TryGetValue(motion, out value2);
+            DrawFigure(value2.Item2, value2.Item1);
+            //Draw(field);
         }
     }
 }
