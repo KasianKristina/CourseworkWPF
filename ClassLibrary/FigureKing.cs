@@ -17,6 +17,7 @@ namespace ClassLibrary
             {
                 Id = -1;
                 GameField[0, 4] = Id;
+                this.StartOffset = new Position(0, 4);
                 offset = new Position(0, 4);
                 endingPosition = new Position(7, 4);
                 LeaveSquareFlag = false;
@@ -25,6 +26,7 @@ namespace ClassLibrary
             {
                 Id = -3;
                 GameField[7, 4] = Id;
+                this.StartOffset = new Position(7, 4);
                 offset = new Position(7, 4);
                 endingPosition = new Position(0, 4);
                 LeaveSquareFlag = false;

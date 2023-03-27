@@ -6,14 +6,31 @@
         xmlns:local="clr-namespace:CourseworkWPF"
         mc:Ignorable="d"
         Foreground="White"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="900">
     <Grid>
-        <Canvas x:Name="GameCanvas" Background="BlanchedAlmond" HorizontalAlignment="Left" Height="334" Margin="58,34,0,0" VerticalAlignment="Top" Width="346" Loaded="GameCanvas_Loaded_1"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="583,63,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="530,187,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Slider x:Name="slider1" HorizontalAlignment="Left" Minimum="1" Maximum="10" Margin="448,285,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="233"/>
-        <Label x:Name="labelMotion" Content="Текущий motion: " HorizontalAlignment="Left" Margin="450,332,0,0" VerticalAlignment="Top"/>
-        <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="448,368,0,0" TextWrapping="Wrap" Text="1jnmklkmjnhb" VerticalAlignment="Top"/>
-
+        <Canvas x:Name="GameCanvas" Background="BlanchedAlmond" HorizontalAlignment="Left" Height="400" Margin="35,34,0,0" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1"/>
+        <Button Content="Играть" HorizontalAlignment="Left" Margin="636,234,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="1" Maximum="10" Margin="479,296,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="274"/>
+        <Label x:Name="labelMotion" Content="Текущий motion: " HorizontalAlignment="Left" Margin="479,337,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="618,347,0,0" TextWrapping="Wrap" Text="1jnmklkmjnhb" VerticalAlignment="Top"/>
+        <ComboBox x:Name="comboboxick1" HorizontalAlignment="Left" Margin="488,124,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="Стратегия 1"/>
+            <ComboBoxItem Content="Стратегия 2"/>
+            <ComboBoxItem Content="Стратегия 3"/>
+            <ComboBoxItem Content="Стратегия 4"/>
+        </ComboBox>
+        <ComboBox x:Name="comboboxick2" HorizontalAlignment="Left" Margin="705,124,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="Стратегия 1"/>
+            <ComboBoxItem Content="Стратегия 2"/>
+            <ComboBoxItem Content="Стратегия 3"/>
+            <ComboBoxItem Content="Стратегия 4"/>
+        </ComboBox>
+        <Label Content="Стратегия 1 игрока" HorizontalAlignment="Left" Margin="493,76,0,0" VerticalAlignment="Top"/>
+        <Label Content="Стратегия 2 игрока" HorizontalAlignment="Left" Margin="705,76,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="sliderCountWalls" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="479,191,0,0" Minimum="1" Maximum="30" VerticalAlignment="Top" Width="265" ValueChanged="sliderCountWalls_ValueChanged"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="783,191,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderCountWalls, Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="42"/>
+        <Menu Height="25" VerticalAlignment="Top">
+            <MenuItem Header="Настройки" Height="25"/>
+        </Menu>
     </Grid>
 </Window>

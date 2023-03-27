@@ -43,7 +43,7 @@ namespace CourseworkWPF
         private Image[,] SetupGameCanvas(Field grid)
         {
             Image[,] images = new Image[grid.Rows, grid.Columns];
-            int cellSize = 40;
+            int cellSize = 50;
 
             for (int r = 0; r < grid.Rows; r++)
             {
@@ -93,9 +93,6 @@ namespace CourseworkWPF
         {
             DrawField(field.GameField);
             DrawFigure(position, id);
-            //DrawFigure(field.player1.queen);
-            //DrawFigure(field.player2.king);
-            //DrawFigure(field.player2.queen);
         }
 
         private void Draw(DynamicField field)
@@ -109,57 +106,122 @@ namespace CourseworkWPF
 
         private void GameCanvas_Loaded_1(object sender, RoutedEventArgs e)
         {
-            // field = new DynamicField();
-            field.Walls();
+            // field.Walls();
             Draw(field);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            field.Walls();
-            field.check_delegate();
-            // Draw(field);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            field.check_delegate();
-            
+            DynamicField.StrategyDelegate str_player1 = null;
+            DynamicField.StrategyDelegate str_player2 = null;
+
+            switch (comboboxick1.SelectedIndex)
+            {
+                case 0:
+                    str_player1 = field.player1.StrategySimple;
+                    break;
+                case 1:
+                    str_player1 = field.player1.Str;
+                    break;
+                case 2:
+                    str_player1 = field.player1.StrategySecurity;
+                    break;
+                case 3:
+                    str_player1 = field.player1.Strategy4;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (comboboxick2.SelectedIndex)
+            {
+                case 0:
+                    str_player2 = field.player2.StrategySimple;
+                    break;
+                case 1:
+                    str_player2 = field.player2.Str;
+                    break;
+                case 2:
+                    str_player2 = field.player2.StrategySecurity;
+                    break;
+                case 3:
+                    str_player2 = field.player2.Strategy4;
+                    break;
+                default:
+                    break;
+            }
+            //DynamicField.GameStrategy(str_player1, str_player2);
+            //if (comboboxick1.SelectedValue != null) // если не равно null
+            //{
+            //    if (comboboxick1.SelectedValue.ToString() == "1")
+            //    {
+            //        str_player1 = field.player1.Str;
+            //    }
+            //}
+            field.Walls((int)sliderCountWalls.Value);
+            field.check_delegate(str_player1, str_player2);
+
             Draw(field);
-            
+
             slider1.Maximum = field.player1.history.Keys.Count;
-            // this.Title = "Value: " + value.ToString("0.0") + "/" + slider1.Maximum;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
             double value = slider.Value;
-            
+
             if (text1 != null)
             {
                 text1.Text = "" + value.ToString("0");
             }
-            
-            //slider.Maximum = field.player1.history.Keys.Count;
+
             this.Title = "Value: " + value.ToString("0") + "/" + slider.Maximum;
             if (value > 1)
                 DrawMotion((int)value);
-            
+
         }
 
         private void DrawMotion(int motion)
         {
             (int, Position) value1;
             field.player1.history.TryGetValue(motion, out value1);
+            (int, Position) value_second = Seek_second(motion, value1.Item1, field.player1);
             
-            //DrawFigure(value1.Item2, value1.Item1);
             Draw(field, value1.Item2, value1.Item1);
-            //Draw(field);
+            DrawFigure(value_second.Item2, value_second.Item1);
+            
             (int, Position) value2;
             field.player2.history.TryGetValue(motion, out value2);
             DrawFigure(value2.Item2, value2.Item1);
-            //Draw(field);
+            (int, Position) value_second2 = Seek_second(motion, value2.Item1, field.player2);
+            DrawFigure(value_second2.Item2, value_second2.Item1);
+            
+        }
+
+        private (int, Position) Seek_second(int motion, int id, Player player)
+        {
+            int id_seek = 0;
+            if (id == -1 || id == -3)
+                id_seek = id - 1;
+            if (id == -2 || id == -4)
+                id_seek = id + 1;
+            (int, Position) value;
+            for (int i = motion; i > 0; i--)
+            {
+
+                player.history.TryGetValue(i, out value);
+                if (value.Item1 == id_seek)
+                    return value;
+            }
+            if (id_seek == -1 || id_seek == -1)
+                return (id_seek, player.king.StartOffset);
+            else return (id_seek, player.queen.StartOffset);
+        }
+
+        private void sliderCountWalls_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }

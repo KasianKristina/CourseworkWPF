@@ -8,7 +8,7 @@ namespace ClassLibrary
 {
     public class Figure
     {
-        protected Position StartOffset { get; }
+        public Position StartOffset { get; set; }
         public int Id;
         public Position offset { get; set; }
         protected Field GameField { get; set; }

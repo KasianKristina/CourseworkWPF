@@ -17,6 +17,7 @@ namespace ClassLibrary
             {
                 Id = -2;
                 GameField[0, 3] = Id;
+                this.StartOffset = new Position(0, 3);
                 offset = new Position(0, 3);
                 endingPosition = new Position(7, 3);
                 // строка с которой ферзь начинает охранять короля
@@ -26,6 +27,7 @@ namespace ClassLibrary
             {
                 Id = -4;
                 GameField[7, 3] = Id;
+                this.StartOffset = new Position(7, 3);
                 offset = new Position(7, 3);
                 endingPosition = new Position(0, 3);
                 RowConst = 5;

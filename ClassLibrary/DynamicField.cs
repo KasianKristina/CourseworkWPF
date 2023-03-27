@@ -25,7 +25,10 @@ namespace ClassLibrary
         public Field GameField;
         public Player player1;
         public Player player2;
-
+        public static int countWinWhite = 0;
+        public static int countWinBlack = 0;
+        public static int countPat = 0;
+        public int countWin = 0;
 
         public DynamicField()
         {
@@ -36,69 +39,6 @@ namespace ClassLibrary
             player2.Сompetitor = player1;
         }
 
-        public void Strategy1()
-        {
-            int motion = 1;
-            while (!IsGameOver())
-            {
-                player1.StrategySimple(motion);
-                if (IsGameOver())
-                    break;
-                Draw();
-                player2.StrategySimple(motion);
-                motion++;
-                Draw();
-            }
-            Console.WriteLine("Конец игры");
-        }
-
-        public void Strategy2()
-        {
-            int motion = 1;
-            while (!IsGameOver())
-            {
-                player1.Str(motion);
-                if (IsGameOver())
-                    break;
-                Draw();
-                player2.Str(motion);
-                motion++;
-                Draw();
-            }
-            Console.WriteLine("Конец игры");
-        }
-
-        public void Strategy3()
-        {
-            int motion = 1;
-            while (!IsGameOver())
-            {
-                player1.StrategySecurity(motion);
-                if (IsGameOver())
-                    break;
-                Draw();
-                player2.StrategySecurity(motion);
-                motion++;
-                Draw();
-            }
-            Console.WriteLine("Конец игры");
-        }
-
-        public void Strategy4()
-        {
-            int motion = 1;
-            while (!IsGameOver())
-            {
-                player1.Strategy4(motion);
-                if (IsGameOver())
-                    break;
-                Draw();
-                player2.Strategy4(motion);
-                motion++;
-                Draw();
-            }
-            Console.WriteLine("Конец игры");
-        }
         public delegate void StrategyDelegate(int motion);
 
         public void GameStrategy(StrategyDelegate strategy_first, StrategyDelegate strategy_second)
@@ -116,24 +56,9 @@ namespace ClassLibrary
             }
             Console.WriteLine("Конец игры");
         }
-        public void check_delegate()
+        public void check_delegate(StrategyDelegate strategy_first, StrategyDelegate strategy_second)
         {
-            GameStrategy(player1.StrategySimple, player2.StrategySimple);
-        }
-        public void Strategy24()
-        {
-            int motion = 1;
-            while (!IsGameOver())
-            {
-                player1.Str(motion);
-                if (IsGameOver())
-                    break;
-                Draw();
-                player2.Strategy4(motion);
-                motion++;
-                Draw();
-            }
-            Console.WriteLine("Конец игры");
+            GameStrategy(strategy_first, strategy_second);
         }
 
         public bool IsGameOver()
@@ -166,7 +91,7 @@ namespace ClassLibrary
             Console.WriteLine("********");
         }
 
-        public void Walls()
+        public void Walls(int quantity)
         {
             Field copy;
             Random random = new Random();
@@ -175,9 +100,9 @@ namespace ClassLibrary
                 copy = GameField.Copy();
                 int i = 1;
                 copy.Draw();
-                int number = random.Next(1, 31);
-                Console.WriteLine(number);
-                while (i <= number)
+                // int number = random.Next(1, 31);
+                // Console.WriteLine(number);
+                while (i <= quantity)
                 {
                     int x = random.Next(0, 8);
                     int y = random.Next(0, 8);
