@@ -18,8 +18,8 @@ namespace ClassLibrary
                 Id = -2;
                 GameField[0, 3] = Id;
                 this.StartOffset = new Position(0, 3);
-                offset = new Position(0, 3);
-                endingPosition = new Position(7, 3);
+                Offset = new Position(0, 3);
+                EndingPosition = new Position(7, 3);
                 // строка с которой ферзь начинает охранять короля
                 RowConst = 2;
             }
@@ -28,20 +28,45 @@ namespace ClassLibrary
                 Id = -4;
                 GameField[7, 3] = Id;
                 this.StartOffset = new Position(7, 3);
-                offset = new Position(7, 3);
-                endingPosition = new Position(0, 3);
+                Offset = new Position(7, 3);
+                EndingPosition = new Position(0, 3);
                 RowConst = 5;
             }
             Color = color;
         }
 
-        public bool CheckPregradaMove(int kingRow, int kingCol, int queenCompetotorRow, int queenCompetitorCol, int motion, Color color, int motionColor, Dictionary<int, (int, Position)> history)
+        public bool CheckPregradaCompetitorQueen(FigureKing king, FigureQueen competitorQueen)
         {
-            if (!getPosFerz(kingRow, kingCol, color))
+            int k;
+            if (competitorQueen.Color == Color.Black)
+                k = -1;
+            else
+                k = 1;
+            // вправо
+            for (int i = king.Offset.Column + 1; i < 8; i++)
+            {
+                if (GameField.IsInside(king.Offset.Row - k, i))
+                    if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
+                        return true;
+            }
+            // влево
+            for (int i = king.Offset.Column - 1; i >= 0; i--)
+            {
+                if (GameField.IsInside(king.Offset.Row - k, i))
+                    if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
+                        return true;
+            }
+
+            return false;
+        }
+
+        public bool CheckPregradaMove(int kingRow, int kingCol, int queenCompetotorRow, int queenCompetitorCol, int motion, Color color, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
+        {
+            if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !GetPosFerz(king.Offset.Row, king.Offset.Column, color))
                 return false;
 
-            List<Position> listPregradi = getBlocksPositions(kingRow, queenCompetotorRow, queenCompetitorCol);
-            List<Position> listAll = getAllPosition(offset.Row, offset.Column, kingRow, kingCol, motionColor);
+            List<Position> listPregradi = GetBlocksPositions(king.Offset.Row, competitorQueen.Offset.Row, competitorQueen.Offset.Column);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, kingRow, kingCol, motionColor);
 
             for (int i = 0; i < listPregradi.Count; i++)
             {
@@ -61,7 +86,7 @@ namespace ClassLibrary
         public bool RandomMove(int kingRow, int kingCol, int motion, Dictionary<int, (int, Position)> history, int motionColor)
         {
             int position;
-            List<Position> list = getAllPosition(offset.Row, offset.Column, kingRow, kingCol, motionColor);
+            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, kingRow, kingCol, motionColor);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -73,7 +98,7 @@ namespace ClassLibrary
             return true;
         }
 
-        public bool getPosFerz(int kingRow, int kingCol, Color color)
+        public bool GetPosFerz(int kingRow, int kingCol, Color color)
         {
             int k;
             if (color == Color.Black)
@@ -100,8 +125,8 @@ namespace ClassLibrary
 
         public bool ObstacleMove(int kingRow, int kingCol, Color color, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
-            List<Position> listObstacles = getObstaclesPosition(kingRow, kingCol, color);
-            List<Position> listAll = getAllPosition(offset.Row, offset.Column, kingRow, kingCol, motionColor);
+            List<Position> listObstacles = GetObstaclesPosition(kingRow, kingCol, color);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, kingRow, kingCol, motionColor);
             for (int i = 0; i < listObstacles.Count; i++)
             {
                 for (int j = 0; j < listAll.Count; j++)
@@ -109,7 +134,7 @@ namespace ClassLibrary
                     if (listAll[j].Equals(listObstacles[i]) &&
                         history.Count > 1 &&
                         listObstacles[i].Row != CheckPreviousPosition(history) &&
-                        !getPosFerz(kingRow, kingCol, color))
+                        !GetPosFerz(kingRow, kingCol, color))
                     {
                         MoveBlock(listObstacles[i].Row, listObstacles[i].Column);
                         history.Add(motion, (Id, new Position(listObstacles[i].Row, listObstacles[i].Column)));
@@ -153,7 +178,7 @@ namespace ClassLibrary
         public bool HorizontalMove(int kingRow, int kingCol, Dictionary<int, (int, Position)> history, int motion)
         {
             int position;
-            List<Position> list = getHorizontalPositions(offset.Row, offset.Column, kingRow, kingCol);
+            List<Position> list = GetHorizontalPositions(Offset.Row, Offset.Column, kingRow, kingCol);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -165,7 +190,7 @@ namespace ClassLibrary
             return true;
         }
 
-        public List<Position> getHorizontalPositions(int x, int y, int kingRow, int kingCol)
+        public List<Position> GetHorizontalPositions(int x, int y, int kingRow, int kingCol)
         {
             List<Position> list = new List<Position>();
 
@@ -192,11 +217,9 @@ namespace ClassLibrary
 
             return list;
         }
-        // TODO избавиться от дублирования
-        // todo погуглить
-        // возможные позиции королевы
 
-        public List<Position> getAllPosition(int x, int y, int kingRow, int kingCol, int motion)
+        // все возможные позиции королевы
+        public List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion)
         {
             List<Position> list = new List<Position>();
             if (motion < 6)
@@ -307,11 +330,11 @@ namespace ClassLibrary
             while (list.Any())
             {
                 int position = random.Next(list.Count);
-                if (GameField.IsEmpty(offset.Row + list[position].Row, offset.Column + list[position].Column)
-                    && CheckQueenAttack(offset.Row + list[position].Row, offset.Column + list[position].Column, kingRow, kingCol))
+                if (GameField.IsEmpty(Offset.Row + list[position].Row, Offset.Column + list[position].Column)
+                    && CheckQueenAttack(Offset.Row + list[position].Row, Offset.Column + list[position].Column, kingRow, kingCol))
                 {
-                    MoveBlock(offset.Row + list[position].Row, offset.Column + list[position].Column);
-                    history.Add(motion, (Id, new Position(offset.Row + list[position].Row, offset.Column + list[position].Column)));
+                    MoveBlock(Offset.Row + list[position].Row, Offset.Column + list[position].Column);
+                    history.Add(motion, (Id, new Position(Offset.Row + list[position].Row, Offset.Column + list[position].Column)));
                     return true;
                 }
                 else list.RemoveAt(position);
@@ -320,7 +343,7 @@ namespace ClassLibrary
         }
 
         // все позиции для блокировки короля соперника
-        public List<Position> getObstaclesPosition(int kingRow, int kingCol, Color color)
+        public List<Position> GetObstaclesPosition(int kingRow, int kingCol, Color color)
         {
             List<Position> list = new List<Position>();
             int k;
@@ -347,7 +370,7 @@ namespace ClassLibrary
         }
 
         // позиции между блокирующим ферзем соперника и королем
-        public List<Position> getBlocksPositions(int kingCol, int queenCompetitorRow, int queenCompetitorCol)
+        public List<Position> GetBlocksPositions(int kingCol, int queenCompetitorRow, int queenCompetitorCol)
         {
             List<Position> list = new List<Position>();
             if (queenCompetitorCol > kingCol)

@@ -24,11 +24,11 @@ namespace CourseworkWPF
         private ImageSource[] detailsImages = new ImageSource[]
         {
             new BitmapImage(new Uri("Assets/EmptySquare.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/newWhiteKing.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/whiteKing.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/blackKing.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/black_queen.jpg", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/Orange.png", UriKind.Relative))
+            new BitmapImage(new Uri("Assets/kingWhite.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/queenWhite.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/kingBlack.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/queenBlack.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/Blue.png", UriKind.Relative))
         };
 
 
@@ -80,7 +80,7 @@ namespace CourseworkWPF
 
         private void DrawFigure(ClassLibrary.Figure figure)
         {
-            images[figure.offset.Row, figure.offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
+            images[figure.Offset.Row, figure.Offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
         }
 
         private void DrawFigure(Position position, int id)
@@ -121,7 +121,7 @@ namespace CourseworkWPF
                     str_player1 = field.player1.StrategySimple;
                     break;
                 case 1:
-                    str_player1 = field.player1.Str;
+                    str_player1 = field.player1.Strategy2;
                     break;
                 case 2:
                     str_player1 = field.player1.StrategySecurity;
@@ -139,7 +139,7 @@ namespace CourseworkWPF
                     str_player2 = field.player2.StrategySimple;
                     break;
                 case 1:
-                    str_player2 = field.player2.Str;
+                    str_player2 = field.player2.Strategy2;
                     break;
                 case 2:
                     str_player2 = field.player2.StrategySecurity;

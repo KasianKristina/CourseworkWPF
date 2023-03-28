@@ -10,10 +10,10 @@ namespace ClassLibrary
     {
         public Position StartOffset { get; set; }
         public int Id;
-        public Position offset { get; set; }
+        public Position Offset { get; set; }
         protected Field GameField { get; set; }
         protected Color Color { get; set; }
-        public Position endingPosition { get; set; }
+        public Position EndingPosition { get; set; }
         public int RowConst { get; set; }
         public bool LeaveSquareFlag { get; set; }
 
@@ -23,10 +23,10 @@ namespace ClassLibrary
         {
             if (GameField[rows, columns] >= 0)
             {
-                GameField[offset.Row, offset.Column] = 0;
-                offset.Row = rows;
-                offset.Column = columns;
-                GameField[offset.Row, offset.Column] = Id;
+                GameField[Offset.Row, Offset.Column] = 0;
+                Offset.Row = rows;
+                Offset.Column = columns;
+                GameField[Offset.Row, Offset.Column] = Id;
             }
         }
     }

@@ -18,8 +18,8 @@ namespace ClassLibrary
                 Id = -1;
                 GameField[0, 4] = Id;
                 this.StartOffset = new Position(0, 4);
-                offset = new Position(0, 4);
-                endingPosition = new Position(7, 4);
+                Offset = new Position(0, 4);
+                EndingPosition = new Position(7, 4);
                 LeaveSquareFlag = false;
             }
             else
@@ -27,26 +27,15 @@ namespace ClassLibrary
                 Id = -3;
                 GameField[7, 4] = Id;
                 this.StartOffset = new Position(7, 4);
-                offset = new Position(7, 4);
-                endingPosition = new Position(0, 4);
+                Offset = new Position(7, 4);
+                EndingPosition = new Position(0, 4);
                 LeaveSquareFlag = false;
             }
             Color = color;
         }
 
-        // проверка, что король может сходить
-        public bool OpportunityToMakeMoveKing(int x, int y, int xOpponent, int yOpponent, int motion)
-        {
-            if ((motion <= 16 || (motion > 16 && LeaveSquare(x, y, motion))) &&
-                AdjacentPosition(x, y, xOpponent, yOpponent) &&
-                LeaveSquare(x, y, motion) &&
-                GameField[x, y] != -5 &&
-                GameField[x, y] != -7)
-                return true;
-            else return false;
-        }
         // true - делаем ход else - нет
-        public bool LeavSquareCheck(int x, int y, int motion)
+        public bool LeaveSquareCheck(int x, int y)
         {
             int Row = 0;
             int iterator = 1;
