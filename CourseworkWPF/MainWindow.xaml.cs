@@ -129,6 +129,9 @@ namespace CourseworkWPF
                 case 3:
                     str_player1 = field.player1.Strategy4;
                     break;
+                case 4:
+                    str_player1 = field.player1.Strategy2;
+                    break;
                 default:
                     break;
             }
@@ -164,6 +167,8 @@ namespace CourseworkWPF
             Draw(field);
 
             slider1.Maximum = field.player1.history.Keys.Count;
+
+            btnPlay.IsEnabled = false;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -177,26 +182,36 @@ namespace CourseworkWPF
             }
 
             this.Title = "Value: " + value.ToString("0") + "/" + slider.Maximum;
-            if (value > 1)
+            if (value >= 0)
                 DrawMotion((int)value);
 
         }
 
         private void DrawMotion(int motion)
         {
-            (int, Position) value1;
-            field.player1.history.TryGetValue(motion, out value1);
-            (int, Position) value_second = Seek_second(motion, value1.Item1, field.player1);
-            
-            Draw(field, value1.Item2, value1.Item1);
-            DrawFigure(value_second.Item2, value_second.Item1);
-            
-            (int, Position) value2;
-            field.player2.history.TryGetValue(motion, out value2);
-            DrawFigure(value2.Item2, value2.Item1);
-            (int, Position) value_second2 = Seek_second(motion, value2.Item1, field.player2);
-            DrawFigure(value_second2.Item2, value_second2.Item1);
-            
+            DrawField(field.GameField);
+            if (motion > 0)
+            {
+                (int, Position) value1;
+                field.player1.history.TryGetValue(motion, out value1);
+                (int, Position) value_second = Seek_second(motion, value1.Item1, field.player1);
+
+                DrawFigure(value1.Item2, value1.Item1);
+                DrawFigure(value_second.Item2, value_second.Item1);
+
+                (int, Position) value2;
+                field.player2.history.TryGetValue(motion, out value2);
+                DrawFigure(value2.Item2, value2.Item1);
+                (int, Position) value_second2 = Seek_second(motion, value2.Item1, field.player2);
+                DrawFigure(value_second2.Item2, value_second2.Item1);
+            }
+            else
+            {
+                DrawFigure(field.player1.king.StartOffset, field.player1.king.Id);
+                DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
+                DrawFigure(field.player2.king.StartOffset, field.player2.king.Id);
+                DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
+            }
         }
 
         private (int, Position) Seek_second(int motion, int id, Player player)
@@ -222,6 +237,34 @@ namespace CourseworkWPF
         private void sliderCountWalls_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+        }
+
+        private void comboboxick2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            btnPlay.IsEnabled = true;
+        }
+
+        private void btnNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            InitializeComponent();
+            images = SetupGameCanvas(field.GameField);
+            //Draw(field);
+        }
+        Point currentPoint = new Point();
+        private void GameCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //if (e.ButtonState == MouseButtonState.Pressed)
+              //  currentPoint = e.GetPosition(this);
+        }
+
+        private void GameCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            //GameCanvas.Children.
+        }
+
+        private void focusOn(object sender, MouseButtonEventArgs e)
+        {
+            this.Title = "Value: X" + Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
         }
     }
 }

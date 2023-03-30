@@ -64,8 +64,11 @@ namespace ClassLibrary
                             if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
                                 CheckXodKing(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, motion))
                             {
-                                figure.MoveBlock(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column);
-                                history.Add(motion, (king.Id, new Position(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column)));
+                                int Row = king.Offset.Row + pos.Row;
+                                int Column = king.Offset.Column + pos.Column;
+
+                                figure.MoveBlock(Row, Column);
+                                history.Add(motion, (king.Id, new Position(Row, Column)));
                                 fx = pos.Row;
                                 break;
                             }
@@ -256,6 +259,13 @@ namespace ClassLibrary
                         motionColor = 0;
                 }
             }
+        }
+
+        public void StrategyUser(int motion, Figure figure, int row, int col)
+        {
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+            figure.MoveBlock(row, col);
         }
 
         public void Strategy4(int motion)

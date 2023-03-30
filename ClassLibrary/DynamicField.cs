@@ -40,12 +40,14 @@ namespace ClassLibrary
         }
 
         public delegate void StrategyDelegate(int motion);
+        public delegate void PlayerDelegate(int motion);
 
         public void GameStrategy(StrategyDelegate strategy_first, StrategyDelegate strategy_second)
         {
             int motion = 1;
             while (!IsGameOver())
             {
+                Console.WriteLine("Ход, {0} ", motion);
                 strategy_first(motion);
                 if (IsGameOver())
                     break;

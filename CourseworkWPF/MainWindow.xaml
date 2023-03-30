@@ -8,15 +8,14 @@
         Foreground="White"
         Title="MainWindow" Height="530" Width="890">
     <Grid>
-
         <Border BorderBrush="#FF7A00" BorderThickness="10" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="419" Margin="28,53,0,0">
-            <Canvas x:Name="GameCanvas" Background="#FFB673" HorizontalAlignment="Left" Height="400" Margin="-0.6,0.4,0,-0.4" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1" Cursor="Hand">
+            <Canvas x:Name="GameCanvas" MouseLeftButtonDown="focusOn" Background="#FFB673" HorizontalAlignment="Left" Height="400" Margin="-0.6,0.4,0,-0.4" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1" Cursor="Hand" MouseDown="GameCanvas_MouseDown" MouseMove="GameCanvas_MouseMove">
             </Canvas>
         </Border>
 
-        <Button Content="Играть" Background="#FF7A00" HorizontalAlignment="Left" Margin="624,318,0,0" VerticalAlignment="Top" Width="107" Click="Button_Click_1" Height="37" FontFamily="Microsoft Sans Serif" FontSize="16" Cursor="Hand">
+        <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#FF7A00" HorizontalAlignment="Left" Margin="624,318,0,0" VerticalAlignment="Top" Width="107" Click="Button_Click_1" Height="37" FontFamily="Microsoft Sans Serif" FontSize="16" Cursor="Hand">
         </Button>
-        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="1" Maximum="10" Margin="502,413,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="274"/>
+        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="10" Margin="502,413,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="274"/>
         <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="502,377,0,0" VerticalAlignment="Top" Height="31" FontFamily="Microsoft Sans Serif" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
         <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="624,382,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="24" Height="26" RenderTransformOrigin="0.767,1.6"/>
         <ComboBox x:Name="comboboxick1" HorizontalAlignment="Left" Margin="502,178,0,0" VerticalAlignment="Top" Width="136">
@@ -26,7 +25,7 @@
             <ComboBoxItem Content="Стратегия 4"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
-        <ComboBox x:Name="comboboxick2" HorizontalAlignment="Left" Margin="712,178,0,0" VerticalAlignment="Top" Width="136">
+        <ComboBox x:Name="comboboxick2" HorizontalAlignment="Left" Margin="712,178,0,0" VerticalAlignment="Top" Width="136" SelectionChanged="comboboxick2_SelectionChanged">
             <ComboBoxItem Content="Стратегия 1"/>
             <ComboBoxItem Content="Стратегия 2"/>
             <ComboBoxItem Content="Стратегия 3"/>
@@ -47,5 +46,6 @@
             </StackPanel>
         </GroupBox>
         <Label Content="Количество преград" HorizontalAlignment="Left" Margin="502,232,0,0" VerticalAlignment="Top" FontFamily="Microsoft Sans Serif" FontSize="14"/>
+        <Button x:Name="btnNewGame" Content="btnNewGame" HorizontalAlignment="Left" Margin="28,30,0,0" VerticalAlignment="Top" Click="btnNewGame_Click"/>
     </Grid>
 </Window>
