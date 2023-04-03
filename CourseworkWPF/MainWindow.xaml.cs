@@ -100,8 +100,8 @@ namespace CourseworkWPF
 
         private void DrawAllPositions(Figure figure)
         {
-            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.king.Offset.Row, field.player2.king.Offset.Column, 1);
-            foreach(Position pos in list)
+            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, 1, field.player2.queen, field.player2.king);
+            foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];
             }
@@ -130,8 +130,7 @@ namespace CourseworkWPF
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
-
+            btnPlay.IsEnabled = false;
             switch (comboboxick1.SelectedIndex)
             {
                 case 0:
@@ -170,25 +169,17 @@ namespace CourseworkWPF
                 default:
                     break;
             }
-            //DynamicField.GameStrategy(str_player1, str_player2);
-            //if (comboboxick1.SelectedValue != null) // если не равно null
-            //{
-            //    if (comboboxick1.SelectedValue.ToString() == "1")
-            //    {
-            //        str_player1 = field.player1.Str;
-            //    }
-            //}
 
             if (str_player1 != null && str_player2 != null)
             {
                 field.check_delegate(str_player1, str_player2);
                 slider1.Maximum = field.player1.history.Keys.Count;
                 btnPlay.IsEnabled = false;
+
             }
             else
             {
                 WhoPlay = true;
-                // field.check_delegate(str_player1, str_player2);
             }
             field.Walls((int)sliderCountWalls.Value);
             DrawField(field.GameField);
@@ -196,9 +187,16 @@ namespace CourseworkWPF
             DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
             DrawFigure(field.player2.king.StartOffset, field.player2.king.Id);
             DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
-            // Draw(field);
 
-
+            if (field.IsGameOver())
+            {
+                labelWinner.Content = "Победитель: " + field.win;
+                GameCanvas.IsEnabled = false;
+            }
+            else
+            {
+                GameCanvas.IsEnabled = true;
+            }
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -264,11 +262,6 @@ namespace CourseworkWPF
             else return (id_seek, player.queen.StartOffset);
         }
 
-        private void sliderCountWalls_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
-
         private void comboboxick2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             btnPlay.IsEnabled = true;
@@ -276,20 +269,40 @@ namespace CourseworkWPF
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            images = SetupGameCanvas(field.GameField);
-            //Draw(field);
-        }
-        
-        private void GameCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //if (e.ButtonState == MouseButtonState.Pressed)
-            //  currentPoint = e.GetPosition(this);
+            field = new DynamicField();
+            Draw(field);
+            btnPlay.IsEnabled = true;
+            slider1.Maximum = field.player1.history.Keys.Count;
+            Click = 0;
+            str_player1 = null;
+            str_player2 = null;
+            str_player1_user = null;
+            figure = null;
+            gameOver = false;
         }
 
-        private void GameCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void opot()
         {
-            //GameCanvas.Children.
+            int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
+            int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
+            int id = field.GameField[Row, Coloumn];
+            switch (id)
+            {
+                case -1:
+                    figure = field.player1.king;
+                    Draw(field);
+                    DrawAllPositions(figure);
+                    break;
+                case -2:
+                    figure = field.player1.queen;
+                    Draw(field);
+                    DrawAllPositions(figure);
+                    break;
+                default:
+                    Draw(field);
+                    Click = 0;
+                    break;
+            }
         }
 
         private void focusOn(object sender, MouseButtonEventArgs e)
@@ -297,32 +310,7 @@ namespace CourseworkWPF
             Click++;
             if (WhoPlay && Click == 1 && !gameOver)
             {
-
-                int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
-                int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
-                int id = field.GameField[Row, Coloumn];
-                switch (id)
-                {
-                    case -1:
-                        figure = field.player1.king;
-                        DrawAllPositions(figure);
-                        break;
-                    case -2:
-                        figure = field.player1.queen;
-                        DrawAllPositions(figure);
-                        break;
-                    case -3:
-                        figure = field.player2.king;
-                        DrawAllPositions(figure);
-                        break;
-                    case -4:
-                        figure = field.player2.queen;
-                        DrawAllPositions(figure);
-                        break;
-                    default:
-                        Click = 0;
-                        break;
-                }
+                opot();
             }
             if (WhoPlay && Click == 2 && !gameOver)
             {
@@ -333,14 +321,23 @@ namespace CourseworkWPF
                 {
                     int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
                     if (check == 0)
+                    {
                         gameOver = true;
+                        labelWinner.Content = "Победитель: " + field.win;
+                        GameCanvas.IsEnabled = false;
+                    }
+
                     slider1.Maximum = field.player1.history.Keys.Count;
                     slider1.Value = slider1.Maximum;
-                    //DrawField(field.GameField);
+
                     Click = 0;
                 }
-                else { MessageBox.Show("Невозможный ход");
+                else
+                {
                     Click = 1;
+                    opot();
+                    //MessageBox.Show("Невозможный ход");
+                    //Click = 1;
                 };
             }
         }

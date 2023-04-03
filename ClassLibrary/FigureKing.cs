@@ -106,21 +106,37 @@ namespace ClassLibrary
             return list[position];
         }
 
-        //public override List<Position> GetAllPosition(FigureQueen queen, FigureKing king, int motion)
-        //{
-        //    if (queen.CheckQueenAttack(queen.Offset.Row, queen.Offset.Column, king.Offset.Row, king.Offset.Column) ||
-        //       king.AdjacentPosition(x, y, Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column) ||
-        //       (!(motion <= 16 || (motion > 16 && king.LeaveSquareCheck(x, y))) ||
-        //       !GameField.IsEmptyWave(x, y)))
-        //        return false;
-        //    else
-        //        return true;
-        //}
-
-        public override List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion)
+        public bool CheckXodKing(int x, int y, int motion, FigureQueen competitorQueen, FigureKing competitorKing)
         {
-            List < Position > list = new List<Position>();
-            list.Add(new Position(5, 5));
+            if (!competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) ||
+               AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) ||
+               (!(motion <= 16 || (motion > 16 && LeaveSquareCheck(x, y))) ||
+               !GameField.IsEmptyWave(x, y)))
+                return false;
+            else
+                return true;
+        }
+
+        public override List<Position> GetAllPosition(int x, int y, int motion, FigureQueen competitorQueen, FigureKing competitorKing)
+        {
+            List<Position> list = new List<Position>();
+            List<Position> listCheck = new List<Position>() {
+                            new Position(0, 1),
+                            new Position(0, -1),
+                            new Position(1, 0),
+                            new Position(1, 1),
+                            new Position(1, -1),
+                            new Position(-1, 0),
+                            new Position(-1, 1),
+                            new Position(-1, -1),
+                        };
+
+            foreach (Position pos in listCheck)
+            {
+                if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
+                    CheckXodKing(Offset.Row + pos.Row, Offset.Column + pos.Column, motion, competitorQueen, competitorKing))
+                    list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
+            }
             return list;
         }
     }

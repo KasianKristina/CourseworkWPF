@@ -29,6 +29,7 @@ namespace ClassLibrary
         public static int countWinBlack = 0;
         public static int countPat = 0;
         public int countWin = 0;
+        public string win = "";
 
         public DynamicField()
         {
@@ -81,18 +82,30 @@ namespace ClassLibrary
             return 1;
         }
 
+        public string WhoIsWin()
+        {
+            if (GameField[0, 4] == -3)
+            {
+                win = "Победили черные фигуры";
+            }
+            else if (GameField[7, 4] == -1)
+                win = "Победили белые фигуры";
+            else win = "Ничья";
+            return win;
+        }
+
         public bool IsGameOver()
         {
             if ((GameField[0, 4] == -3) || (GameField[7, 4] == -1))
             {
                 if (GameField[0, 4] == -3)
-                    Console.WriteLine("Победили черные фигуры");
-                else Console.WriteLine("Победили белые фигуры");
+                    win = "Победили черные фигуры";
+                else win = "Победили белые фигуры";
                 return true;
             }
             if (player1.Pat || player2.Pat)
             {
-                Console.WriteLine("Ничья");
+                win = "Ничья";
                 return true;
             }
             return false;
