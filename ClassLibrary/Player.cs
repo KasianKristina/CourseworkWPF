@@ -261,11 +261,12 @@ namespace ClassLibrary
             }
         }
 
-        public void StrategyUser(int motion, Figure figure, int row, int col)
+        public void StrategyUser(int motion, Figure figure, Position pos)
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
-            figure.MoveBlock(row, col);
+            figure.MoveBlock(pos.Row, pos.Column);
+            history.Add(motion, (figure.Id, pos));
         }
 
         public void Strategy4(int motion)

@@ -40,7 +40,7 @@ namespace ClassLibrary
         }
 
         public delegate void StrategyDelegate(int motion);
-        public delegate void PlayerDelegate(int motion);
+        public delegate void PlayerDelegate(int motion, Figure figure, Position pos);
 
         public void GameStrategy(StrategyDelegate strategy_first, StrategyDelegate strategy_second)
         {
@@ -58,9 +58,27 @@ namespace ClassLibrary
             }
             Console.WriteLine("Конец игры");
         }
+
         public void check_delegate(StrategyDelegate strategy_first, StrategyDelegate strategy_second)
         {
             GameStrategy(strategy_first, strategy_second);
+        }
+        private int motion_with_player = 1;
+        public int check_delegate(PlayerDelegate strategy_first, StrategyDelegate strategy_second, Position pos, Figure figure)
+        {
+
+            if (IsGameOver())
+                return 0;
+            Console.WriteLine("Ход, {0} ", motion_with_player);
+            strategy_first(motion_with_player, figure, pos);
+            if (IsGameOver())
+                return 0;
+            Draw();
+            strategy_second(motion_with_player);
+            motion_with_player++;
+            Draw();
+            Console.WriteLine("Конец игры");
+            return 1;
         }
 
         public bool IsGameOver()

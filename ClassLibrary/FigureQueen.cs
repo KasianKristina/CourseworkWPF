@@ -219,7 +219,7 @@ namespace ClassLibrary
         }
 
         // все возможные позиции королевы
-        public List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion)
+        public override List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion)
         {
             List<Position> list = new List<Position>();
             if (motion < 6)

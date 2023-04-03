@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClassLibrary;
+using Figure = ClassLibrary.Figure;
 
 namespace CourseworkWPF
 {
@@ -22,18 +23,26 @@ namespace CourseworkWPF
     public partial class MainWindow : Window
     {
         private ImageSource[] detailsImages = new ImageSource[]
-        {
-            new BitmapImage(new Uri("Assets/EmptySquare.png", UriKind.Relative)),
+       {
+            new BitmapImage(new Uri("Assets/squareEmptyNew.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/kingWhite.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/queenWhite.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/kingBlack.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/queenBlack.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/Blue.png", UriKind.Relative))
-        };
+            new BitmapImage(new Uri("Assets/squareWall.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/squarePosition.png", UriKind.Relative))
+       };
 
 
         private Image[,] images;
         private DynamicField field = new DynamicField();
+        private bool WhoPlay = false;
+        private int Click = 0;
+        private DynamicField.StrategyDelegate str_player1 = null;
+        private DynamicField.StrategyDelegate str_player2 = null;
+        private DynamicField.PlayerDelegate str_player1_user = null;
+        private Figure figure = null;
+        private bool gameOver = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -89,6 +98,15 @@ namespace CourseworkWPF
                 images[position.Row, position.Column].Source = detailsImages[Math.Abs(id)];
         }
 
+        private void DrawAllPositions(Figure figure)
+        {
+            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.king.Offset.Row, field.player2.king.Offset.Column, 1);
+            foreach(Position pos in list)
+            {
+                images[pos.Row, pos.Column].Source = detailsImages[6];
+            }
+        }
+
         private void Draw(DynamicField field, Position position, int id)
         {
             DrawField(field.GameField);
@@ -112,8 +130,7 @@ namespace CourseworkWPF
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            DynamicField.StrategyDelegate str_player1 = null;
-            DynamicField.StrategyDelegate str_player2 = null;
+
 
             switch (comboboxick1.SelectedIndex)
             {
@@ -130,7 +147,7 @@ namespace CourseworkWPF
                     str_player1 = field.player1.Strategy4;
                     break;
                 case 4:
-                    str_player1 = field.player1.Strategy2;
+                    str_player1_user = field.player1.StrategyUser;
                     break;
                 default:
                     break;
@@ -161,14 +178,27 @@ namespace CourseworkWPF
             //        str_player1 = field.player1.Str;
             //    }
             //}
+
+            if (str_player1 != null && str_player2 != null)
+            {
+                field.check_delegate(str_player1, str_player2);
+                slider1.Maximum = field.player1.history.Keys.Count;
+                btnPlay.IsEnabled = false;
+            }
+            else
+            {
+                WhoPlay = true;
+                // field.check_delegate(str_player1, str_player2);
+            }
             field.Walls((int)sliderCountWalls.Value);
-            field.check_delegate(str_player1, str_player2);
+            DrawField(field.GameField);
+            DrawFigure(field.player1.king.StartOffset, field.player1.king.Id);
+            DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
+            DrawFigure(field.player2.king.StartOffset, field.player2.king.Id);
+            DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
+            // Draw(field);
 
-            Draw(field);
 
-            slider1.Maximum = field.player1.history.Keys.Count;
-
-            btnPlay.IsEnabled = false;
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -250,11 +280,11 @@ namespace CourseworkWPF
             images = SetupGameCanvas(field.GameField);
             //Draw(field);
         }
-        Point currentPoint = new Point();
+        
         private void GameCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //if (e.ButtonState == MouseButtonState.Pressed)
-              //  currentPoint = e.GetPosition(this);
+            //  currentPoint = e.GetPosition(this);
         }
 
         private void GameCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -264,7 +294,55 @@ namespace CourseworkWPF
 
         private void focusOn(object sender, MouseButtonEventArgs e)
         {
-            this.Title = "Value: X" + Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
+            Click++;
+            if (WhoPlay && Click == 1 && !gameOver)
+            {
+
+                int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
+                int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
+                int id = field.GameField[Row, Coloumn];
+                switch (id)
+                {
+                    case -1:
+                        figure = field.player1.king;
+                        DrawAllPositions(figure);
+                        break;
+                    case -2:
+                        figure = field.player1.queen;
+                        DrawAllPositions(figure);
+                        break;
+                    case -3:
+                        figure = field.player2.king;
+                        DrawAllPositions(figure);
+                        break;
+                    case -4:
+                        figure = field.player2.queen;
+                        DrawAllPositions(figure);
+                        break;
+                    default:
+                        Click = 0;
+                        break;
+                }
+            }
+            if (WhoPlay && Click == 2 && !gameOver)
+            {
+                int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
+                int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
+                Position pos = new Position(Row, Coloumn);
+                if (images[pos.Row, pos.Column].Source == detailsImages[6])
+                {
+                    int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
+                    if (check == 0)
+                        gameOver = true;
+                    slider1.Maximum = field.player1.history.Keys.Count;
+                    slider1.Value = slider1.Maximum;
+                    //DrawField(field.GameField);
+                    Click = 0;
+                }
+                else { MessageBox.Show("Невозможный ход");
+                    Click = 1;
+                };
+            }
         }
     }
 }

@@ -105,5 +105,23 @@ namespace ClassLibrary
             position = random.Next(list.Count);
             return list[position];
         }
+
+        //public override List<Position> GetAllPosition(FigureQueen queen, FigureKing king, int motion)
+        //{
+        //    if (queen.CheckQueenAttack(queen.Offset.Row, queen.Offset.Column, king.Offset.Row, king.Offset.Column) ||
+        //       king.AdjacentPosition(x, y, Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column) ||
+        //       (!(motion <= 16 || (motion > 16 && king.LeaveSquareCheck(x, y))) ||
+        //       !GameField.IsEmptyWave(x, y)))
+        //        return false;
+        //    else
+        //        return true;
+        //}
+
+        public override List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion)
+        {
+            List < Position > list = new List<Position>();
+            list.Add(new Position(5, 5));
+            return list;
+        }
     }
 }

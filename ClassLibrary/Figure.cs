@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public class Figure
+    public abstract class Figure
     {
         public Position StartOffset { get; set; }
         public int Id;
@@ -29,5 +29,7 @@ namespace ClassLibrary
                 GameField[Offset.Row, Offset.Column] = Id;
             }
         }
+
+        public abstract List<Position> GetAllPosition(int x, int y, int kingRow, int kingCol, int motion);
     }
 }

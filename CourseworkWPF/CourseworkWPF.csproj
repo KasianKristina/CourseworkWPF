@@ -126,5 +126,45 @@
     <Resource Include="Assets\queenBlack.png" />
     <Resource Include="Assets\queenWhite.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\position.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\fon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\kva.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\kvakva.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\emptyBlue.png" />
+    <Resource Include="Assets\wallBlue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\wallBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\wall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\squareWall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\squarePosition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\squareEmpty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\squareEmptyNew.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

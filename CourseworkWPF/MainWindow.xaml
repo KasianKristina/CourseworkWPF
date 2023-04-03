@@ -8,12 +8,12 @@
         Foreground="White"
         Title="MainWindow" Height="530" Width="890">
     <Grid>
-        <Border BorderBrush="#FF7A00" BorderThickness="10" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="419" Margin="28,53,0,0">
-            <Canvas x:Name="GameCanvas" MouseLeftButtonDown="focusOn" Background="#FFB673" HorizontalAlignment="Left" Height="400" Margin="-0.6,0.4,0,-0.4" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1" Cursor="Hand" MouseDown="GameCanvas_MouseDown" MouseMove="GameCanvas_MouseMove">
+        <Border BorderBrush="#284268" CornerRadius="1" BorderThickness="10" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="419" Margin="28,53,0,0">
+            <Canvas x:Name="GameCanvas" MouseLeftButtonDown="focusOn" Background="#C6D7FF" HorizontalAlignment="Left" Height="400" Margin="-0.6,0.4,0,-0.4" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1" Cursor="Hand" MouseDown="GameCanvas_MouseDown" MouseMove="GameCanvas_MouseMove">
             </Canvas>
         </Border>
 
-        <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#FF7A00" HorizontalAlignment="Left" Margin="624,318,0,0" VerticalAlignment="Top" Width="107" Click="Button_Click_1" Height="37" FontFamily="Microsoft Sans Serif" FontSize="16" Cursor="Hand">
+        <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#6994FE" HorizontalAlignment="Left" Margin="624,318,0,0" VerticalAlignment="Top" Width="107" Click="Button_Click_1" Height="37" FontFamily="Microsoft Sans Serif" FontSize="16" Cursor="Hand">
         </Button>
         <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="10" Margin="502,413,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="274"/>
         <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="502,377,0,0" VerticalAlignment="Top" Height="31" FontFamily="Microsoft Sans Serif" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
