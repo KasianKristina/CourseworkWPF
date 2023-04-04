@@ -38,7 +38,7 @@ namespace ClassLibrary
 
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
 
-                if (fx != -100 && 
+                if (fx != -100 &&
                     king.CheckXodKing(fx, fy, Сompetitor.queen, Сompetitor.king, motionColor))
                 {
                     king.MoveBlock(fx, fy);
@@ -267,7 +267,6 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
-            if (motionColor < 6)
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
             if (figure.Id == -2)

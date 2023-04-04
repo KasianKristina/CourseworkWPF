@@ -19,7 +19,7 @@ namespace ClassLibrary
 
 
         // метод премещения, который перемещает блок на заданную позицию
-        public void MoveBlock(int rows, int columns)
+        public virtual void MoveBlock(int rows, int columns)
         {
             if (GameField[rows, columns] >= 0)
             {
@@ -29,7 +29,7 @@ namespace ClassLibrary
                 GameField[Offset.Row, Offset.Column] = Id;
             }
         }
-
+        
         public abstract List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen queen, FigureKing king);
         //public abstract List<Position> GetAllPosition(int x, int y, int motion, FigureKing king);
     }

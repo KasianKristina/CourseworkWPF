@@ -60,6 +60,8 @@ namespace ClassLibrary
             return false;
         }
 
+        
+
         public bool CheckPregradaMove(FigureKing competitorKing, int motion, Color color, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
             if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !GetPosFerz(king.Offset.Row, king.Offset.Column, color))

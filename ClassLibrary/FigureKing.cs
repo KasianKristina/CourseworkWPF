@@ -34,6 +34,28 @@ namespace ClassLibrary
             Color = color;
         }
 
+        // функция возвращает true, если позиция в квадрате
+        private bool CheckInSquare(int x, int y, int Row, int iterator)
+        {
+            if ((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
+                 (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
+                 (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5))
+                return true;
+            else return false;
+        }
+
+        public override void MoveBlock(int rows, int columns)
+        {
+            if (GameField[rows, columns] >= 0)
+            {
+                GameField[Offset.Row, Offset.Column] = 0;
+                Offset.Row = rows;
+                Offset.Column = columns;
+                GameField[Offset.Row, Offset.Column] = Id;
+                ChangeFlag(rows, columns);
+            }
+        }
+        
         // true - делаем ход else - нет
         public bool LeaveSquareCheck(int x, int y)
         {
@@ -45,17 +67,24 @@ namespace ClassLibrary
                 iterator = -1;
             }
 
-            if (((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
-                (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
-                (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5)) && (LeaveSquareFlag))
+            if ((CheckInSquare(x, y, Row, iterator)) && LeaveSquareFlag)
                 return false;
-            if (!((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
-                 (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
-                 (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5)))
-                 LeaveSquareFlag = true;
             return true;
         }
 
+
+        public void ChangeFlag(int x, int y)
+        {
+            int Row = 0;
+            int iterator = 1;
+            if (Color == Color.Black)
+            {
+                Row += 7;
+                iterator = -1;
+            }
+            if (!CheckInSquare(x, y, Row, iterator))
+                LeaveSquareFlag = true;
+        }
         // проверка: король находится в смежной позиции с королем противника
         // x, y - координаты короля; xOpponent, yOpponent - координаты короля противника
         // возвращаем true, если позиция смежная
@@ -89,11 +118,18 @@ namespace ClassLibrary
             if (GameField.IsEmpty(x, y) && 
                competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) &&
                !AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) &&
-               LeaveSquareCheck(x, y) &&
-               motionQueen < 6)
+               LeaveSquareCheck(x, y))
                 return true;
             else
                 return false;
+        }
+
+        public bool OpportunityToMakeMove(FigureKing competitorKing, int motion, int motionColor)
+        {
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
+            if (listAll is null)
+                return false;
+            else return true;
         }
 
         public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing)
@@ -109,6 +145,7 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
+            // TODO добавить условие проверки на невозможность хода
             if (motionQueen >= 6)
                 return list;
 
