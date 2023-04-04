@@ -66,7 +66,7 @@ namespace ClassLibrary
                 return false;
 
             List<Position> listPregradi = GetBlocksPositions(king.Offset.Row, competitorQueen.Offset.Row, competitorQueen.Offset.Column);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, null, competitorKing);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
 
             for (int i = 0; i < listPregradi.Count; i++)
             {
@@ -87,7 +87,7 @@ namespace ClassLibrary
         public bool RandomMove(FigureKing competitorKing, int motion, Dictionary<int, (int, Position)> history, int motionColor)
         {
             int position;
-            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, motionColor, null, competitorKing);
+            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -128,7 +128,7 @@ namespace ClassLibrary
         public bool ObstacleMove(FigureKing competitorKing, Color color, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
             List<Position> listObstacles = GetObstaclesPosition(competitorKing, color);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, null, competitorKing);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion,  motionColor, null, competitorKing);
             for (int i = 0; i < listObstacles.Count; i++)
             {
                 for (int j = 0; j < listAll.Count; j++)
@@ -223,10 +223,10 @@ namespace ClassLibrary
         }
 
         // все возможные позиции королевы
-        public override List<Position> GetAllPosition(int x, int y, int motion, FigureQueen competitorQueen, FigureKing competitorKing)
+        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing)
         {
             List<Position> list = new List<Position>();
-            if (motion < 6)
+            if (motionQueen < 6)
             {
                 // иду вправо
                 for (int i = y + 1; i < 8; i++)

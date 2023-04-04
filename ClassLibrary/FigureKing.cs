@@ -45,38 +45,15 @@ namespace ClassLibrary
                 iterator = -1;
             }
 
-            if (((x, y) == (Row, 3) || (x, y) == (Row + iterator * 2, 3) || (x, y) == (Row + iterator * 3, 3) ||
-                (x, y) == (Row, 4) || (x, y) == (Row + iterator * 2, 4) || (x, y) == (Row + iterator * 3, 4) ||
-                (x, y) == (Row, 5) || (x, y) == (Row + iterator * 2, 5) || (x, y) == (Row + iterator * 3, 5)) && (LeaveSquareFlag))
+            if (((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
+                (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
+                (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5)) && (LeaveSquareFlag))
                 return false;
-            if (!((x, y) == (Row, 3) || (x, y) == (Row + iterator * 2, 3) || (x, y) == (Row + iterator * 3, 3) ||
-                 (x, y) == (Row, 4) || (x, y) == (Row + iterator * 2, 4) || (x, y) == (Row + iterator * 3, 4) ||
-                 (x, y) == (Row, 5) || (x, y) == (Row + iterator * 2, 5) || (x, y) == (Row + iterator * 3, 5)))
-                LeaveSquareFlag = true;
+            if (!((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
+                 (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
+                 (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5)))
+                 LeaveSquareFlag = true;
             return true;
-        }
-        // проверка: король должен покинуть квадрат за 16 ходов и больше не возвращаться в него
-        // x, y - позиция короля, которую он займет при передвижении
-        // true - в квадрате, false - не в квадрате
-        public bool LeaveSquare(int x, int y, int motion)
-        {
-            if (motion <= 16)
-                return false;
-            else
-            {
-                int Row = 0;
-                int iterator = 1;
-                if (Color == Color.Black)
-                {
-                    Row += 7;
-                    iterator = -1;
-                }
-                if ((x, y) == (Row, 3) || (x, y) == (Row + iterator * 2, 3) || (x, y) == (Row + iterator * 3, 3) ||
-                    (x, y) == (Row, 4) || (x, y) == (Row + iterator * 2, 4) || (x, y) == (Row + iterator * 3, 4) ||
-                    (x, y) == (Row, 5) || (x, y) == (Row + iterator * 2, 5) || (x, y) == (Row + iterator * 3, 5))
-                    return true;
-                return false;
-            }
         }
 
         // проверка: король находится в смежной позиции с королем противника
@@ -106,18 +83,20 @@ namespace ClassLibrary
             return list[position];
         }
 
-        public bool CheckXodKing(int x, int y, int motion, FigureQueen competitorQueen, FigureKing competitorKing)
+        // true - король может сделать ход, false - не может
+        public bool CheckXodKing(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing, int motionQueen)
         {
-            if (!competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) ||
-               AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) ||
-               (!(motion <= 16 || (motion > 16 && LeaveSquareCheck(x, y))) ||
-               !GameField.IsEmptyWave(x, y)))
-                return false;
-            else
+            if (GameField.IsEmpty(x, y) && 
+               competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) &&
+               !AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) &&
+               LeaveSquareCheck(x, y) &&
+               motionQueen < 6)
                 return true;
+            else
+                return false;
         }
 
-        public override List<Position> GetAllPosition(int x, int y, int motion, FigureQueen competitorQueen, FigureKing competitorKing)
+        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing)
         {
             List<Position> list = new List<Position>();
             List<Position> listCheck = new List<Position>() {
@@ -130,11 +109,13 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
+            if (motionQueen >= 6)
+                return list;
 
             foreach (Position pos in listCheck)
             {
                 if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
-                    CheckXodKing(Offset.Row + pos.Row, Offset.Column + pos.Column, motion, competitorQueen, competitorKing))
+                    CheckXodKing(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing, motionQueen))
                     list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
             }
             return list;

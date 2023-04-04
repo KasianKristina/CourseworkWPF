@@ -28,20 +28,21 @@ namespace ClassLibrary
             history = new Dictionary<int, (int, Position)>();
         }
 
-        public int Wave(FigureKing figure, int motion)
+        public int Wave(FigureKing king, int motion)
         {
             int result, fx, fy;
             while (true)
             {
-                Field cMap = DynamicField.CreateWave(figure.Offset.Row, figure.Offset.Column, posEnd.Row, posEnd.Column, false, GameField);
+                Field cMap = DynamicField.CreateWave(king.Offset.Row, king.Offset.Column, posEnd.Row, posEnd.Column, false, GameField);
                 result = cMap[posEnd.Row, posEnd.Column];
 
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
 
-                if (fx != -100 && CheckXodKing(fx, fy, motion))
+                if (fx != -100 && 
+                    king.CheckXodKing(fx, fy, Сompetitor.queen, Сompetitor.king, motionColor))
                 {
-                    figure.MoveBlock(fx, fy);
-                    history.Add(motion, (figure.Id, new Position(fx, fy)));
+                    king.MoveBlock(fx, fy);
+                    history.Add(motion, (king.Id, new Position(fx, fy)));
                     Console.WriteLine("king morm");
                     break;
                 }
@@ -63,12 +64,12 @@ namespace ClassLibrary
                         {
                             Position pos = king.RandomXodKing(list);
                             if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
-                                CheckXodKing(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, motion))
+                                king.CheckXodKing(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
                             {
                                 int Row = king.Offset.Row + pos.Row;
                                 int Column = king.Offset.Column + pos.Column;
 
-                                figure.MoveBlock(Row, Column);
+                                king.MoveBlock(Row, Column);
                                 history.Add(motion, (king.Id, new Position(Row, Column)));
                                 Console.WriteLine("king random");
                                 fx = pos.Row;
@@ -266,8 +267,11 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
+            if (motionColor < 6)
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
+            if (figure.Id == -2)
+                motionColor = 0;
         }
 
         public void Strategy4(int motion)

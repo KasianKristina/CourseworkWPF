@@ -30,7 +30,7 @@ namespace ClassLibrary
             }
         }
 
-        public abstract List<Position> GetAllPosition(int x, int y, int motion, FigureQueen queen, FigureKing king);
+        public abstract List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen queen, FigureKing king);
         //public abstract List<Position> GetAllPosition(int x, int y, int motion, FigureKing king);
     }
 }

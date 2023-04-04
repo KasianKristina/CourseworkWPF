@@ -67,7 +67,6 @@ namespace ClassLibrary
         private int motion_with_player = 1;
         public int check_delegate(PlayerDelegate strategy_first, StrategyDelegate strategy_second, Position pos, Figure figure)
         {
-
             if (IsGameOver())
                 return 0;
             Console.WriteLine("Ход, {0} ", motion_with_player);
@@ -82,25 +81,23 @@ namespace ClassLibrary
             return 1;
         }
 
-        public string WhoIsWin()
-        {
-            if (GameField[0, 4] == -3)
-            {
-                win = "Победили черные фигуры";
-            }
-            else if (GameField[7, 4] == -1)
-                win = "Победили белые фигуры";
-            else win = "Ничья";
-            return win;
-        }
-
         public bool IsGameOver()
         {
             if ((GameField[0, 4] == -3) || (GameField[7, 4] == -1))
             {
                 if (GameField[0, 4] == -3)
-                    win = "Победили черные фигуры";
-                else win = "Победили белые фигуры";
+                    win = "Черные фигуры";
+                else win = "Белые фигуры";
+                return true;
+            }
+            if (player1.king.LeaveSquareFlag == false && motion_with_player > 16)
+            {
+                win = "Черные фигуры";
+                return true;
+            }
+            if (player2.king.LeaveSquareFlag == false && motion_with_player > 16)
+            {
+                win = "Белые фигуры";
                 return true;
             }
             if (player1.Pat || player2.Pat)

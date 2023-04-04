@@ -100,7 +100,7 @@ namespace CourseworkWPF
 
         private void DrawAllPositions(Figure figure)
         {
-            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, 1, field.player2.queen, field.player2.king);
+            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king);
             foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];
@@ -336,8 +336,6 @@ namespace CourseworkWPF
                 {
                     Click = 1;
                     opot();
-                    //MessageBox.Show("Невозможный ход");
-                    //Click = 1;
                 };
             }
         }
