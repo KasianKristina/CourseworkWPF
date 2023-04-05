@@ -68,7 +68,7 @@ namespace ClassLibrary
                 return false;
 
             List<Position> listPregradi = GetBlocksPositions(king.Offset.Row, competitorQueen.Offset.Row, competitorQueen.Offset.Column);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
 
             for (int i = 0; i < listPregradi.Count; i++)
             {
@@ -89,7 +89,7 @@ namespace ClassLibrary
         public bool RandomMove(FigureKing competitorKing, int motion, Dictionary<int, (int, Position)> history, int motionColor)
         {
             int position;
-            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
+            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -101,7 +101,7 @@ namespace ClassLibrary
             Console.WriteLine("random q {0}, {1}", list[position].Row, list[position].Column);
             return true;
         }
-
+        // ферзь уже блокирует короля
         public bool GetPosFerz(int kingRow, int kingCol, Color color)
         {
             int k;
@@ -127,10 +127,12 @@ namespace ClassLibrary
             return false;
         }
 
+
+        // TODO: проверить, что CheckPreviousPosition работает правильно
         public bool ObstacleMove(FigureKing competitorKing, Color color, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
             List<Position> listObstacles = GetObstaclesPosition(competitorKing, color);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion,  motionColor, null, competitorKing);
+            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
             for (int i = 0; i < listObstacles.Count; i++)
             {
                 for (int j = 0; j < listAll.Count; j++)
@@ -150,6 +152,8 @@ namespace ClassLibrary
             return false;
         }
 
+        // проверка, что ферзь сходил на предыдущую строку
+        // возвращает предыдущую строку
         public int CheckPreviousPosition(Dictionary<int, (int, Position)> history)
         {
             int[] rows = { -10, -10 };
@@ -225,7 +229,7 @@ namespace ClassLibrary
         }
 
         // все возможные позиции королевы
-        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing)
+        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
             List<Position> list = new List<Position>();
             if (motionQueen < 6)
@@ -321,6 +325,104 @@ namespace ClassLibrary
             }
             return list;
         }
+
+        public List<Position> GetAllPosition(int x, int y, int motionQueen, FigureKing competitorKing)
+        {
+            List<Position> list = new List<Position>();
+            if (motionQueen < 6)
+            {
+                // иду вправо
+                for (int i = y + 1; i < 8; i++)
+                {
+                    if (GameField[x, i] == 0)
+                    {
+                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                            list.Add(new Position(x, i));
+                    }
+                    else break;
+                }
+                // иду влево
+                for (int i = y - 1; i >= 0; i--)
+                {
+                    if (GameField[x, i] == 0)
+                    {
+                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                            list.Add(new Position(x, i));
+                    }
+                    else break;
+                }
+            }
+            // иду вниз
+            for (int i = x + 1; i < 8; i++)
+            {
+                if (GameField[i, y] == 0)
+                {
+                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(i, y));
+                }
+                else break;
+            }
+            // иду вверх
+            for (int i = x - 1; i >= 0; i--)
+            {
+                if (GameField[i, y] == 0)
+                {
+                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(i, y));
+                }
+                else break;
+            }
+            // иду в правый нижний угол
+            int rowStep = 1;
+            int columnStep = 1;
+            for (int i = 1; i < 8; i++)
+            {
+                if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
+                {
+                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(x + i * rowStep, y + i * columnStep));
+                }
+                else break;
+            }
+            // иду в левый нижний угол
+            rowStep = 1;
+            columnStep = -1;
+            for (int i = 1; i < 8; i++)
+            {
+                if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
+                {
+                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(x + i * rowStep, y + i * columnStep));
+                }
+                else break;
+            }
+            // иду в правый верхний угол
+            rowStep = -1;
+            columnStep = 1;
+            for (int i = 1; i < 8; i++)
+            {
+                if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
+                {
+                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(x + i * rowStep, y + i * columnStep));
+                }
+                else break;
+            }
+            // иду в левый верхний угол
+            rowStep = -1;
+            columnStep = -1;
+            for (int i = 1; i < 8; i++)
+            {
+                if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
+                {
+                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        list.Add(new Position(x + i * rowStep, y + i * columnStep));
+                }
+                else break;
+            }
+            return list;
+        }
+
 
         public bool NearbyMove(int kingRow, int kingCol, int motion, Dictionary<int, (int, Position)> history)
         {

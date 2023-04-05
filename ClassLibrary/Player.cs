@@ -39,7 +39,7 @@ namespace ClassLibrary
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
 
                 if (fx != -100 &&
-                    king.CheckXodKing(fx, fy, Сompetitor.queen, Сompetitor.king, motionColor))
+                    king.OpportunityToMakeMove(fx, fy, Сompetitor.queen, Сompetitor.king, motionColor))
                 {
                     king.MoveBlock(fx, fy);
                     history.Add(motion, (king.Id, new Position(fx, fy)));
@@ -62,9 +62,9 @@ namespace ClassLibrary
                         };
                         while (list.Any())
                         {
-                            Position pos = king.RandomXodKing(list);
+                            Position pos = king.RandomMoveKing(list);
                             if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
-                                king.CheckXodKing(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
+                                king.OpportunityToMakeMove(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
                             {
                                 int Row = king.Offset.Row + pos.Row;
                                 int Column = king.Offset.Column + pos.Column;
@@ -104,18 +104,6 @@ namespace ClassLibrary
                 }
             }
         }
-
-        public bool CheckXodKing(int x, int y, int motion)
-        {
-            if (!Сompetitor.queen.CheckQueenAttack(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column, x, y) ||
-               king.AdjacentPosition(x, y, Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column) ||
-               (!(motion <= 16 || (motion > 16 && king.LeaveSquareCheck(x, y))) ||
-               !GameField.IsEmptyWave(x, y)))
-                return false;
-            else
-                return true;
-        }
-
         public void StrategySimple(int motion)
         {
             Console.WriteLine("Ходит {0} ", Color);
@@ -265,12 +253,13 @@ namespace ClassLibrary
 
         public void StrategyUser(int motion, Figure figure, Position pos)
         {
+            // TODO добавить проверку на пат
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
+            if (figure.Id == -2 && pos.Row != figure.Offset.Row)
+                motionColor = 0;
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
-            if (figure.Id == -2)
-                motionColor = 0;
         }
 
         public void Strategy4(int motion)

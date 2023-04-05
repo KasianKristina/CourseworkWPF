@@ -100,7 +100,7 @@ namespace CourseworkWPF
 
         private void DrawAllPositions(Figure figure)
         {
-            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king);
+            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king, field.player1.queen);
             foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];
@@ -279,6 +279,7 @@ namespace CourseworkWPF
             str_player1_user = null;
             figure = null;
             gameOver = false;
+            labelWinner.Content = "Победитель: ";
         }
 
         private void opot()

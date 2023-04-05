@@ -34,29 +34,48 @@ namespace ClassLibrary
             Color = color;
         }
 
-        // функция возвращает true, если позиция в квадрате
-        private bool CheckInSquare(int x, int y, int Row, int iterator)
+        /// <summary>
+        /// Проверка, находится ли переданная позиция внутри квадрата
+        /// </summary>
+        /// <param name="x">строка</param>
+        /// <param name="y">столбец</param>
+        /// <param name="row">начало отсчета: 0 - белые, 7 - черные</param>
+        /// <param name="iterator"></param>
+        /// <returns>true - позиция в квадрате, false - не в квадрате</returns>
+        private bool CheckInSquare(int x, int y, int row, int iterator)
         {
-            if ((x, y) == (Row, 3) || (x, y) == (Row + iterator * 1, 3) || (x, y) == (Row + iterator * 2, 3) ||
-                 (x, y) == (Row, 4) || (x, y) == (Row + iterator * 1, 4) || (x, y) == (Row + iterator * 2, 4) ||
-                 (x, y) == (Row, 5) || (x, y) == (Row + iterator * 1, 5) || (x, y) == (Row + iterator * 2, 5))
+            if ((x, y) == (row, 3) || (x, y) == (row + iterator * 1, 3) || (x, y) == (row + iterator * 2, 3) ||
+                 (x, y) == (row, 4) || (x, y) == (row + iterator * 1, 4) || (x, y) == (row + iterator * 2, 4) ||
+                 (x, y) == (row, 5) || (x, y) == (row + iterator * 1, 5) || (x, y) == (row + iterator * 2, 5))
                 return true;
             else return false;
         }
 
-        public override void MoveBlock(int rows, int columns)
+
+        /// <summary>
+        /// Метод для перемещения короля на указанную позицию. Изменение флага выхода из квадрата по необходимости.
+        /// </summary>
+        /// <param name="x">строка</param>
+        /// <param name="y">столбец</param>
+        public override void MoveBlock(int x, int y)
         {
-            if (GameField[rows, columns] >= 0)
+            if (GameField[x, y] >= 0)
             {
                 GameField[Offset.Row, Offset.Column] = 0;
-                Offset.Row = rows;
-                Offset.Column = columns;
+                Offset.Row = x;
+                Offset.Column = y;
                 GameField[Offset.Row, Offset.Column] = Id;
-                ChangeFlag(rows, columns);
+                ChangeFlag(x, y);
             }
         }
         
-        // true - делаем ход else - нет
+
+        /// <summary>
+        /// Метод для проверки, не является ли переданная позиция невозможной для хода по причине выхода короля из квдрата
+        /// </summary>
+        /// <param name="x">возможная строка</param>
+        /// <param name="y">возможный столбец</param>
+        /// <returns>true - можно сходить на эту позицию, false - нельзя</returns>
         public bool LeaveSquareCheck(int x, int y)
         {
             int Row = 0;
@@ -73,21 +92,33 @@ namespace ClassLibrary
         }
 
 
+        /// <summary>
+        /// Смена флага при выходе за границы квадрата
+        /// </summary>
+        /// <param name="x">строка</param>
+        /// <param name="y">столбец</param>
         public void ChangeFlag(int x, int y)
         {
-            int Row = 0;
+            int row = 0;
             int iterator = 1;
             if (Color == Color.Black)
             {
-                Row += 7;
+                row += 7;
                 iterator = -1;
             }
-            if (!CheckInSquare(x, y, Row, iterator))
+            if (!CheckInSquare(x, y, row, iterator))
                 LeaveSquareFlag = true;
         }
-        // проверка: король находится в смежной позиции с королем противника
-        // x, y - координаты короля; xOpponent, yOpponent - координаты короля противника
-        // возвращаем true, если позиция смежная
+
+
+        /// <summary>
+        /// Проверка, что король находится в смежной позиции с королем соперника
+        /// </summary>
+        /// <param name="x">строка короля игрока</param>
+        /// <param name="y">столбец короля игрока</param>
+        /// <param name="xOpponent">строка короля соперника</param>
+        /// <param name="yOpponent">столбец короля соперника</param>
+        /// <returns>true - позиция смежная, false - иначе</returns>
         public bool AdjacentPosition(int x, int y, int xOpponent, int yOpponent)
         {
             if ((x, y) == (xOpponent - 1, yOpponent) ||
@@ -104,7 +135,12 @@ namespace ClassLibrary
             else return false;
         }
 
-        public Position RandomXodKing(List<Position> list)
+        /// <summary>
+        /// Выбор случайной позиции
+        /// </summary>
+        /// <param name="list">список возможных позиций</param>
+        /// <returns>случайную позицию</returns>
+        public Position RandomMoveKing(List<Position> list)
         {
             int position;
             Random random = new Random();
@@ -112,8 +148,17 @@ namespace ClassLibrary
             return list[position];
         }
 
-        // true - король может сделать ход, false - не может
-        public bool CheckXodKing(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing, int motionQueen)
+
+        /// <summary>
+        /// Проверка, что король может сделать ход
+        /// </summary>
+        /// <param name="x">строка короля</param>
+        /// <param name="y">столбец короля</param>
+        /// <param name="competitorQueen">ферзь соперника</param>
+        /// <param name="competitorKing">король соперника</param>
+        /// <param name="motionQueen">количество ходов, когда ферзь находится на одной горизонтали</param>
+        /// <returns>true - король может сделать ход, false - не может</returns>
+        public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing, int motionQueen)
         {
             if (GameField.IsEmpty(x, y) && 
                competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) &&
@@ -124,15 +169,7 @@ namespace ClassLibrary
                 return false;
         }
 
-        public bool OpportunityToMakeMove(FigureKing competitorKing, int motion, int motionColor)
-        {
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motion, motionColor, null, competitorKing);
-            if (listAll is null)
-                return false;
-            else return true;
-        }
-
-        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing)
+        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
             List<Position> list = new List<Position>();
             List<Position> listCheck = new List<Position>() {
@@ -145,14 +182,15 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
-            // TODO добавить условие проверки на невозможность хода
-            if (motionQueen >= 6)
+            
+            if (motionQueen >= 6 &&
+                queen.GetAllPosition(queen.Offset.Row, queen.Offset.Column, motionQueen, competitorKing) != null)
                 return list;
 
             foreach (Position pos in listCheck)
             {
                 if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
-                    CheckXodKing(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing, motionQueen))
+                    OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing, motionQueen))
                     list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
             }
             return list;

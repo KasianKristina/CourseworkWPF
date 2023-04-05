@@ -331,6 +331,22 @@ namespace UnitTestProject
         /// <summary>
         /// Тест для проверки метода CheckPreviousPosition
         /// </summary>
+        public void CheckPreviousPositionTest4()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            int row = player1.queen.CheckPreviousPosition(player1.history);
+            Assert.AreEqual(-10, row);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода CheckPreviousPosition
+        /// </summary>
         public void CheckPreviousPositionTest3()
         {
             Field GameField = new Field(8, 8);
