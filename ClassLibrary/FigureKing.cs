@@ -189,7 +189,7 @@ namespace ClassLibrary
 
             foreach (Position pos in listCheck)
             {
-                if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
+                if (GameField.IsEmpty(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
                     OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing, motionQueen))
                     list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
             }

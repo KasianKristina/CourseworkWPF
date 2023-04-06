@@ -50,37 +50,43 @@ namespace ClassLibrary
                 {
                     if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
                     {
-                        List<Position> list = new List<Position>() {
-                            new Position(0, 1),
-                            new Position(0, -1),
-                            new Position(1, 0),
-                            new Position(1, 1),
-                            new Position(1, -1),
-                            new Position(-1, 0),
-                            new Position(-1, 1),
-                            new Position(-1, -1),
-                        };
-                        while (list.Any())
-                        {
-                            Position pos = king.RandomMoveKing(list);
-                            if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
-                                king.OpportunityToMakeMove(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
-                            {
-                                int Row = king.Offset.Row + pos.Row;
-                                int Column = king.Offset.Column + pos.Column;
-
-                                king.MoveBlock(Row, Column);
-                                history.Add(motion, (king.Id, new Position(Row, Column)));
-                                Console.WriteLine("king random");
-                                fx = pos.Row;
-                                break;
-                            }
-                            else
-                                list.Remove(pos);
-                        }
-                        if (list.Count == 0)
-                            fx = -100;
+                        List<Position> allPositions = king.GetAllPosition(king.Offset.Row, king.Offset.Column, motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
+                        Position position = king.RandomMoveKing(allPositions);
+                        king.MoveBlock(position.Row, position.Column);
+                        history.Add(motion, (king.Id, new Position(position.Row, position.Column)));
+                        fx = position.Row;
                         break;
+                        //List<Position> list = new List<Position>() {
+                        //    new Position(0, 1),
+                        //    new Position(0, -1),
+                        //    new Position(1, 0),
+                        //    new Position(1, 1),
+                        //    new Position(1, -1),
+                        //    new Position(-1, 0),
+                        //    new Position(-1, 1),
+                        //    new Position(-1, -1),
+                        //};
+                        //while (list.Any())
+                        //{
+                        //    Position pos = king.RandomMoveKing(list);
+                        //    if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
+                        //        king.OpportunityToMakeMove(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
+                        //    {
+                        //        int Row = king.Offset.Row + pos.Row;
+                        //        int Column = king.Offset.Column + pos.Column;
+
+                        //        king.MoveBlock(Row, Column);
+                        //        history.Add(motion, (king.Id, new Position(Row, Column)));
+                        //        Console.WriteLine("king random");
+                        //        fx = pos.Row;
+                        //        break;
+                        //    }
+                        //    else
+                        //        list.Remove(pos);
+                        //}
+                        //if (list.Count == 0)
+                        //    fx = -100;
+                        //break;
                     }
                     GameField[fx, fy] = -7;
                     //queen.ObstaclesQueenCheck();

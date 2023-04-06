@@ -479,5 +479,24 @@ namespace UnitTestProject
             player1.king.MoveBlock(0, 6);
             Assert.AreEqual(false, player1.king.LeaveSquareCheck(3, 5));
         }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки OpportunityToMakeMove
+        /// </summary>
+        public void OpportunityToMakeMoveTest()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[0, 2] = -5;
+            GameField[1, 2] = -5;
+            GameField[1, 3] = -5;
+            GameField[1, 4] = -5;
+            Assert.AreEqual(false, player1.king.OpportunityToMakeMove(player1.king.Offset.Row, player1.king.Offset.Column, player2.queen, player2.king, 0));
+        }
     }
 }
