@@ -67,12 +67,12 @@ namespace ClassLibrary
         }
 
         
-        public bool CheckPregradaMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
+        public bool CheckUnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
             if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !IsQueenAlreadyBlockingKing(king.Offset))
                 return false;
 
-            List<Position> listPregradi = GetBlocksPositions(king.Offset.Row, competitorQueen.Offset.Row, competitorQueen.Offset.Column);
+            List<Position> listPregradi = GetUnlockingPositions(king.Offset.Row, competitorQueen.Offset);
             List<Position> listAll = GetAllPosition(motionColor, competitorKing);
 
             for (int i = 0; i < listPregradi.Count; i++)
@@ -84,7 +84,7 @@ namespace ClassLibrary
                     {
                         MoveBlock(listPregradi[i].Row, listPregradi[i].Column);
                         history.Add(motion, (Id, new Position(listPregradi[i].Row, listPregradi[i].Column)));
-                        Console.WriteLine("pregrada q {0}, {1}", listPregradi[i].Row, listPregradi[i].Column);
+                        // Console.WriteLine("pregrada q {0}, {1}", listPregradi[i].Row, listPregradi[i].Column);
                         return true;
                     }
                 }
@@ -149,7 +149,6 @@ namespace ClassLibrary
         }
 
 
-        // TODO: проверить, что CheckPreviousPosition работает правильно
         /// <summary>
         /// Преграждающий ход
         /// </summary>
@@ -272,7 +271,16 @@ namespace ClassLibrary
             return list;
         }
 
-        // все возможные позиции королевы
+
+        /// <summary>
+        /// Получить все возможные позиции ферзя
+        /// </summary>
+        /// <param name="motion"></param>
+        /// <param name="motionQueen"></param>
+        /// <param name="competitorQueen"></param>
+        /// <param name="competitorKing"></param>
+        /// <param name="queen"></param>
+        /// <returns>список позиций</returns>
         public override List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
             int x = Offset.Row;
@@ -540,9 +548,17 @@ namespace ClassLibrary
             return list;
         }
 
-        // позиции между блокирующим ферзем соперника и королем
-        public List<Position> GetBlocksPositions(int kingCol, int queenCompetitorRow, int queenCompetitorCol)
+
+        /// <summary>
+        /// Получить позиции между блокирующим ферзем соперника и королем
+        /// </summary>
+        /// <param name="kingCol"></param>
+        /// <param name="queenCompetitorPosition"></param>
+        /// <returns>список позиций</returns>
+        public List<Position> GetUnlockingPositions(int kingCol, Position queenCompetitorPosition)
         {
+            int queenCompetitorRow = queenCompetitorPosition.Row;
+            int queenCompetitorCol = queenCompetitorPosition.Column;
             List<Position> list = new List<Position>();
             if (queenCompetitorCol > kingCol)
             {
@@ -559,7 +575,13 @@ namespace ClassLibrary
             return list;
         }
 
-        // true - не бьет, false - бьет
+
+        /// <summary>
+        /// Проверка: ферзь не бьет короля соперника
+        /// </summary>
+        /// <param name="positionQueen">рассматриваемая дальнейшая позиция ферзя</param>
+        /// <param name="positionKing">позиция короля соперника</param>
+        /// <returns>true - не бьет, false - бьет</returns>
         public bool CheckQueenAttack(Position positionQueen, Position positionKing)
         {
             int queenRow = positionQueen.Row;
@@ -607,13 +629,13 @@ namespace ClassLibrary
                     }
                     return false;
                 }
-            // Check if king is in the same diagonal as queen
+            // находится ли король на той же диагонали, что и ферзь
             int rowDiff = Math.Abs(queenRow - kingRow);
             int colDiff = Math.Abs(queenCol - kingCol);
 
             if (rowDiff == colDiff)
             {
-                // Check for obstacles
+                // проверить наличие препятствий
                 if (queenRow > kingRow)
                 {
                     int rowStep = -1;

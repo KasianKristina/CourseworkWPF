@@ -389,7 +389,7 @@ namespace UnitTestProject
             player2.history.Add(motion, (player2.queen.Id, new Position(2, 5)));
             motion++;
 
-            List<Position> listObstacles = player1.queen.GetBlocksPositions(player1.king.Offset.Column, player1.Сompetitor.queen.Offset.Row, player1.Сompetitor.queen.Offset.Column);
+            List<Position> listObstacles = player1.queen.GetUnlockingPositions(player1.king.Offset.Column, player1.Сompetitor.queen.Offset);
             List<Position> expectedList = new List<Position>() {
                             new Position(2, 3),
                             new Position(2, 4) };
@@ -411,7 +411,7 @@ namespace UnitTestProject
             player1.king.MoveBlock(1, 6);
             player2.queen.MoveBlock(2, 1);
 
-            List<Position> listObstacles = player1.queen.GetBlocksPositions(player1.king.Offset.Column, player1.Сompetitor.queen.Offset.Row, player1.Сompetitor.queen.Offset.Column);
+            List<Position> listObstacles = player1.queen.GetUnlockingPositions(player1.king.Offset.Column, player1.Сompetitor.queen.Offset);
             List<Position> expectedList = new List<Position>() {
                             new Position(2, 5),
                             new Position(2, 4),

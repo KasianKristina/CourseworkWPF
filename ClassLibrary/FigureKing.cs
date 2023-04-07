@@ -195,7 +195,7 @@ namespace ClassLibrary
                         };
             
             if (motionQueen >= 6 &&
-                queen.GetAllPosition(motionQueen, competitorKing) != null)
+                queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
                 return list;
 
             foreach (Position pos in listCheck)

@@ -51,11 +51,15 @@ namespace ClassLibrary
                     if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
                     {
                         List<Position> allPositions = king.GetAllPosition(motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
-                        Position position = king.ChooseRandomPosition(allPositions);
-                        king.MoveBlock(position.Row, position.Column);
-                        history.Add(motion, (king.Id, new Position(position.Row, position.Column)));
-                        fx = position.Row;
-                        break;
+                        if (allPositions.Count != 0)
+                        {
+                            Position position = king.ChooseRandomPosition(allPositions);
+                            king.MoveBlock(position.Row, position.Column);
+                            history.Add(motion, (king.Id, new Position(position.Row, position.Column)));
+                            fx = position.Row;
+                            break;
+                        }
+                        else return -100;
                     }
                     GameField[fx, fy] = -7;
                 }
@@ -64,7 +68,6 @@ namespace ClassLibrary
             ClearGameField();
             return fx;
         }
-
 
         private void ClearGameField()
         {
@@ -226,15 +229,23 @@ namespace ClassLibrary
             }
         }
 
+        private void CheckPat(int motion)
+        {
+            List<Position> listPositionsQueen = queen.GetAllPosition(motionColor, Сompetitor.king);
+            List<Position> listPositionsKing = king.GetAllPosition(motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
+            if (listPositionsKing.Count == 0 && listPositionsQueen.Count == 0)
+                Pat = true;
+        }
+
         public void StrategyUser(int motion, Figure figure, Position pos)
         {
-            // TODO добавить проверку на пат
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
             if (figure.Id == -2 && pos.Row != figure.Offset.Row)
                 motionColor = 0;
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
+            CheckPat(motion);
         }
 
         public void Strategy4(int motion)
@@ -244,7 +255,7 @@ namespace ClassLibrary
 
             if (motionColor >= 6)
             {
-                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
+                bool check = queen.CheckUnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
                 if (check)
                 {
                     motionColor = 0;
@@ -271,7 +282,7 @@ namespace ClassLibrary
             }
             else
             {
-                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
+                bool check = queen.CheckUnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
                 if (check)
                 {
                     motionColor = 0;

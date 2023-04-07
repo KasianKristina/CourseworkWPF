@@ -107,12 +107,6 @@ namespace CourseworkWPF
             }
         }
 
-        private void Draw(DynamicField field, Position position, int id)
-        {
-            DrawField(field.GameField);
-            DrawFigure(position, id);
-        }
-
         private void Draw(DynamicField field)
         {
             DrawField(field.GameField);
@@ -169,7 +163,7 @@ namespace CourseworkWPF
                 default:
                     break;
             }
-
+            field.Walls((int)sliderCountWalls.Value);
             if (str_player1 != null && str_player2 != null)
             {
                 field.check_delegate(str_player1, str_player2);
@@ -181,7 +175,6 @@ namespace CourseworkWPF
             {
                 WhoPlay = true;
             }
-            field.Walls((int)sliderCountWalls.Value);
             DrawField(field.GameField);
             DrawFigure(field.player1.king.StartOffset, field.player1.king.Id);
             DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
