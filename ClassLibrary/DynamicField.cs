@@ -147,7 +147,7 @@ namespace ClassLibrary
         // первый найденный путь отмечаем -5 (стены)
         public bool TwoWave(Field copy)
         {
-            Field cMap = CreateWave(0, 4, 7, 4, true, copy);
+            Field cMap = CreateWave(0, 4, 7, 4, copy);
             Console.WriteLine("Первый непересекающийся путь");
             int result = cMap[7, 4];
             cMap.Draw();
@@ -156,7 +156,7 @@ namespace ClassLibrary
 
             Search(7, 4, result, ref cMap, true);
             cMap.Draw();
-            cMap = CreateWave(0, 4, 7, 4, true, cMap);
+            cMap = CreateWave(0, 4, 7, 4, cMap);
 
             Console.WriteLine("Второй непересекающийся путь");
             cMap.Draw();
@@ -240,7 +240,7 @@ namespace ClassLibrary
             return (x, y);
         }
 
-        public static Field CreateWave(int startX, int startY, int finishX, int finishY, bool wall, Field field)
+        public static Field CreateWave(int startX, int startY, int finishX, int finishY, Field field)
         {
             bool add = true;
             int MapX = 8;

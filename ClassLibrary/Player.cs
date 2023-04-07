@@ -33,7 +33,7 @@ namespace ClassLibrary
             int result, fx, fy;
             while (true)
             {
-                Field cMap = DynamicField.CreateWave(king.Offset.Row, king.Offset.Column, posEnd.Row, posEnd.Column, false, GameField);
+                Field cMap = DynamicField.CreateWave(king.Offset.Row, king.Offset.Column, posEnd.Row, posEnd.Column, GameField);
                 result = cMap[posEnd.Row, posEnd.Column];
 
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
