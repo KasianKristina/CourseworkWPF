@@ -140,7 +140,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="list">список возможных позиций</param>
         /// <returns>случайную позицию</returns>
-        public Position RandomMoveKing(List<Position> list)
+        public Position ChooseRandomPosition(List<Position> list)
         {
             int position;
             Random random = new Random();
@@ -158,10 +158,10 @@ namespace ClassLibrary
         /// <param name="competitorKing">король соперника</param>
         /// <param name="motionQueen">количество ходов, когда ферзь находится на одной горизонтали</param>
         /// <returns>true - король может сделать ход, false - не может</returns>
-        public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing, int motionQueen)
+        public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
         {
             if (GameField.IsEmpty(x, y) && 
-               competitorQueen.CheckQueenAttack(competitorQueen.Offset.Row, competitorQueen.Offset.Column, x, y) &&
+               competitorQueen.CheckQueenAttack(competitorQueen.Offset, new Position(x, y)) &&
                !AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) &&
                LeaveSquareCheck(x, y))
                 return true;
@@ -169,7 +169,18 @@ namespace ClassLibrary
                 return false;
         }
 
-        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
+        /// <summary>
+        /// Получение всех возможных позиций короля
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="motion">текущий ход</param>
+        /// <param name="motionQueen">сколько ходов ферзь оставался на одной горизонтали</param>
+        /// <param name="competitorQueen"></param>
+        /// <param name="competitorKing"></param>
+        /// <param name="queen"></param>
+        /// <returns>список всех возможных позиций</returns>
+        public override List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
             List<Position> list = new List<Position>();
             List<Position> listCheck = new List<Position>() {
@@ -184,13 +195,12 @@ namespace ClassLibrary
                         };
             
             if (motionQueen >= 6 &&
-                queen.GetAllPosition(queen.Offset.Row, queen.Offset.Column, motionQueen, competitorKing) != null)
+                queen.GetAllPosition(motionQueen, competitorKing) != null)
                 return list;
 
             foreach (Position pos in listCheck)
             {
-                if (GameField.IsEmpty(Offset.Row + pos.Row, Offset.Column + pos.Column) &&
-                    OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing, motionQueen))
+                if (OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing))
                     list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
             }
             return list;

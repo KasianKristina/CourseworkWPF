@@ -35,6 +35,12 @@ namespace ClassLibrary
             Color = color;
         }
 
+        /// <summary>
+        /// Проверка: ферзь соперника уже преграждает королю
+        /// </summary>
+        /// <param name="king"></param>
+        /// <param name="competitorQueen"></param>
+        /// <returns></returns>
         public bool CheckPregradaCompetitorQueen(FigureKing king, FigureQueen competitorQueen)
         {
             int k;
@@ -61,14 +67,13 @@ namespace ClassLibrary
         }
 
         
-
-        public bool CheckPregradaMove(FigureKing competitorKing, int motion, Color color, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
+        public bool CheckPregradaMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
-            if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !GetPosFerz(king.Offset.Row, king.Offset.Column, color))
+            if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !IsQueenAlreadyBlockingKing(king.Offset))
                 return false;
 
             List<Position> listPregradi = GetBlocksPositions(king.Offset.Row, competitorQueen.Offset.Row, competitorQueen.Offset.Column);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
+            List<Position> listAll = GetAllPosition(motionColor, competitorKing);
 
             for (int i = 0; i < listPregradi.Count; i++)
             {
@@ -86,10 +91,20 @@ namespace ClassLibrary
             }
             return false;
         }
-        public bool RandomMove(FigureKing competitorKing, int motion, Dictionary<int, (int, Position)> history, int motionColor)
+
+
+        /// <summary>
+        /// Сходить на случайную позицию
+        /// </summary>
+        /// <param name="competitorKing"></param>
+        /// <param name="motion"></param>
+        /// <param name="history"></param>
+        /// <param name="motionQueen"></param>
+        /// <returns>true - если удалось сходить, false - нет</returns>
+        public bool RandomMove(FigureKing competitorKing, int motion, Dictionary<int, (int, Position)> history, int motionQueen)
         {
             int position;
-            List<Position> list = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
+            List<Position> list = GetAllPosition(motionQueen, competitorKing);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -98,41 +113,56 @@ namespace ClassLibrary
 
             MoveBlock(list[position].Row, list[position].Column);
             history.Add(motion, (Id, new Position(list[position].Row, list[position].Column)));
-            Console.WriteLine("random q {0}, {1}", list[position].Row, list[position].Column);
+            // Console.WriteLine("random q {0}, {1}", list[position].Row, list[position].Column);
             return true;
         }
-        // ферзь уже блокирует короля
-        public bool GetPosFerz(int kingRow, int kingCol, Color color)
+
+
+        /// <summary>
+        /// Проверка: ферзь уже блокирует короля
+        /// </summary>
+        /// <param name="kingPosition">позиция короля соперника</param>
+        /// <param name="color">цвет фигур соперника</param>
+        /// <returns>true - блокирует, false - не блокирует</returns>
+        public bool IsQueenAlreadyBlockingKing(Position kingPosition)
         {
             int k;
-            if (color == Color.Black)
+            if (Color == Color.Black)
                 k = -1;
             else
                 k = 1;
             // вправо
-            for (int i = kingCol + 1; i < 8; i++)
+            for (int i = kingPosition.Column + 1; i < 8; i++)
             {
-                if (GameField.IsInside(kingRow - k, i))
-                    if (GameField[kingRow - k, i] == Id)
+                if (GameField.IsInside(kingPosition.Row - k, i))
+                    if (GameField[kingPosition.Row - k, i] == Id)
                         return true;
             }
             // влево
-            for (int i = kingCol - 1; i >= 0; i--)
+            for (int i = kingPosition.Column - 1; i >= 0; i--)
             {
-                if (GameField.IsInside(kingRow - k, i))
-                    if (GameField[kingRow - k, i] == Id)
+                if (GameField.IsInside(kingPosition.Row - k, i))
+                    if (GameField[kingPosition.Row - k, i] == Id)
                         return true;
             }
-
             return false;
         }
 
 
         // TODO: проверить, что CheckPreviousPosition работает правильно
-        public bool ObstacleMove(FigureKing competitorKing, Color color, int motionColor, Dictionary<int, (int, Position)> history, int motion)
+        /// <summary>
+        /// Преграждающий ход
+        /// </summary>
+        /// <param name="competitorKing"></param>
+        /// <param name="color"></param>
+        /// <param name="motionColor"></param>
+        /// <param name="history"></param>
+        /// <param name="motion"></param>
+        /// <returns></returns>
+        public bool ObstacleMove(FigureKing competitorKing, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
-            List<Position> listObstacles = GetObstaclesPosition(competitorKing, color);
-            List<Position> listAll = GetAllPosition(Offset.Row, Offset.Column, motionColor, competitorKing);
+            List<Position> listObstacles = GetObstaclesPosition(competitorKing);
+            List<Position> listAll = GetAllPosition(motionColor, competitorKing);
             for (int i = 0; i < listObstacles.Count; i++)
             {
                 for (int j = 0; j < listAll.Count; j++)
@@ -140,7 +170,7 @@ namespace ClassLibrary
                     if (listAll[j].Equals(listObstacles[i]) &&
                         history.Count > 1 &&
                         listObstacles[i].Row != CheckPreviousPosition(history) &&
-                        !GetPosFerz(competitorKing.Offset.Row, competitorKing.Offset.Column, color))
+                        !IsQueenAlreadyBlockingKing(competitorKing.Offset))
                     {
                         MoveBlock(listObstacles[i].Row, listObstacles[i].Column);
                         history.Add(motion, (Id, new Position(listObstacles[i].Row, listObstacles[i].Column)));
@@ -151,6 +181,7 @@ namespace ClassLibrary
             }
             return false;
         }
+
 
         // проверка, что ферзь сходил на предыдущую строку
         // возвращает предыдущую строку
@@ -168,26 +199,38 @@ namespace ClassLibrary
             return rows[0];
         }
 
-        public bool ObstacleOrNearbyMove(FigureKing competitorKing, Color color, int motionColor, Dictionary<int, (int, Position)> history, int motion)
+
+        /// <summary>
+        /// Если возможно, заблокировать короля, иначе - сходить недалеко от своей позиции
+        /// </summary>
+        /// <param name="competitorKing"></param>
+        /// <param name="motionColor"></param>
+        /// <param name="history"></param>
+        /// <param name="motion"></param>
+        /// <returns></returns>
+        public bool ObstacleOrNearbyMove(FigureKing competitorKing, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
-            if ((color == Color.Black && competitorKing.Offset.Row >= RowConst) || (color == Color.White && competitorKing.Offset.Row <= RowConst))
+            if ((Color == Color.Black && competitorKing.Offset.Row >= RowConst) || 
+                (Color == Color.White && competitorKing.Offset.Row <= RowConst))
             {
-                bool check = ObstacleMove(competitorKing, color, motionColor, history, motion);
+                bool check = ObstacleMove(competitorKing, motionColor, history, motion);
                 return check;
             }
-            else if (motionColor >= 6 && ((color == Color.Black && competitorKing.Offset.Row < RowConst) || (color == Color.White && competitorKing.Offset.Row > RowConst)))
+            else if (motionColor >= 6 && 
+                ((Color == Color.Black && competitorKing.Offset.Row < RowConst) || 
+                 (Color == Color.White && competitorKing.Offset.Row > RowConst)))
             {
-                bool check = NearbyMove(competitorKing.Offset.Row, competitorKing.Offset.Column, motion, history);
+                bool check = NearbyMove(competitorKing.Offset, motion, history);
                 return check;
             }
             else
                 return false;
         }
 
-        public bool HorizontalMove(int kingRow, int kingCol, Dictionary<int, (int, Position)> history, int motion)
+        public bool HorizontalMove(Position kingPosition, Dictionary<int, (int, Position)> history, int motion)
         {
             int position;
-            List<Position> list = GetHorizontalPositions(Offset.Row, Offset.Column, kingRow, kingCol);
+            List<Position> list = GetHorizontalPositions(kingPosition);
             Random random = new Random();
 
             if (list.Count == 0)
@@ -200,16 +243,17 @@ namespace ClassLibrary
             return true;
         }
 
-        public List<Position> GetHorizontalPositions(int x, int y, int kingRow, int kingCol)
+        public List<Position> GetHorizontalPositions(Position kingPosition)
         {
             List<Position> list = new List<Position>();
-
+            int x = Offset.Row;
+            int y = Offset.Column;
             // иду вправо
             for (int i = y + 1; i < 8; i++)
             {
                 if (GameField[x, i] == 0)
                 {
-                    if (CheckQueenAttack(x, i, kingRow, kingCol))
+                    if (CheckQueenAttack(new Position(x, i), kingPosition))
                         list.Add(new Position(x, i));
                 }
                 else break;
@@ -219,7 +263,7 @@ namespace ClassLibrary
             {
                 if (GameField[x, i] == 0)
                 {
-                    if (CheckQueenAttack(x, i, kingRow, kingCol))
+                    if (CheckQueenAttack(new Position(x, i), kingPosition))
                         list.Add(new Position(x, i));
                 }
                 else break;
@@ -229,8 +273,10 @@ namespace ClassLibrary
         }
 
         // все возможные позиции королевы
-        public override List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
+        public override List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
+            int x = Offset.Row;
+            int y = Offset.Column;
             List<Position> list = new List<Position>();
             if (motionQueen < 6)
             {
@@ -239,7 +285,7 @@ namespace ClassLibrary
                 {
                     if (GameField[x, i] == 0)
                     {
-                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        if (CheckQueenAttack(new Position(x, i), competitorKing.Offset))
                             list.Add(new Position(x, i));
                     }
                     else break;
@@ -249,7 +295,7 @@ namespace ClassLibrary
                 {
                     if (GameField[x, i] == 0)
                     {
-                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        if (CheckQueenAttack(new Position(x, i), competitorKing.Offset))
                             list.Add(new Position(x, i));
                     }
                     else break;
@@ -260,7 +306,7 @@ namespace ClassLibrary
             {
                 if (GameField[i, y] == 0)
                 {
-                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(i, y), competitorKing.Offset))
                         list.Add(new Position(i, y));
                 }
                 else break;
@@ -270,7 +316,7 @@ namespace ClassLibrary
             {
                 if (GameField[i, y] == 0)
                 {
-                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(i, y), competitorKing.Offset))
                         list.Add(new Position(i, y));
                 }
                 else break;
@@ -282,7 +328,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -294,7 +340,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -306,7 +352,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -318,7 +364,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -326,8 +372,10 @@ namespace ClassLibrary
             return list;
         }
 
-        public List<Position> GetAllPosition(int x, int y, int motionQueen, FigureKing competitorKing)
+        public List<Position> GetAllPosition(int motionQueen, FigureKing competitorKing)
         {
+            int x = Offset.Row;
+            int y = Offset.Column;
             List<Position> list = new List<Position>();
             if (motionQueen < 6)
             {
@@ -336,7 +384,7 @@ namespace ClassLibrary
                 {
                     if (GameField[x, i] == 0)
                     {
-                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        if (CheckQueenAttack(new Position(x, i), competitorKing.Offset))
                             list.Add(new Position(x, i));
                     }
                     else break;
@@ -346,7 +394,7 @@ namespace ClassLibrary
                 {
                     if (GameField[x, i] == 0)
                     {
-                        if (CheckQueenAttack(x, i, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                        if (CheckQueenAttack(new Position(x, i), competitorKing.Offset))
                             list.Add(new Position(x, i));
                     }
                     else break;
@@ -357,7 +405,7 @@ namespace ClassLibrary
             {
                 if (GameField[i, y] == 0)
                 {
-                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(i, y), competitorKing.Offset))
                         list.Add(new Position(i, y));
                 }
                 else break;
@@ -367,7 +415,7 @@ namespace ClassLibrary
             {
                 if (GameField[i, y] == 0)
                 {
-                    if (CheckQueenAttack(i, y, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(i, y), competitorKing.Offset))
                         list.Add(new Position(i, y));
                 }
                 else break;
@@ -379,7 +427,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -391,7 +439,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -403,7 +451,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -415,7 +463,7 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(x + i * rowStep, y + i * columnStep) && GameField[x + i * rowStep, y + i * columnStep] == 0)
                 {
-                    if (CheckQueenAttack(x + i * rowStep, y + i * columnStep, competitorKing.Offset.Row, competitorKing.Offset.Column))
+                    if (CheckQueenAttack(new Position(x + i * rowStep, y + i * columnStep), competitorKing.Offset))
                         list.Add(new Position(x + i * rowStep, y + i * columnStep));
                 }
                 else break;
@@ -424,7 +472,14 @@ namespace ClassLibrary
         }
 
 
-        public bool NearbyMove(int kingRow, int kingCol, int motion, Dictionary<int, (int, Position)> history)
+        /// <summary>
+        /// Сходить недалеко от своей позиции
+        /// </summary>
+        /// <param name="kingPosition"></param>
+        /// <param name="motion"></param>
+        /// <param name="history"></param>
+        /// <returns></returns>
+        public bool NearbyMove(Position kingPosition, int motion, Dictionary<int, (int, Position)> history)
         {
             List<Position> list = new List<Position>() {
                             new Position(1, 0),
@@ -441,11 +496,11 @@ namespace ClassLibrary
                 int row = Offset.Row + list[position].Row;
                 int col = Offset.Column + list[position].Column;
                 if (GameField.IsEmpty(row, col)
-                    && CheckQueenAttack(row, col, kingRow, kingCol))
+                    && CheckQueenAttack(new Position(row, col), kingPosition))
                 {
                     MoveBlock(row, col);
                     history.Add(motion, (Id, new Position(row, col)));
-                    Console.WriteLine("nearby q {0}, {1}", row, col);
+                    // Console.WriteLine("nearby q {0}, {1}", row, col);
                     return true;
                 }
                 else list.RemoveAt(position);
@@ -453,12 +508,17 @@ namespace ClassLibrary
             return false;
         }
 
-        // все позиции для блокировки короля соперника
-        public List<Position> GetObstaclesPosition(FigureKing competitorKing, Color color)
+
+        /// <summary>
+        /// Получить все позиции, преграждающие путь королю соперника
+        /// </summary>
+        /// <param name="competitorKing">король соперника</param>
+        /// <returns>список позиций</returns>
+        public List<Position> GetObstaclesPosition(FigureKing competitorKing)
         {
             List<Position> list = new List<Position>();
             int k;
-            if (color == Color.Black)
+            if (Color == Color.Black)
                 k = -1;
             else k = 1;
             // вправо
@@ -500,8 +560,13 @@ namespace ClassLibrary
         }
 
         // true - не бьет, false - бьет
-        public bool CheckQueenAttack(int queenRow, int queenCol, int kingRow, int kingCol)
+        public bool CheckQueenAttack(Position positionQueen, Position positionKing)
         {
+            int queenRow = positionQueen.Row;
+            int queenCol = positionQueen.Column;
+            int kingRow = positionKing.Row;
+            int kingCol = positionKing.Column;
+
             if (queenRow == kingRow)
                 if (queenCol > kingCol)
                 {

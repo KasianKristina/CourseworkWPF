@@ -39,7 +39,7 @@ namespace ClassLibrary
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
 
                 if (fx != -100 &&
-                    king.OpportunityToMakeMove(fx, fy, Сompetitor.queen, Сompetitor.king, motionColor))
+                    king.OpportunityToMakeMove(fx, fy, Сompetitor.queen, Сompetitor.king))
                 {
                     king.MoveBlock(fx, fy);
                     history.Add(motion, (king.Id, new Position(fx, fy)));
@@ -50,53 +50,22 @@ namespace ClassLibrary
                 {
                     if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
                     {
-                        List<Position> allPositions = king.GetAllPosition(king.Offset.Row, king.Offset.Column, motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
-                        Position position = king.RandomMoveKing(allPositions);
+                        List<Position> allPositions = king.GetAllPosition(motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
+                        Position position = king.ChooseRandomPosition(allPositions);
                         king.MoveBlock(position.Row, position.Column);
                         history.Add(motion, (king.Id, new Position(position.Row, position.Column)));
                         fx = position.Row;
                         break;
-                        //List<Position> list = new List<Position>() {
-                        //    new Position(0, 1),
-                        //    new Position(0, -1),
-                        //    new Position(1, 0),
-                        //    new Position(1, 1),
-                        //    new Position(1, -1),
-                        //    new Position(-1, 0),
-                        //    new Position(-1, 1),
-                        //    new Position(-1, -1),
-                        //};
-                        //while (list.Any())
-                        //{
-                        //    Position pos = king.RandomMoveKing(list);
-                        //    if (GameField.IsInside(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column) &&
-                        //        king.OpportunityToMakeMove(king.Offset.Row + pos.Row, king.Offset.Column + pos.Column, Сompetitor.queen, Сompetitor.king, motionColor))
-                        //    {
-                        //        int Row = king.Offset.Row + pos.Row;
-                        //        int Column = king.Offset.Column + pos.Column;
-
-                        //        king.MoveBlock(Row, Column);
-                        //        history.Add(motion, (king.Id, new Position(Row, Column)));
-                        //        Console.WriteLine("king random");
-                        //        fx = pos.Row;
-                        //        break;
-                        //    }
-                        //    else
-                        //        list.Remove(pos);
-                        //}
-                        //if (list.Count == 0)
-                        //    fx = -100;
-                        //break;
                     }
                     GameField[fx, fy] = -7;
-                    //queen.ObstaclesQueenCheck();
                 }
-
                 cMap.Draw();
             }
             ClearGameField();
             return fx;
         }
+
+
         private void ClearGameField()
         {
             for (int i = 0; i < 8; i++)
@@ -124,7 +93,7 @@ namespace ClassLibrary
                     {
                         if (-100 == Wave(king, motion))
                         {
-                            check = queen.HorizontalMove(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column, history, motion);
+                            check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                             if (check == false)
                             {
                                 Console.WriteLine("пат");
@@ -160,7 +129,7 @@ namespace ClassLibrary
 
             if (motionColor >= 6)
             {
-                bool check = queen.ObstacleMove(Сompetitor.king, Color, motionColor, history, motion);
+                bool check = queen.ObstacleMove(Сompetitor.king, motionColor, history, motion);
                 if (check)
                 {
                     motionColor = 0;
@@ -171,7 +140,7 @@ namespace ClassLibrary
                 {
                     if (-100 == Wave(king, motion))
                     {
-                        check = queen.HorizontalMove(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column, history, motion);
+                        check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                         if (check == false)
                         {
                             Console.WriteLine("пат");
@@ -185,7 +154,7 @@ namespace ClassLibrary
             }
             else
             {
-                bool check = queen.ObstacleMove(Сompetitor.king, Color, motionColor, history, motion);
+                bool check = queen.ObstacleMove(Сompetitor.king, motionColor, history, motion);
                 if (check)
                 {
                     motionColor = 0;
@@ -213,7 +182,7 @@ namespace ClassLibrary
 
             if (motionColor >= 6)
             {
-                if (queen.ObstacleOrNearbyMove(Сompetitor.king, Color, motionColor, history, motion))
+                if (queen.ObstacleOrNearbyMove(Сompetitor.king, motionColor, history, motion))
                 {
                     motionColor = 0;
                     return;
@@ -226,7 +195,7 @@ namespace ClassLibrary
 
                 if (-100 == Wave(king, motion))
                 {
-                    if (!queen.HorizontalMove(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column, history, motion))
+                    if (!queen.HorizontalMove(Сompetitor.king.Offset, history, motion))
                     {
                         Console.WriteLine("пат");
                         Pat = true;
@@ -236,7 +205,7 @@ namespace ClassLibrary
             }
             else
             {
-                bool check = queen.ObstacleOrNearbyMove(Сompetitor.king, Color, motionColor, history, motion);
+                bool check = queen.ObstacleOrNearbyMove(Сompetitor.king, motionColor, history, motion);
                 if (check)
                 {
                     motionColor = 0;
@@ -275,7 +244,7 @@ namespace ClassLibrary
 
             if (motionColor >= 6)
             {
-                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, Color, motionColor, history, king, Сompetitor.queen);
+                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
                 if (check)
                 {
                     motionColor = 0;
@@ -291,7 +260,7 @@ namespace ClassLibrary
 
                 if (-100 == Wave(king, motion))
                 {
-                    check = queen.HorizontalMove(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column, history, motion);
+                    check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                     if (!check)
                     {
                         Console.WriteLine("пат");
@@ -302,7 +271,7 @@ namespace ClassLibrary
             }
             else
             {
-                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, Color, motionColor, history, king, Сompetitor.queen);
+                bool check = queen.CheckPregradaMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen);
                 if (check)
                 {
                     motionColor = 0;
@@ -318,7 +287,7 @@ namespace ClassLibrary
                             motionColor = 0;
                             return;
                         }
-                        check = queen.HorizontalMove(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column, history, motion);
+                        check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                         if (!check)
                         {
                             Console.WriteLine("пат");

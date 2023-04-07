@@ -87,7 +87,7 @@ namespace CourseworkWPF
             }
         }
 
-        private void DrawFigure(ClassLibrary.Figure figure)
+        private void DrawFigure(Figure figure)
         {
             images[figure.Offset.Row, figure.Offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
         }
@@ -100,7 +100,7 @@ namespace CourseworkWPF
 
         private void DrawAllPositions(Figure figure)
         {
-            List<Position> list = figure.GetAllPosition(figure.Offset.Row, figure.Offset.Column, field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king, field.player1.queen);
+            List<Position> list = figure.GetAllPosition(field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king, field.player1.queen);
             foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];

@@ -25,10 +25,6 @@ namespace ClassLibrary
         public Field GameField;
         public Player player1;
         public Player player2;
-        public static int countWinWhite = 0;
-        public static int countWinBlack = 0;
-        public static int countPat = 0;
-        public int countWin = 0;
         public string win = "";
 
         public DynamicField()
@@ -130,8 +126,6 @@ namespace ClassLibrary
                 copy = GameField.Copy();
                 int i = 1;
                 copy.Draw();
-                // int number = random.Next(1, 31);
-                // Console.WriteLine(number);
                 while (i <= quantity)
                 {
                     int x = random.Next(0, 8);
@@ -246,7 +240,6 @@ namespace ClassLibrary
             return (x, y);
         }
 
-        // TODO убрать дублирование
         public static Field CreateWave(int startX, int startY, int finishX, int finishY, bool wall, Field field)
         {
             bool add = true;

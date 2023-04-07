@@ -29,7 +29,7 @@ namespace ClassLibrary
                 GameField[Offset.Row, Offset.Column] = Id;
             }
         }
-        
-        public abstract List<Position> GetAllPosition(int x, int y, int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen);
+
+        public abstract List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen);
     }
 }

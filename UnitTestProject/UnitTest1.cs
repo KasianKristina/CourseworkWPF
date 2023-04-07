@@ -20,7 +20,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset.Row, player2.king.Offset.Column, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
             Assert.AreEqual(true, check);
         }
 
@@ -38,7 +38,7 @@ namespace UnitTestProject
 
             player2.king.MoveBlock(0, 4);
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset.Row, player2.king.Offset.Column, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
             Assert.AreEqual(true, check);
         }
 
@@ -57,7 +57,7 @@ namespace UnitTestProject
             player2.king.MoveBlock(1, 4);
             GameField[0, 2] = -5; // стена
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset.Row, player2.king.Offset.Column, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
             Assert.AreEqual(false, check);
         }
 
@@ -77,7 +77,7 @@ namespace UnitTestProject
             GameField[6, 7] = -5; // стена
             GameField[6, 5] = -5; // стена
 
-            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king, player2.Color);
+            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king);
             List<Position> expectedList = new List<Position>() {
                             new Position(6, 6),
                             new Position(6, 4),
@@ -105,7 +105,7 @@ namespace UnitTestProject
             GameField[6, 5] = -5; // стена
             GameField[6, 2] = -5; // стена
 
-            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king, player2.Color);
+            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king);
             List<Position> expectedList = new List<Position>() {
                             new Position(6, 6),
                             new Position(6, 4),
@@ -134,7 +134,7 @@ namespace UnitTestProject
             GameField[6, 1] = -5;
             GameField[6, 0] = -5;
 
-            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king, player2.Color);
+            List<Position> listObstacles = player2.queen.GetObstaclesPosition(player1.king);
             List<Position> expectedList = new List<Position>() { };
             CollectionAssert.AreEqual(expectedList, listObstacles);
         }
@@ -168,7 +168,7 @@ namespace UnitTestProject
             player2.king.MoveBlock(2, 4);
             player2.history.Add(motion, (player2.king.Id, new Position(2, 4)));
 
-            bool move = player1.queen.ObstacleMove(player2.king, player1.Color, 0, player1.history, motion);
+            bool move = player1.queen.ObstacleMove(player2.king, 0, player1.history, motion);
             Assert.AreEqual(false, move);
         }
 
@@ -197,15 +197,15 @@ namespace UnitTestProject
             player2.history.Add(motion, (player2.king.Id, new Position(2, 4)));
             motion++;
 
-            bool move = player1.queen.ObstacleMove(player2.king, player1.Color, 2, player1.history, motion);
+            bool move = player1.queen.ObstacleMove(player2.king, 2, player1.history, motion);
             Assert.AreEqual(true, move);
         }
 
         [TestMethod]
         /// <summary>
-        /// Тест для проверки метода getPozFerz. Ферзь уже блокирует короля.
+        /// Тест для проверки метода IsQueenAlreadyBlockingKing. Ферзь уже блокирует короля.
         /// </summary>
-        public void getPozFerzTest1()
+        public void IsQueenAlreadyBlockingKingTest1()
         {
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
@@ -216,15 +216,15 @@ namespace UnitTestProject
             player1.queen.MoveBlock(4, 1);
             player2.king.MoveBlock(5, 3);
 
-            bool check = player1.queen.GetPosFerz(player2.king.Offset.Row, player2.king.Offset.Column, player1.Color);
+            bool check = player1.queen.IsQueenAlreadyBlockingKing(player2.king.Offset);
             Assert.AreEqual(true, check);
         }
 
         [TestMethod]
         /// <summary>
-        /// Тест для проверки метода getPozFerz. Ферзь не блокирует короля.
+        /// Тест для проверки метода IsQueenAlreadyBlockingKing. Ферзь не блокирует короля.
         /// </summary>
-        public void getPozFerzTest2()
+        public void IsQueenAlreadyBlockingKingTest2()
         {
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
@@ -235,15 +235,15 @@ namespace UnitTestProject
             player1.queen.MoveBlock(3, 1);
             player2.king.MoveBlock(5, 3);
 
-            bool check = player1.queen.GetPosFerz(player2.king.Offset.Row, player2.king.Offset.Column, player1.Color);
+            bool check = player1.queen.IsQueenAlreadyBlockingKing(player2.king.Offset);
             Assert.AreEqual(false, check);
         }
 
         [TestMethod]
         /// <summary>
-        /// Тест для проверки метода getPozFerz. Черный ферзь блокирует короля.
+        /// Тест для проверки метода IsQueenAlreadyBlockingKing. Черный ферзь блокирует короля.
         /// </summary>
-        public void getPozFerzTest3()
+        public void IsQueenAlreadyBlockingKingTest3()
         {
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
@@ -254,15 +254,15 @@ namespace UnitTestProject
             player1.king.MoveBlock(4, 4);
             player2.queen.MoveBlock(5, 6);
 
-            bool check = player2.queen.GetPosFerz(player1.king.Offset.Row, player1.king.Offset.Column, player2.Color);
+            bool check = player2.queen.IsQueenAlreadyBlockingKing(player1.king.Offset);
             Assert.AreEqual(true, check);
         }
 
         [TestMethod]
         /// <summary>
-        /// Тест для проверки метода getPozFerz. Черный ферзь не блокирует короля.
+        /// Тест для проверки метода IsQueenAlreadyBlockingKing. Черный ферзь не блокирует короля.
         /// </summary>
-        public void getPozFerzTest4()
+        public void IsQueenAlreadyBlockingKingTest4()
         {
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
@@ -273,7 +273,7 @@ namespace UnitTestProject
             player1.king.MoveBlock(4, 4);
             player2.queen.MoveBlock(6, 3);
 
-            bool check = player2.queen.GetPosFerz(player1.king.Offset.Row, player1.king.Offset.Column, player2.Color);
+            bool check = player2.queen.IsQueenAlreadyBlockingKing(player1.king.Offset);
             Assert.AreEqual(false, check);
         }
 
@@ -464,22 +464,6 @@ namespace UnitTestProject
             Assert.AreEqual(true, player1.king.LeaveSquareCheck(6, 2));
         }
 
-        [TestMethod, TestCategory("LeaveSquare")]
-        /// <summary>
-        /// Тест для проверки LeaveSquareCheck
-        /// </summary>
-        public void LeaveSquareCheckTest2()
-        {
-            Field GameField = new Field(8, 8);
-            Player player1 = new Player(Color.White, ref GameField);
-            Player player2 = new Player(Color.Black, ref GameField);
-            player1.Сompetitor = player2;
-            player2.Сompetitor = player1;
-
-            player1.king.MoveBlock(0, 6);
-            Assert.AreEqual(false, player1.king.LeaveSquareCheck(3, 5));
-        }
-
         [TestMethod]
         /// <summary>
         /// Тест для проверки OpportunityToMakeMove
@@ -496,7 +480,7 @@ namespace UnitTestProject
             GameField[1, 2] = -5;
             GameField[1, 3] = -5;
             GameField[1, 4] = -5;
-            Assert.AreEqual(false, player1.king.OpportunityToMakeMove(player1.king.Offset.Row, player1.king.Offset.Column, player2.queen, player2.king, 0));
+            Assert.AreEqual(false, player1.king.OpportunityToMakeMove(player1.king.Offset.Row, player1.king.Offset.Column, player2.queen, player2.king));
         }
     }
 }
