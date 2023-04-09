@@ -59,7 +59,11 @@ namespace ClassLibrary
                             fx = position.Row;
                             break;
                         }
-                        else return -100;
+                        else
+                        {
+                            fx = -100;
+                            break;
+                        }
                     }
                     GameField[fx, fy] = -7;
                 }
@@ -68,7 +72,11 @@ namespace ClassLibrary
             ClearGameField();
             return fx;
         }
-
+        private void CheckForNumberOfMoves(int motion)
+        {
+            if (motion >= 1000)
+                Pat = true;
+        }
         private void ClearGameField()
         {
             for (int i = 0; i < 8; i++)
@@ -84,6 +92,7 @@ namespace ClassLibrary
         }
         public void StrategySimple(int motion)
         {
+            CheckForNumberOfMoves(motion);
             Console.WriteLine("Ходит {0} ", Color);
             if (motion % 6 == 0)
             {
@@ -127,6 +136,7 @@ namespace ClassLibrary
 
         public void Strategy2(int motion)
         {
+            CheckForNumberOfMoves(motion);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -180,6 +190,7 @@ namespace ClassLibrary
 
         public void StrategySecurity(int motion)
         {
+            CheckForNumberOfMoves(motion);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -250,6 +261,7 @@ namespace ClassLibrary
 
         public void Strategy4(int motion)
         {
+            CheckForNumberOfMoves(motion);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 

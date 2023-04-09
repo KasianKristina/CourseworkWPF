@@ -26,6 +26,10 @@ namespace ClassLibrary
         public Player player1;
         public Player player2;
         public string win = "";
+        public int countWinWhite = 0;
+        public int countWinBlack = 0;
+        public int countPat = 0;
+        public int countWin = 0;
 
         public DynamicField()
         {
@@ -82,18 +86,28 @@ namespace ClassLibrary
             if ((GameField[0, 4] == -3) || (GameField[7, 4] == -1))
             {
                 if (GameField[0, 4] == -3)
+                {
                     win = "Черные фигуры";
-                else win = "Белые фигуры";
+                    Count(-3);
+                }
+
+                else
+                {
+                    win = "Белые фигуры";
+                    Count(-1);
+                }
                 return true;
             }
             if (player1.king.LeaveSquareFlag == false && motion_with_player > 16)
             {
                 win = "Черные фигуры";
+                Count(-3);
                 return true;
             }
             if (player2.king.LeaveSquareFlag == false && motion_with_player > 16)
             {
                 win = "Белые фигуры";
+                Count(-1);
                 return true;
             }
             if (player1.Pat || player2.Pat)
@@ -142,6 +156,36 @@ namespace ClassLibrary
             }
             GameField.Clone(copy);
         }
+
+        public void Count(int flag)
+        {
+            if (flag == -1)
+                countWinWhite++;
+            if (flag == -3)
+                countWinBlack++;
+            countPat = 100 - countWinWhite - countWinBlack;
+        }
+
+
+        public static void Result()
+        {
+            int checkwinwhite = 0;
+            int checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.Strategy4, field.player2.Strategy4);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            Console.WriteLine("Количество побед белых {0}", checkwinwhite);
+            Console.WriteLine("Количество побед черных {0}", checkwinblack);
+            Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
+            Console.ReadKey();
+        }
+
+
 
         // поиск двух непересекающихся путей
         // первый найденный путь отмечаем -5 (стены)

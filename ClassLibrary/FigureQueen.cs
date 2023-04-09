@@ -84,7 +84,6 @@ namespace ClassLibrary
                     {
                         MoveBlock(listPregradi[i].Row, listPregradi[i].Column);
                         history.Add(motion, (Id, new Position(listPregradi[i].Row, listPregradi[i].Column)));
-                        // Console.WriteLine("pregrada q {0}, {1}", listPregradi[i].Row, listPregradi[i].Column);
                         return true;
                     }
                 }
@@ -113,7 +112,6 @@ namespace ClassLibrary
 
             MoveBlock(list[position].Row, list[position].Column);
             history.Add(motion, (Id, new Position(list[position].Row, list[position].Column)));
-            // Console.WriteLine("random q {0}, {1}", list[position].Row, list[position].Column);
             return true;
         }
 
@@ -173,7 +171,6 @@ namespace ClassLibrary
                     {
                         MoveBlock(listObstacles[i].Row, listObstacles[i].Column);
                         history.Add(motion, (Id, new Position(listObstacles[i].Row, listObstacles[i].Column)));
-                        Console.WriteLine("obstacle q {0}, {1}", listObstacles[i].Row, listObstacles[i].Column);
                         return true;
                     }
                 }
@@ -182,7 +179,7 @@ namespace ClassLibrary
         }
 
 
-        // проверка, что ферзь сходил на предыдущую строку
+        // проверка, что ферзь сходил на строку предыдущего хода
         // возвращает предыдущую строку
         public int CheckPreviousPosition(Dictionary<int, (int, Position)> history)
         {
@@ -238,7 +235,6 @@ namespace ClassLibrary
 
             MoveBlock(list[position].Row, list[position].Column);
             history.Add(motion, (Id, new Position(list[position].Row, list[position].Column)));
-            Console.WriteLine("horizontal q {0}, {1}", list[position].Row, list[position].Column);
             return true;
         }
 
@@ -508,7 +504,6 @@ namespace ClassLibrary
                 {
                     MoveBlock(row, col);
                     history.Add(motion, (Id, new Position(row, col)));
-                    // Console.WriteLine("nearby q {0}, {1}", row, col);
                     return true;
                 }
                 else list.RemoveAt(position);
