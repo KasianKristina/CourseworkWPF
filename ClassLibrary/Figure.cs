@@ -16,6 +16,7 @@ namespace ClassLibrary
         public Position EndingPosition { get; set; }
         public int RowConst { get; set; }
         public bool LeaveSquareFlag { get; set; }
+        public bool LoserFlag { get; set; }
 
 
         // метод премещения, который перемещает блок на заданную позицию

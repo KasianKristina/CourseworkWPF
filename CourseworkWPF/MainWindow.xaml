@@ -37,5 +37,6 @@
         <Label Content="Количество преград" HorizontalAlignment="Left" Margin="502,130,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
         <Button x:Name="btnNewGame" Content="Новая игра" Background="#284268" HorizontalAlignment="Left" Margin="673,217,0,0" VerticalAlignment="Top" Click="btnNewGame_Click" Width="136" Height="37" FontFamily="Courier New" FontSize="16" Foreground="White"/>
         <Label x:Name="labelWinner" Content="Победитель: " HorizontalAlignment="Left" Margin="502,330,0,0" VerticalAlignment="Top" Width="307" FontFamily="Courier New" FontSize="14"/>
+        <Label x:Name="count" Content="Label" HorizontalAlignment="Left" Margin="502,287,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

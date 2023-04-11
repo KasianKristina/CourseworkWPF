@@ -33,6 +33,7 @@ namespace ClassLibrary
                 RowConst = 5;
             }
             Color = color;
+            LoserFlag = false;
         }
 
         /// <summary>
@@ -66,7 +67,41 @@ namespace ClassLibrary
             return false;
         }
 
-        
+        //public void CheckLoseGame(FigureQueen competitorQueen, int motionQueen, FigureKing competitorKing)
+        //{
+        //    List<Position> list = GetAllPosition(motionQueen, competitorKing);
+        //    List<Position> listCompetitor = competitorQueen.GetAllPosition() 
+        //}
+
+        public bool CheckLoseGame(int competitorQueenId)
+        {
+            List<Position> list = new List<Position>() {
+                            new Position(1, 0),
+                            new Position(1, 1),
+                            new Position(1, -1),
+                            new Position(-1, 0),
+                            new Position(-1, 1),
+                            new Position(-1, -1),
+                            new Position(0, 1),
+                            new Position(0, -1),
+                        };
+            foreach (Position pos in list)
+            {
+                if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column))
+                {
+                    if (GameField[Offset.Row + pos.Row, Offset.Column + pos.Column] == competitorQueenId)
+                        LoserFlag = false;
+                    else
+                    {
+                        LoserFlag = true;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
         public bool CheckUnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
             if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !IsQueenAlreadyBlockingKing(king.Offset))
@@ -282,7 +317,7 @@ namespace ClassLibrary
             int x = Offset.Row;
             int y = Offset.Column;
             List<Position> list = new List<Position>();
-            if (motionQueen < 6)
+            if (motionQueen < 5)
             {
                 // иду вправо
                 for (int i = y + 1; i < 8; i++)
@@ -381,7 +416,7 @@ namespace ClassLibrary
             int x = Offset.Row;
             int y = Offset.Column;
             List<Position> list = new List<Position>();
-            if (motionQueen < 6)
+            if (motionQueen < 5)
             {
                 // иду вправо
                 for (int i = y + 1; i < 8; i++)

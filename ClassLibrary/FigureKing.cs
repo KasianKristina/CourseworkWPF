@@ -194,7 +194,7 @@ namespace ClassLibrary
                             new Position(-1, -1),
                         };
             
-            if (motionQueen >= 6 &&
+            if (motionQueen >= 5 &&
                 queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
                 return list;
 

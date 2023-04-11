@@ -43,7 +43,6 @@ namespace ClassLibrary
                 {
                     king.MoveBlock(fx, fy);
                     history.Add(motion, (king.Id, new Position(fx, fy)));
-                    Console.WriteLine("king morm");
                     break;
                 }
                 else
@@ -108,8 +107,8 @@ namespace ClassLibrary
                             check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                             if (check == false)
                             {
-                                Console.WriteLine("пат");
-                                Pat = true;
+                                if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                                    Pat = true;
                             }
                         }
                     }
@@ -126,8 +125,8 @@ namespace ClassLibrary
                         bool check = queen.RandomMove(Сompetitor.king, motion, history, 0);
                         if (check == false)
                         {
-                            Console.WriteLine("пат");
-                            Pat = true;
+                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                                Pat = true;
                         }
                     }
                 }
@@ -156,9 +155,11 @@ namespace ClassLibrary
                         check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                         if (check == false)
                         {
-                            Console.WriteLine("пат");
-                            Pat = true;
-                            return;
+                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                            {
+                                Pat = true;
+                                return;
+                            }
                         }
                     }
                 }
@@ -178,9 +179,11 @@ namespace ClassLibrary
                     check = queen.RandomMove(Сompetitor.king, motion, history, motion);
                     if (check == false)
                     {
-                        Console.WriteLine("пат");
-                        Pat = true;
-                        return;
+                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        {
+                            Pat = true;
+                            return;
+                        }
                     }
                     else
                         motionColor = 0;
@@ -191,6 +194,7 @@ namespace ClassLibrary
         public void StrategySecurity(int motion)
         {
             CheckForNumberOfMoves(motion);
+            queen.CheckLoseGame(Сompetitor.queen.Id);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -211,9 +215,11 @@ namespace ClassLibrary
                 {
                     if (!queen.HorizontalMove(Сompetitor.king.Offset, history, motion))
                     {
-                        Console.WriteLine("пат");
-                        Pat = true;
-                        return;
+                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        {
+                            Pat = true;
+                            return;
+                        }
                     }
                 }
             }
@@ -230,9 +236,11 @@ namespace ClassLibrary
                     check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                     if (!check)
                     {
-                        Console.WriteLine("пат");
-                        Pat = true;
-                        return;
+                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        {
+                            Pat = true;
+                            return;
+                        }
                     }
                     else
                         motionColor = 0;
@@ -257,11 +265,16 @@ namespace ClassLibrary
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
             CheckPat(motion);
+            if (motionColor >= 5 && queen.GetAllPosition(motionColor, Сompetitor.king).Count == 0)
+            {
+                queen.CheckLoseGame(Сompetitor.queen.Id);
+            }
         }
 
         public void Strategy4(int motion)
         {
             CheckForNumberOfMoves(motion);
+            queen.CheckLoseGame(Сompetitor.queen.Id);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -286,9 +299,11 @@ namespace ClassLibrary
                     check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                     if (!check)
                     {
-                        Console.WriteLine("пат");
-                        Pat = true;
-                        return;
+                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        {
+                            Pat = true;
+                            return;
+                        }
                     }
                 }
             }
@@ -313,9 +328,11 @@ namespace ClassLibrary
                         check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
                         if (!check)
                         {
-                            Console.WriteLine("пат");
-                            Pat = true;
-                            return;
+                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                            {
+                                Pat = true;
+                                return;
+                            }
                         }
                     }
                 }

@@ -42,7 +42,7 @@ namespace CourseworkWPF
         private DynamicField.StrategyDelegate str_player2 = null;
         private DynamicField.PlayerDelegate str_player1_user = null;
         private Figure figure = null;
-        private bool gameOver = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -89,11 +89,21 @@ namespace CourseworkWPF
 
         private void DrawFigure(Figure figure)
         {
+            if (field.IsGameOver())
+            {
+                labelWinner.Content = "Победитель: " + field.win;
+                GameCanvas.IsEnabled = false;
+            }
             images[figure.Offset.Row, figure.Offset.Column].Source = detailsImages[Math.Abs(figure.Id)];
         }
 
         private void DrawFigure(Position position, int id)
         {
+            if (field.IsGameOver())
+            {
+                labelWinner.Content = "Победитель: " + field.win;
+                GameCanvas.IsEnabled = false;
+            }
             if (position != null)
                 images[position.Row, position.Column].Source = detailsImages[Math.Abs(id)];
         }
@@ -118,7 +128,6 @@ namespace CourseworkWPF
 
         private void GameCanvas_Loaded_1(object sender, RoutedEventArgs e)
         {
-            // field.Walls();
             Draw(field);
         }
 
@@ -245,12 +254,11 @@ namespace CourseworkWPF
             (int, Position) value;
             for (int i = motion; i > 0; i--)
             {
-
                 player.history.TryGetValue(i, out value);
                 if (value.Item1 == id_seek)
                     return value;
             }
-            if (id_seek == -1 || id_seek == -1)
+            if (id_seek == -1)
                 return (id_seek, player.king.StartOffset);
             else return (id_seek, player.queen.StartOffset);
         }
@@ -265,14 +273,15 @@ namespace CourseworkWPF
             field = new DynamicField();
             Draw(field);
             btnPlay.IsEnabled = true;
+            GameCanvas.IsEnabled = false;
             slider1.Maximum = field.player1.history.Keys.Count;
             Click = 0;
             str_player1 = null;
             str_player2 = null;
             str_player1_user = null;
             figure = null;
-            gameOver = false;
             labelWinner.Content = "Победитель: ";
+            count.Content = "0";
         }
 
         private void opot()
@@ -302,11 +311,11 @@ namespace CourseworkWPF
         private void focusOn(object sender, MouseButtonEventArgs e)
         {
             Click++;
-            if (WhoPlay && Click == 1 && !gameOver)
+            if (WhoPlay && Click == 1)
             {
                 opot();
             }
-            if (WhoPlay && Click == 2 && !gameOver)
+            if (WhoPlay && Click == 2)
             {
                 int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
                 int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
@@ -316,14 +325,12 @@ namespace CourseworkWPF
                     int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
                     if (check == 0)
                     {
-                        gameOver = true;
                         labelWinner.Content = "Победитель: " + field.win;
                         GameCanvas.IsEnabled = false;
                     }
 
                     slider1.Maximum = field.player1.history.Keys.Count;
                     slider1.Value = slider1.Maximum;
-
                     Click = 0;
                 }
                 else
@@ -331,6 +338,7 @@ namespace CourseworkWPF
                     Click = 1;
                     opot();
                 };
+                count.Content = field.player1.motionColor;
             }
         }
     }

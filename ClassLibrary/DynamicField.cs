@@ -70,7 +70,7 @@ namespace ClassLibrary
             if (IsGameOver())
                 return 0;
             Console.WriteLine("Ход, {0} ", motion_with_player);
-            strategy_first(motion_with_player, figure, pos);
+             strategy_first(motion_with_player, figure, pos);
             if (IsGameOver())
                 return 0;
             Draw();
@@ -98,13 +98,13 @@ namespace ClassLibrary
                 }
                 return true;
             }
-            if (player1.king.LeaveSquareFlag == false && motion_with_player > 16)
+            if (player1.queen.LoserFlag || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Черные фигуры";
                 Count(-3);
                 return true;
             }
-            if (player2.king.LeaveSquareFlag == false && motion_with_player > 16)
+            if (player1.queen.LoserFlag || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Белые фигуры";
                 Count(-1);
