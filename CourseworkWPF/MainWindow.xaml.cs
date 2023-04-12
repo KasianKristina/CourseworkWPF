@@ -41,6 +41,7 @@ namespace CourseworkWPF
         private DynamicField.StrategyDelegate str_player1 = null;
         private DynamicField.StrategyDelegate str_player2 = null;
         private DynamicField.PlayerDelegate str_player1_user = null;
+        private DynamicField.PlayerDelegate str_player2_user = null;
         private Figure figure = null;
 
         public MainWindow()
@@ -169,6 +170,9 @@ namespace CourseworkWPF
                 case 3:
                     str_player2 = field.player2.Strategy4;
                     break;
+                case 4:
+                    str_player2_user = field.player2.StrategyUser;
+                    break;
                 default:
                     break;
             }
@@ -178,7 +182,6 @@ namespace CourseworkWPF
                 field.check_delegate(str_player1, str_player2);
                 slider1.Maximum = field.player1.history.Keys.Count;
                 btnPlay.IsEnabled = false;
-
             }
             else
             {
@@ -210,11 +213,8 @@ namespace CourseworkWPF
             {
                 text1.Text = "" + value.ToString("0");
             }
-
-            this.Title = "Value: " + value.ToString("0") + "/" + slider.Maximum;
             if (value >= 0)
                 DrawMotion((int)value);
-
         }
 
         private void DrawMotion(int motion)
@@ -265,7 +265,7 @@ namespace CourseworkWPF
 
         private void comboboxick2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnPlay.IsEnabled = true;
+            //btnPlay.IsEnabled = true;
         }
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
@@ -281,7 +281,7 @@ namespace CourseworkWPF
             str_player1_user = null;
             figure = null;
             labelWinner.Content = "Победитель: ";
-            count.Content = "0";
+            count.Content = "Ферзь на горизонтали: 0";
         }
 
         private void opot()
@@ -298,6 +298,16 @@ namespace CourseworkWPF
                     break;
                 case -2:
                     figure = field.player1.queen;
+                    Draw(field);
+                    DrawAllPositions(figure);
+                    break;
+                case -3:
+                    figure = field.player2.king;
+                    Draw(field);
+                    DrawAllPositions(figure);
+                    break;
+                case -4:
+                    figure = field.player2.queen;
                     Draw(field);
                     DrawAllPositions(figure);
                     break;
@@ -338,7 +348,7 @@ namespace CourseworkWPF
                     Click = 1;
                     opot();
                 };
-                count.Content = field.player1.motionColor;
+                count.Content = "Ферзь на горизонтали: " + field.player1.motionColor;
             }
         }
     }
