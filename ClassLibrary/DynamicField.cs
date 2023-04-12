@@ -81,6 +81,40 @@ namespace ClassLibrary
             return 1;
         }
 
+        public int check_delegate(StrategyDelegate strategy_first, PlayerDelegate strategy_second, Position pos, Figure figure)
+        {
+            if (IsGameOver())
+                return 0;
+            Console.WriteLine("Ход, {0} ", motion_with_player);
+            strategy_first(motion_with_player);
+            
+            if (IsGameOver())
+                return 0;
+            Draw();
+            strategy_second(motion_with_player, figure, pos);
+            motion_with_player++;
+            Draw();
+            Console.WriteLine("Конец игры");
+            return 1;
+        }
+
+        public int check_delegate(PlayerDelegate strategy_first, PlayerDelegate strategy_second, Position pos, Figure figure)
+        {
+            if (IsGameOver())
+                return 0;
+            Console.WriteLine("Ход, {0} ", motion_with_player);
+            strategy_first(motion_with_player, figure, pos);
+
+            if (IsGameOver())
+                return 0;
+            Draw();
+            strategy_second(motion_with_player, figure, pos);
+            motion_with_player++;
+            Draw();
+            Console.WriteLine("Конец игры");
+            return 1;
+        }
+
         public bool IsGameOver()
         {
             if ((GameField[0, 4] == -3) || (GameField[7, 4] == -1))

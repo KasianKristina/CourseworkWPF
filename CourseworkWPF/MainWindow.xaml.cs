@@ -36,13 +36,14 @@ namespace CourseworkWPF
 
         private Image[,] images;
         private DynamicField field = new DynamicField();
-        private bool WhoPlay = false;
+        private int WhoPlay = 0;
         private int Click = 0;
         private DynamicField.StrategyDelegate str_player1 = null;
         private DynamicField.StrategyDelegate str_player2 = null;
         private DynamicField.PlayerDelegate str_player1_user = null;
         private DynamicField.PlayerDelegate str_player2_user = null;
         private Figure figure = null;
+        private Player player;
 
         public MainWindow()
         {
@@ -183,10 +184,15 @@ namespace CourseworkWPF
                 slider1.Maximum = field.player1.history.Keys.Count;
                 btnPlay.IsEnabled = false;
             }
-            else
+            if (str_player1 == null)
             {
-                WhoPlay = true;
+                WhoPlay = 1;
             }
+            else if (str_player2 == null)
+            {
+                WhoPlay = 2;
+            }
+
             DrawField(field.GameField);
             DrawFigure(field.player1.king.StartOffset, field.player1.king.Id);
             DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
@@ -265,7 +271,7 @@ namespace CourseworkWPF
 
         private void comboboxick2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //btnPlay.IsEnabled = true;
+            btnPlay.IsEnabled = true;
         }
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
@@ -289,43 +295,55 @@ namespace CourseworkWPF
             int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
             int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
             int id = field.GameField[Row, Coloumn];
-            switch (id)
+
+            if (WhoPlay == 1)
             {
-                case -1:
-                    figure = field.player1.king;
-                    Draw(field);
-                    DrawAllPositions(figure);
-                    break;
-                case -2:
-                    figure = field.player1.queen;
-                    Draw(field);
-                    DrawAllPositions(figure);
-                    break;
-                case -3:
-                    figure = field.player2.king;
-                    Draw(field);
-                    DrawAllPositions(figure);
-                    break;
-                case -4:
-                    figure = field.player2.queen;
-                    Draw(field);
-                    DrawAllPositions(figure);
-                    break;
-                default:
-                    Draw(field);
-                    Click = 0;
-                    break;
+                switch (id)
+                {
+                    case -1:
+                        figure = field.player1.king;
+                        Draw(field);
+                        DrawAllPositions(figure);
+                        break;
+                    case -2:
+                        figure = field.player1.queen;
+                        Draw(field);
+                        DrawAllPositions(figure);
+                        break;
+                    default:
+                        Draw(field);
+                        Click = 0;
+                        break;
+                }
             }
+            else 
+                switch(id)
+                {
+                    case -3:
+                        figure = field.player2.king;
+                        Draw(field);
+                        DrawAllPositions(figure);
+                        break;
+                    case -4:
+                        figure = field.player2.queen;
+                        Draw(field);
+                        DrawAllPositions(figure);
+                        break;
+                    default:
+                        Draw(field);
+                        Click = 0;
+                        break;
+                }
         }
 
         private void focusOn(object sender, MouseButtonEventArgs e)
         {
             Click++;
-            if (WhoPlay && Click == 1)
+            if (WhoPlay != 0 && Click == 1)
             {
                 opot();
             }
-            if (WhoPlay && Click == 2)
+            if (WhoPlay != 0 && Click == 2)
             {
                 int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
                 int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
