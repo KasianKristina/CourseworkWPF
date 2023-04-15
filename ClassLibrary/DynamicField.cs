@@ -70,7 +70,7 @@ namespace ClassLibrary
             if (IsGameOver())
                 return 0;
             Console.WriteLine("Ход, {0} ", motion_with_player);
-             strategy_first(motion_with_player, figure, pos);
+            strategy_first(motion_with_player, figure, pos);
             if (IsGameOver())
                 return 0;
             Draw();
@@ -87,7 +87,7 @@ namespace ClassLibrary
                 return 0;
             Console.WriteLine("Ход, {0} ", motion_with_player);
             strategy_first(motion_with_player);
-            
+
             if (IsGameOver())
                 return 0;
             Draw();
@@ -132,13 +132,13 @@ namespace ClassLibrary
                 }
                 return true;
             }
-            if (player1.queen.LoserFlag || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player1.Lose || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Черные фигуры";
                 Count(-3);
                 return true;
             }
-            if (player1.queen.LoserFlag || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player2.Lose || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Белые фигуры";
                 Count(-1);
@@ -188,6 +188,48 @@ namespace ClassLibrary
                 if (TwoWave(copy))
                     break;
             }
+            GameField.Clone(copy);
+        }
+
+        public void WallsTest()
+        {
+            Field copy;
+
+            copy = GameField.Copy();
+
+            copy[0, 2] = -5;
+            copy[0, 5] = -5;
+            copy[0, 7] = -5;
+            copy[1, 1] = -5;
+            copy[1, 2] = -5;
+            copy[1, 5] = -5;
+            copy[1, 6] = -5;
+            copy[2, 0] = -5;
+            copy[2, 3] = -5;
+            copy[2, 4] = -5;
+            copy[2, 6] = -5;
+            copy[2, 7] = -5;
+            copy[3, 2] = -5;
+            copy[3, 5] = -5;
+            copy[3, 7] = -5;
+            copy[4, 0] = -5;
+            copy[4, 2] = -5;
+            copy[4, 3] = -5;
+            copy[4, 5] = -5;
+            copy[4, 7] = -5;
+            copy[5, 0] = -5;
+            copy[5, 2] = -5;
+            copy[5, 6] = -5;
+            copy[6, 0] = -5;
+            copy[6, 7] = -5;
+            copy[7, 0] = -5;
+            copy[7, 1] = -5;
+            copy[7, 5] = -5;
+            copy[7, 6] = -5;
+            copy[7, 7] = -5;
+
+            copy.Draw();
+           
             GameField.Clone(copy);
         }
 

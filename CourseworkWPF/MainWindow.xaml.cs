@@ -178,6 +178,7 @@ namespace CourseworkWPF
                     break;
             }
             field.Walls((int)sliderCountWalls.Value);
+            // field.WallsTest();
             if (str_player1 != null && str_player2 != null)
             {
                 field.check_delegate(str_player1, str_player2);

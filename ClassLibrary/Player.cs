@@ -14,6 +14,7 @@ namespace ClassLibrary
         public Field GameField;
         public Player Сompetitor { get; set; }
         public bool Pat = false;
+        public bool Lose = false;
         public int motionColor = 0;
         public Position posEnd;
         public Dictionary<int, (int, Position)> history;
@@ -91,7 +92,7 @@ namespace ClassLibrary
         }
         public void StrategySimple(int motion)
         {
-            CheckForNumberOfMoves(motion);
+            // CheckForNumberOfMoves(motion);
             Console.WriteLine("Ходит {0} ", Color);
             if (motion % 6 == 0)
             {
@@ -102,14 +103,23 @@ namespace ClassLibrary
                         Console.WriteLine("Finish. Win is {0} ", Color);
                     else
                     {
-                        if (-100 == Wave(king, motion))
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
-                            check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
-                            if (check == false)
+                            if (-100 == Wave(king, motion))
                             {
-                                if (!queen.CheckLoseGame(Сompetitor.queen.Id))
-                                    Pat = true;
+                                //check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
+                                //if (check == false)
+                                //{
+                                //    if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                                Pat = true;
+                                return;
+                                //}
                             }
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
                         }
                     }
                 }
@@ -125,8 +135,16 @@ namespace ClassLibrary
                         bool check = queen.RandomMove(Сompetitor.king, motion, history, 0);
                         if (check == false)
                         {
-                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                            if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                            {
                                 Pat = true;
+                                return;
+                            }    
+                            else
+                            {
+                                Lose = true;
+                                return;
+                            }
                         }
                     }
                 }
@@ -135,7 +153,7 @@ namespace ClassLibrary
 
         public void Strategy2(int motion)
         {
-            CheckForNumberOfMoves(motion);
+            // CheckForNumberOfMoves(motion);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -150,18 +168,26 @@ namespace ClassLibrary
                 check = queen.RandomMove(Сompetitor.king, motion, history, motion);
                 if (check == false)
                 {
-                    if (-100 == Wave(king, motion))
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
-                        if (check == false)
+                        if (-100 == Wave(king, motion))
                         {
-                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
-                            {
-                                Pat = true;
-                                return;
-                            }
+                            //check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
+                            //if (check == false)
+                            //{
+                            //    if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                            //    {
+                            Pat = true;
+                            return;
+                            //    }
+                            //}
                         }
                     }
+                    else
+                    {
+                        Lose = true;
+                        return;
+                    };
                 }
                 else
                     motionColor = 0;
@@ -179,9 +205,14 @@ namespace ClassLibrary
                     check = queen.RandomMove(Сompetitor.king, motion, history, motion);
                     if (check == false)
                     {
-                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
                             Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
                             return;
                         }
                     }
@@ -193,8 +224,7 @@ namespace ClassLibrary
 
         public void StrategySecurity(int motion)
         {
-            CheckForNumberOfMoves(motion);
-            queen.CheckLoseGame(Сompetitor.queen.Id);
+            // CheckForNumberOfMoves(motion);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -210,17 +240,24 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-
-                if (-100 == Wave(king, motion))
+                if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                 {
-                    if (!queen.HorizontalMove(Сompetitor.king.Offset, history, motion))
+                    if (-100 == Wave(king, motion))
                     {
-                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
-                        {
-                            Pat = true;
-                            return;
-                        }
+                        //if (!queen.HorizontalMove(Сompetitor.king.Offset, history, motion))
+                        //{
+                        //    if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        //    {
+                        Pat = true;
+                        return;
+                        //    }
+                        //}
                     }
+                }
+                else
+                {
+                    Lose = true;
+                    return;
                 }
             }
             else
@@ -236,9 +273,14 @@ namespace ClassLibrary
                     check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                     if (!check)
                     {
-                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
                             Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
                             return;
                         }
                     }
@@ -265,16 +307,20 @@ namespace ClassLibrary
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
             CheckPat(motion);
-            if (motionColor >= 5 && queen.GetAllPosition(motionColor, Сompetitor.king).Count == 0)
+            if (motionColor > 5)
             {
-                queen.CheckLoseGame(Сompetitor.queen.Id);
+                if (!queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset)) 
+                {
+                    Lose = true;
+                    return;
+                };
             }
         }
 
         public void Strategy4(int motion)
         {
             CheckForNumberOfMoves(motion);
-            queen.CheckLoseGame(Сompetitor.queen.Id);
+            queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset);
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
@@ -293,18 +339,25 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-
-                if (-100 == Wave(king, motion))
+                if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                 {
-                    check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
-                    if (!check)
+                    if (-100 == Wave(king, motion))
                     {
-                        if (!queen.CheckLoseGame(Сompetitor.queen.Id))
-                        {
-                            Pat = true;
-                            return;
-                        }
+                        //check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
+                        //if (!check)
+                        //{
+                        //    if (!queen.CheckLoseGame(Сompetitor.queen.Id))
+                        //    {
+                        Pat = true;
+                        return;
+                        //    }
+                        //}
                     }
+                }
+                else
+                {
+                    Lose = true;
+                    return;
                 }
             }
             else
@@ -325,15 +378,20 @@ namespace ClassLibrary
                             motionColor = 0;
                             return;
                         }
-                        check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
-                        if (!check)
+                        //check = queen.HorizontalMove(Сompetitor.king.Offset, history, motion);
+                        //if (!check)
+                        //{
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
-                            if (!queen.CheckLoseGame(Сompetitor.queen.Id))
-                            {
-                                Pat = true;
-                                return;
-                            }
+                            Pat = true;
+                            return;
                         }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                        //}
                     }
                 }
             }

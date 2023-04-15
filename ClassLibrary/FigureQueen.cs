@@ -73,7 +73,8 @@ namespace ClassLibrary
         //    List<Position> listCompetitor = competitorQueen.GetAllPosition() 
         //}
 
-        public bool CheckLoseGame(int competitorQueenId)
+            // true - ферзь не проиграл, ему преграждают путь, false - ферзь проиграл
+        public bool CheckLoseGame(int competitorQueenId, Position king)
         {
             List<Position> list = new List<Position>() {
                             new Position(1, 0),
@@ -90,14 +91,13 @@ namespace ClassLibrary
                 if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column))
                 {
                     if (GameField[Offset.Row + pos.Row, Offset.Column + pos.Column] == competitorQueenId)
-                        LoserFlag = false;
-                    else
                     {
-                        LoserFlag = true;
                         return true;
                     }
                 }
             }
+            if (!CheckQueenAttack(Offset, king))
+                return true;
             return false;
         }
 

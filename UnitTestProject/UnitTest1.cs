@@ -482,5 +482,31 @@ namespace UnitTestProject
             GameField[1, 4] = -5;
             Assert.AreEqual(false, player1.king.OpportunityToMakeMove(player1.king.Offset.Row, player1.king.Offset.Column, player2.queen, player2.king));
         }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckLoseGame
+        /// </summary>
+        public void CheckLoseGameTest()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(7, 3);
+            player1.queen.MoveBlock(7, 4);
+
+            GameField[7, 5] = -5;
+            GameField[6, 5] = -5;
+            GameField[6, 4] = -5;
+            GameField[6, 3] = -5;
+            Assert.AreEqual(false, player1.queen.CheckLoseGame(player2.queen.Id));
+
+            player2.queen.MoveBlock(7, 3);
+            player1.queen.MoveBlock(7, 4);
+            Assert.AreEqual(true, player1.queen.CheckLoseGame(player2.queen.Id));
+        }
     }
 }
