@@ -68,7 +68,7 @@ namespace ClassLibrary
                 ChangeFlag(x, y);
             }
         }
-        
+
 
         /// <summary>
         /// Метод для проверки, не является ли переданная позиция невозможной для хода по причине выхода короля из квдрата
@@ -160,7 +160,7 @@ namespace ClassLibrary
         /// <returns>true - король может сделать ход, false - не может</returns>
         public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
         {
-            if (GameField.IsEmpty(x, y) && 
+            if (GameField.IsEmpty(x, y) &&
                competitorQueen.CheckQueenAttack(competitorQueen.Offset, new Position(x, y)) &&
                !AdjacentPosition(x, y, competitorKing.Offset.Row, competitorKing.Offset.Column) &&
                LeaveSquareCheck(x, y))
@@ -193,10 +193,10 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
-            
+            // здесь блок
             if (motionQueen >= 5 &&
                 queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
-                return list;
+                return list; // это все время возращается
 
             foreach (Position pos in listCheck)
             {

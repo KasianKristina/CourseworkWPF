@@ -80,36 +80,31 @@ namespace ClassLibrary
             Console.WriteLine("Конец игры");
             return 1;
         }
-
-        public int check_delegate(StrategyDelegate strategy_first, PlayerDelegate strategy_second, Position pos, Figure figure)
+        // ии против игрока
+        public int check_delegate(StrategyDelegate strategy_first)
         {
-            if (IsGameOver())
-                return 0;
+
             Console.WriteLine("Ход, {0} ", motion_with_player);
             strategy_first(motion_with_player);
-
+            Draw();
             if (IsGameOver())
                 return 0;
-            Draw();
-            strategy_second(motion_with_player, figure, pos);
-            motion_with_player++;
-            Draw();
-            Console.WriteLine("Конец игры");
             return 1;
         }
-
-        public int check_delegate(PlayerDelegate strategy_first, PlayerDelegate strategy_second, Position pos, Figure figure)
+        // cюда отправляет второй игрок
+        // Делегат хода игрока
+        public int check_delegate(PlayerDelegate strategy_first, Position pos, Figure figure, bool flaghoda)
         {
             if (IsGameOver())
                 return 0;
             Console.WriteLine("Ход, {0} ", motion_with_player);
             strategy_first(motion_with_player, figure, pos);
+            if (flaghoda)
+                motion_with_player++;
 
             if (IsGameOver())
                 return 0;
-            Draw();
-            strategy_second(motion_with_player, figure, pos);
-            motion_with_player++;
+            
             Draw();
             Console.WriteLine("Конец игры");
             return 1;
@@ -132,13 +127,13 @@ namespace ClassLibrary
                 }
                 return true;
             }
-            if (player1.Lose || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player1.queen.LoserFlag || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Черные фигуры";
                 Count(-3);
                 return true;
             }
-            if (player2.Lose || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player1.queen.LoserFlag || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Белые фигуры";
                 Count(-1);
@@ -188,48 +183,6 @@ namespace ClassLibrary
                 if (TwoWave(copy))
                     break;
             }
-            GameField.Clone(copy);
-        }
-
-        public void WallsTest()
-        {
-            Field copy;
-
-            copy = GameField.Copy();
-
-            copy[0, 2] = -5;
-            copy[0, 5] = -5;
-            copy[0, 7] = -5;
-            copy[1, 1] = -5;
-            copy[1, 2] = -5;
-            copy[1, 5] = -5;
-            copy[1, 6] = -5;
-            copy[2, 0] = -5;
-            copy[2, 3] = -5;
-            copy[2, 4] = -5;
-            copy[2, 6] = -5;
-            copy[2, 7] = -5;
-            copy[3, 2] = -5;
-            copy[3, 5] = -5;
-            copy[3, 7] = -5;
-            copy[4, 0] = -5;
-            copy[4, 2] = -5;
-            copy[4, 3] = -5;
-            copy[4, 5] = -5;
-            copy[4, 7] = -5;
-            copy[5, 0] = -5;
-            copy[5, 2] = -5;
-            copy[5, 6] = -5;
-            copy[6, 0] = -5;
-            copy[6, 7] = -5;
-            copy[7, 0] = -5;
-            copy[7, 1] = -5;
-            copy[7, 5] = -5;
-            copy[7, 6] = -5;
-            copy[7, 7] = -5;
-
-            copy.Draw();
-           
             GameField.Clone(copy);
         }
 

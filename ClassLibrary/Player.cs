@@ -302,7 +302,7 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
-            if (figure.Id == -2 && pos.Row != figure.Offset.Row)
+            if ((figure.Id == -4 || figure.Id == -2) && pos.Row != figure.Offset.Row)
                 motionColor = 0;
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));

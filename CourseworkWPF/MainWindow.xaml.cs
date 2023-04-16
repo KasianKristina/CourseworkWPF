@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClassLibrary;
+using static ClassLibrary.DynamicField;
 using Figure = ClassLibrary.Figure;
 
 namespace CourseworkWPF
@@ -23,7 +24,7 @@ namespace CourseworkWPF
     public partial class MainWindow : Window
     {
         private ImageSource[] detailsImages = new ImageSource[]
-       {
+        {
             new BitmapImage(new Uri("Assets/squareEmptyNew.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/kingWhite.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/queenWhite.png", UriKind.Relative)),
@@ -31,7 +32,7 @@ namespace CourseworkWPF
             new BitmapImage(new Uri("Assets/queenBlack.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/squareWall.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/squarePosition.png", UriKind.Relative))
-       };
+        };
 
 
         private Image[,] images;
@@ -110,9 +111,9 @@ namespace CourseworkWPF
                 images[position.Row, position.Column].Source = detailsImages[Math.Abs(id)];
         }
 
-        private void DrawAllPositions(Figure figure)
+        private void DrawAllPositions(Figure figure, Player player_s, Player enemy)
         {
-            List<Position> list = figure.GetAllPosition(field.player2.history.Count + 1, field.player1.motionColor, field.player2.queen, field.player2.king, field.player1.queen);
+            List<Position> list = figure.GetAllPosition(field.player2.history.Count + 1, player_s.motionColor, enemy.queen, enemy.king, player_s.queen);
             foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];
@@ -178,27 +179,35 @@ namespace CourseworkWPF
                     break;
             }
             field.Walls((int)sliderCountWalls.Value);
-            // field.WallsTest();
             if (str_player1 != null && str_player2 != null)
             {
                 field.check_delegate(str_player1, str_player2);
                 slider1.Maximum = field.player1.history.Keys.Count;
                 btnPlay.IsEnabled = false;
-            }
-            if (str_player1 == null)
-            {
-                WhoPlay = 1;
-            }
-            else if (str_player2 == null)
-            {
-                WhoPlay = 2;
-            }
 
+            }
             DrawField(field.GameField);
             DrawFigure(field.player1.king.StartOffset, field.player1.king.Id);
             DrawFigure(field.player1.queen.StartOffset, field.player1.queen.Id);
             DrawFigure(field.player2.king.StartOffset, field.player2.king.Id);
             DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
+            if (str_player1_user != null)
+            {
+                WhoPlay = 1;
+            }
+            else if (str_player2_user != null)
+            {
+
+                WhoPlay = 2;
+                int check = field.check_delegate(str_player1);
+                check_check(check);
+                DrawField(field.GameField);
+                DrawFigure(field.player1.king);
+                DrawFigure(field.player1.queen);
+                DrawFigure(field.player2.king.StartOffset, field.player2.king.Id);
+                DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
+            }
+
 
             if (field.IsGameOver())
             {
@@ -236,11 +245,15 @@ namespace CourseworkWPF
                 DrawFigure(value1.Item2, value1.Item1);
                 DrawFigure(value_second.Item2, value_second.Item1);
 
-                (int, Position) value2;
-                field.player2.history.TryGetValue(motion, out value2);
+                (int, Position) value2 = Seek_second(motion, -3, field.player2);
+
                 DrawFigure(value2.Item2, value2.Item1);
+
+
                 (int, Position) value_second2 = Seek_second(motion, value2.Item1, field.player2);
+
                 DrawFigure(value_second2.Item2, value_second2.Item1);
+
             }
             else
             {
@@ -265,7 +278,7 @@ namespace CourseworkWPF
                 if (value.Item1 == id_seek)
                     return value;
             }
-            if (id_seek == -1)
+            if (id_seek == -1 || id_seek == -3)
                 return (id_seek, player.king.StartOffset);
             else return (id_seek, player.queen.StartOffset);
         }
@@ -286,9 +299,11 @@ namespace CourseworkWPF
             str_player1 = null;
             str_player2 = null;
             str_player1_user = null;
+            str_player2_user = null;
             figure = null;
             labelWinner.Content = "Победитель: ";
             count.Content = "Ферзь на горизонтали: 0";
+            historyLabel.Content = "";
         }
 
         private void opot()
@@ -304,12 +319,12 @@ namespace CourseworkWPF
                     case -1:
                         figure = field.player1.king;
                         Draw(field);
-                        DrawAllPositions(figure);
+                        DrawAllPositions(figure, field.player1, field.player2);
                         break;
                     case -2:
                         figure = field.player1.queen;
                         Draw(field);
-                        DrawAllPositions(figure);
+                        DrawAllPositions(figure, field.player1, field.player2);
                         break;
                     default:
                         Draw(field);
@@ -317,18 +332,18 @@ namespace CourseworkWPF
                         break;
                 }
             }
-            else 
-                switch(id)
+            else
+                switch (id)
                 {
                     case -3:
                         figure = field.player2.king;
                         Draw(field);
-                        DrawAllPositions(figure);
+                        DrawAllPositions(figure, field.player2, field.player1);
                         break;
                     case -4:
                         figure = field.player2.queen;
                         Draw(field);
-                        DrawAllPositions(figure);
+                        DrawAllPositions(figure, field.player2, field.player1);
                         break;
                     default:
                         Draw(field);
@@ -336,9 +351,20 @@ namespace CourseworkWPF
                         break;
                 }
         }
+        private void check_check(int check)
+        {
+            if (check == 0)
+            {
+                labelWinner.Content = "Победитель: " + field.win;
+                GameCanvas.IsEnabled = false;
+            }
+        }
+
 
         private void focusOn(object sender, MouseButtonEventArgs e)
         {
+            int playerMotionColor = 0;
+            string hod = "";
             Click++;
             if (WhoPlay != 0 && Click == 1)
             {
@@ -351,12 +377,49 @@ namespace CourseworkWPF
                 Position pos = new Position(Row, Coloumn);
                 if (images[pos.Row, pos.Column].Source == detailsImages[6])
                 {
-                    int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
-                    if (check == 0)
+                    if (str_player1_user != null && str_player2 != null)
                     {
-                        labelWinner.Content = "Победитель: " + field.win;
-                        GameCanvas.IsEnabled = false;
+                        int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
+                        check_check(check);
+                        playerMotionColor = field.player1.motionColor;
+                        hod = "Белый ферзь: ";
                     }
+                    if (str_player2_user != null && str_player1 != null)
+                    {
+
+                        int check = field.check_delegate(str_player2_user, pos, figure, true);
+                        check_check(check);
+                        check = field.check_delegate(str_player1);
+                        check_check(check);
+                        Draw(field);
+                        playerMotionColor = field.player2.motionColor;
+                        hod = "Черный ферзь: ";
+                        // historyLabel.Content = field.player2.history;
+                    }
+                    if ((str_player1_user != null && str_player2_user != null))
+                    {
+                        bool flaghoda = true;
+                        PlayerDelegate player = str_player2_user;
+                        if (WhoPlay == 1)
+                        {
+                            flaghoda = false;
+                            WhoPlay = 2;
+                            player = str_player1_user;
+                            playerMotionColor = field.player2.motionColor;
+                            hod = "Черный ферзь: ";
+                        }
+                        else
+                        {
+                            WhoPlay = 1;
+                            playerMotionColor = field.player1.motionColor;
+                            hod = "Белый ферзь: ";
+                        }
+                        int check = field.check_delegate(player, pos, figure, flaghoda);
+                        check_check(check);
+                        Draw(field);
+                        // historyLabel.Content = field.player2.history.Values.ToString();
+                    }
+
 
                     slider1.Maximum = field.player1.history.Keys.Count;
                     slider1.Value = slider1.Maximum;
@@ -367,7 +430,7 @@ namespace CourseworkWPF
                     Click = 1;
                     opot();
                 };
-                count.Content = "Ферзь на горизонтали: " + field.player1.motionColor;
+                count.Content = hod + playerMotionColor;
             }
         }
     }

@@ -6,38 +6,45 @@
         xmlns:local="clr-namespace:CourseworkWPF"
         mc:Ignorable="d"
         Foreground="White"
-        Title="MainWindow" Height="550" Width="880">
+        Title="MainWindow" Height="550" Width="1080">
     <Grid Margin="0,0,0.2,0">
-        <Border BorderBrush="#284268" CornerRadius="1" BorderThickness="10" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="419" Margin="29,68,0,0">
+        <Border BorderBrush="#284268" CornerRadius="1" BorderThickness="10" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="419" Margin="404,68,0,0">
             <Canvas x:Name="GameCanvas" IsEnabled="False" MouseLeftButtonDown="focusOn" Background="#C6D7FF" HorizontalAlignment="Left" Height="400" Margin="-0.6,0.4,0,-0.4" VerticalAlignment="Top" Width="400" Loaded="GameCanvas_Loaded_1" Cursor="Hand">
             </Canvas>
         </Border>
 
-        <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#6994FE" HorizontalAlignment="Left" Margin="502,217,0,0" VerticalAlignment="Top" Width="136" Click="Button_Click_1" Height="37" FontFamily="Courier New" FontSize="16" Cursor="Hand"/>
-        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="10" Margin="502,414,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="307"/>
-        <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="502,374,0,0" VerticalAlignment="Top" Height="31" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
-        <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="621,379,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="24" Height="26" RenderTransformOrigin="0.767,1.6"/>
-        <ComboBox x:Name="comboboxick1" SelectedIndex="0" HorizontalAlignment="Left" Margin="502,68,0,0" VerticalAlignment="Top" Width="136">
+        <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#6994FE" HorizontalAlignment="Left" Margin="29,265,0,0" VerticalAlignment="Top" Width="136" Click="Button_Click_1" Height="37" FontFamily="Courier New" FontSize="16" Cursor="Hand"/>
+        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="10" Margin="29,425,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="307"/>
+        <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="29,389,0,0" VerticalAlignment="Top" Height="31" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
+        <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="152,393,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="24" Height="26" RenderTransformOrigin="0.767,1.6"/>
+        <ComboBox x:Name="comboboxick1" SelectedIndex="0" HorizontalAlignment="Left" Margin="29,99,0,0" VerticalAlignment="Top" Width="136">
             <ComboBoxItem Content="Стратегия 1"/>
             <ComboBoxItem Content="Стратегия 2"/>
             <ComboBoxItem Content="Стратегия 3"/>
             <ComboBoxItem Content="Стратегия 4"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
-        <ComboBox x:Name="comboboxick2" SelectedIndex="0" HorizontalAlignment="Left" Margin="673,68,0,0" VerticalAlignment="Top" Width="136" SelectionChanged="comboboxick2_SelectionChanged" RenderTransformOrigin="0.45,-1.875">
+        <ComboBox x:Name="comboboxick2" SelectedIndex="0" HorizontalAlignment="Left" Margin="204,99,0,0" VerticalAlignment="Top" Width="136" SelectionChanged="comboboxick2_SelectionChanged" RenderTransformOrigin="0.45,-1.875">
             <ComboBoxItem Content="Стратегия 1"/>
             <ComboBoxItem Content="Стратегия 2"/>
             <ComboBoxItem Content="Стратегия 3"/>
             <ComboBoxItem Content="Стратегия 4"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
-        <Label Content="Игрок 1" HorizontalAlignment="Left" Margin="502,26,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" Width="162" RenderTransformOrigin="0.484,-0.492"/>
-        <Label Content="Игрок 2" HorizontalAlignment="Left" Margin="673,26,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.5,0.5"/>
-        <Slider x:Name="sliderCountWalls" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="502,161,0,0" Minimum="1" Maximum="30" VerticalAlignment="Top" Width="255"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="767,161,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderCountWalls, Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.524,-1.304"/>
-        <Label Content="Количество преград" HorizontalAlignment="Left" Margin="502,130,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
-        <Button x:Name="btnNewGame" Content="Новая игра" Background="#284268" HorizontalAlignment="Left" Margin="673,217,0,0" VerticalAlignment="Top" Click="btnNewGame_Click" Width="136" Height="37" FontFamily="Courier New" FontSize="16" Foreground="White"/>
-        <Label x:Name="labelWinner" Content="Победитель: " HorizontalAlignment="Left" Margin="502,330,0,0" VerticalAlignment="Top" Width="307" FontFamily="Courier New" FontSize="14"/>
-        <Label x:Name="count" Content="Ферзь на горизонтали: " HorizontalAlignment="Left" Margin="29,25,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
+        <Label Content="Игрок 1" HorizontalAlignment="Left" Margin="29,68,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" Width="162" RenderTransformOrigin="0.484,-0.492"/>
+        <Label Content="Игрок 2" HorizontalAlignment="Left" Margin="204,68,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.5,0.5"/>
+        <Slider x:Name="sliderCountWalls" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="29,189,0,0" Minimum="1" Maximum="30" VerticalAlignment="Top" Width="255"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="298,189,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderCountWalls, Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.524,-1.304"/>
+        <Label Content="Количество преград" HorizontalAlignment="Left" Margin="29,158,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
+        <Button x:Name="btnNewGame" Content="Новая игра" Background="#284268" HorizontalAlignment="Left" Margin="204,265,0,0" VerticalAlignment="Top" Click="btnNewGame_Click" Width="136" Height="37" FontFamily="Courier New" FontSize="16" Foreground="White"/>
+        <Label x:Name="labelWinner" Content="Победитель: " HorizontalAlignment="Left" Margin="33,358,0,0" VerticalAlignment="Top" Width="307" FontFamily="Courier New" FontSize="14"/>
+        <Label x:Name="count" Content="Ферзь на горизонтали: " HorizontalAlignment="Left" Margin="404,22,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
+        <Label Content="История игры" HorizontalAlignment="Left" Margin="846,22,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
+        <ScrollViewer HorizontalAlignment="Left" Height="419" Margin="856,68,0,0" VerticalAlignment="Top" Width="139">
+            <StackPanel Height="347" Width="100" Orientation = "Vertical">
+                <Label x:Name="historyLabel" Content="Label"/>
+            </StackPanel>
+        </ScrollViewer>
+        <Label x:Name="countBlack" Content="Label" HorizontalAlignment="Left" Margin="641,22,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
