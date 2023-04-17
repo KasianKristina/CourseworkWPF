@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -383,6 +384,7 @@ namespace CourseworkWPF
                         check_check(check);
                         playerMotionColor = field.player1.motionColor;
                         hod = "Белый ферзь: ";
+                        field.player1.CheckPat(playerMotionColor);
                     }
                     if (str_player2_user != null && str_player1 != null)
                     {
@@ -393,8 +395,7 @@ namespace CourseworkWPF
                         check_check(check);
                         Draw(field);
                         playerMotionColor = field.player2.motionColor;
-                        hod = "Черный ферзь: ";
-                        // historyLabel.Content = field.player2.history;
+                        hod = "Черный ферзь: ";  
                     }
                     if ((str_player1_user != null && str_player2_user != null))
                     {
@@ -417,10 +418,7 @@ namespace CourseworkWPF
                         int check = field.check_delegate(player, pos, figure, flaghoda);
                         check_check(check);
                         Draw(field);
-                        // historyLabel.Content = field.player2.history.Values.ToString();
                     }
-
-
                     slider1.Maximum = field.player1.history.Keys.Count;
                     slider1.Value = slider1.Maximum;
                     Click = 0;

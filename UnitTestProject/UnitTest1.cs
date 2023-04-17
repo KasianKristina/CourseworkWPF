@@ -495,18 +495,95 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(7, 3);
-            player1.queen.MoveBlock(7, 4);
+            player1.king.MoveBlock(7, 5);
+            player2.queen.MoveBlock(0, 4);
 
-            GameField[7, 5] = -5;
-            GameField[6, 5] = -5;
-            GameField[6, 4] = -5;
-            GameField[6, 3] = -5;
-            Assert.AreEqual(false, player1.queen.CheckLoseGame(player2.queen.Id));
+            GameField[0, 2] = -5;
+            GameField[1, 2] = -5;
+            GameField[1, 3] = -5;
+            GameField[1, 4] = -5;
+            Assert.AreEqual(true, player1.queen.CheckLoseGame(player2.queen.Id, player2.king.Offset));
+        }
 
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckLoseGame
+        /// </summary>
+        public void CheckLoseGameTest2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[0, 2] = -5;
+            GameField[1, 2] = -5;
+            GameField[1, 3] = -5;
+            GameField[1, 4] = -5;
+
+            player1.king.MoveBlock(7, 5);
             player2.queen.MoveBlock(7, 3);
-            player1.queen.MoveBlock(7, 4);
-            Assert.AreEqual(true, player1.queen.CheckLoseGame(player2.queen.Id));
+            Assert.AreEqual(false, player1.queen.CheckLoseGame(player2.queen.Id, player2.king.Offset));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckLoseGame
+        /// </summary>
+        public void CheckLoseGameTest3()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(7, 7);
+            player2.king.MoveBlock(2, 6);
+
+            GameField[0, 2] = -5;
+            GameField[1, 2] = -5;
+            GameField[1, 3] = -5;
+            GameField[1, 4] = -5;
+
+            Assert.AreEqual(true, player1.queen.CheckLoseGame(player2.queen.Id, player2.king.Offset));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckStartingBarriers
+        /// </summary>
+        public void CheckStartingBarriers()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[1, 4] = -5;
+            GameField[1, 3] = -5;
+            GameField[1, 2] = -5;
+
+            Assert.AreEqual(true, player1.queen.CheckStartingBarriers(player1.history, 0, player2.king.Offset));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckStartingBarriers
+        /// </summary>
+        public void CheckStartingBarriers2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[1, 4] = -5;
+
+            Assert.AreEqual(false, player1.queen.CheckStartingBarriers(player1.history, 0, player2.king.Offset));
         }
     }
 }

@@ -127,13 +127,13 @@ namespace ClassLibrary
                 }
                 return true;
             }
-            if (player1.queen.LoserFlag || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player1.Lose || (player1.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Черные фигуры";
                 Count(-3);
                 return true;
             }
-            if (player1.queen.LoserFlag || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player1.Lose || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Белые фигуры";
                 Count(-1);

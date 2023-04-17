@@ -22,6 +22,9 @@ namespace ClassLibrary
                 EndingPosition = new Position(7, 3);
                 // строка с которой ферзь начинает охранять короля
                 RowConst = 2;
+                BarrierPositionLeft = new Position(1, 2);
+                BarrierPositionMiddle = new Position(1, 3);
+                BarrierPositionRight = new Position(1, 4);
             }
             else
             {
@@ -31,6 +34,9 @@ namespace ClassLibrary
                 Offset = new Position(7, 3);
                 EndingPosition = new Position(0, 3);
                 RowConst = 5;
+                BarrierPositionLeft = new Position(6, 2);
+                BarrierPositionMiddle = new Position(6, 3);
+                BarrierPositionRight = new Position(6, 4);
             }
             Color = color;
             LoserFlag = false;
@@ -67,13 +73,8 @@ namespace ClassLibrary
             return false;
         }
 
-        //public void CheckLoseGame(FigureQueen competitorQueen, int motionQueen, FigureKing competitorKing)
-        //{
-        //    List<Position> list = GetAllPosition(motionQueen, competitorKing);
-        //    List<Position> listCompetitor = competitorQueen.GetAllPosition() 
-        //}
 
-            // true - ферзь не проиграл, ему преграждают путь, false - ферзь проиграл
+        // true - ферзь не проиграл, ему преграждают путь, false - ферзь проиграл
         public bool CheckLoseGame(int competitorQueenId, Position king)
         {
             List<Position> list = new List<Position>() {
@@ -90,14 +91,50 @@ namespace ClassLibrary
             {
                 if (GameField.IsInside(Offset.Row + pos.Row, Offset.Column + pos.Column))
                 {
-                    if (GameField[Offset.Row + pos.Row, Offset.Column + pos.Column] == competitorQueenId)
+                    if (GameField[Offset.Row + pos.Row, Offset.Column + pos.Column] == competitorQueenId ||
+                        (GameField[Offset.Row + pos.Row, Offset.Column + pos.Column] != -5 && !CheckQueenAttack(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column), king)))
                     {
                         return true;
                     }
                 }
             }
-            if (!CheckQueenAttack(Offset, king))
-                return true;
+            return false;
+        }
+
+        public bool CheckStartingBarriers(Dictionary<int, (int, Position)> history, int motion, Position competitorKing)
+        {
+            List<Position> horizontalPositions;
+            int row;
+            int barrierRow;
+            if (Color == Color.White)
+            {
+                row = 0;
+                barrierRow = 1;
+            }
+            else
+            {
+                row = 7;
+                barrierRow = 6;
+            }
+
+            if (GameField[StartOffset.Row, StartOffset.Column] == Id &&
+                GameField[BarrierPositionRight.Row, BarrierPositionRight.Column] == -5 &&
+                GameField[BarrierPositionMiddle.Row, BarrierPositionMiddle.Column] == -5 &&
+                GameField[BarrierPositionLeft.Row, BarrierPositionLeft.Column] == -5)
+            {
+                horizontalPositions = GetHorizontalPositions(competitorKing);
+            }
+            else return false;
+
+            foreach (Position pos in horizontalPositions)
+            {
+                if (GameField[barrierRow, pos.Column] == 0)
+                {
+                    MoveBlock(row, pos.Column);
+                    history.Add(motion, (Id, new Position(row, pos.Column)));
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -241,14 +278,14 @@ namespace ClassLibrary
         /// <returns></returns>
         public bool ObstacleOrNearbyMove(FigureKing competitorKing, int motionColor, Dictionary<int, (int, Position)> history, int motion)
         {
-            if ((Color == Color.Black && competitorKing.Offset.Row >= RowConst) || 
+            if ((Color == Color.Black && competitorKing.Offset.Row >= RowConst) ||
                 (Color == Color.White && competitorKing.Offset.Row <= RowConst))
             {
                 bool check = ObstacleMove(competitorKing, motionColor, history, motion);
                 return check;
             }
-            else if (motionColor >= 6 && 
-                ((Color == Color.Black && competitorKing.Offset.Row < RowConst) || 
+            else if (motionColor >= 6 &&
+                ((Color == Color.Black && competitorKing.Offset.Row < RowConst) ||
                  (Color == Color.White && competitorKing.Offset.Row > RowConst)))
             {
                 bool check = NearbyMove(competitorKing.Offset, motion, history);

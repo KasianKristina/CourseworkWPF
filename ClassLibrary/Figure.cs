@@ -18,6 +18,11 @@ namespace ClassLibrary
         public bool LeaveSquareFlag { get; set; }
         public bool LoserFlag { get; set; }
 
+        public Position BarrierPositionLeft { get; set; }
+        public Position BarrierPositionRight { get; set; }
+        public Position BarrierPositionMiddle { get; set; }
+
+
 
         // метод премещения, который перемещает блок на заданную позицию
         public virtual void MoveBlock(int rows, int columns)
