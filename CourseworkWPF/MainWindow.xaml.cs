@@ -198,9 +198,9 @@ namespace CourseworkWPF
             }
             else if (str_player2_user != null)
             {
-
                 WhoPlay = 2;
                 int check = field.check_delegate(str_player1);
+                slider1.Value = 1;
                 check_check(check);
                 DrawField(field.GameField);
                 DrawFigure(field.player1.king);
@@ -209,6 +209,8 @@ namespace CourseworkWPF
                 DrawFigure(field.player2.queen.StartOffset, field.player2.queen.Id);
             }
 
+            comboboxick1.IsEnabled = false;
+            comboboxick2.IsEnabled = false;
 
             if (field.IsGameOver())
             {
@@ -295,7 +297,8 @@ namespace CourseworkWPF
             Draw(field);
             btnPlay.IsEnabled = true;
             GameCanvas.IsEnabled = false;
-            slider1.Maximum = field.player1.history.Keys.Count;
+            slider1.Maximum = 3;
+            slider1.Value = 0;
             Click = 0;
             str_player1 = null;
             str_player2 = null;
@@ -304,7 +307,8 @@ namespace CourseworkWPF
             figure = null;
             labelWinner.Content = "Победитель: ";
             count.Content = "Ферзь на горизонтали: 0";
-            historyLabel.Content = "";
+            comboboxick1.IsEnabled = true;
+            comboboxick2.IsEnabled = true;
         }
 
         private void opot()
@@ -376,6 +380,16 @@ namespace CourseworkWPF
                 int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
                 int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
                 Position pos = new Position(Row, Coloumn);
+                if (WhoPlay == 1)
+                {
+                    hod = "Белый ферзь на горизонтали: ";
+                    playerMotionColor = field.player1.motionColor;
+                }
+                else
+                {
+                    hod = "Черный ферзь на горизонтали: ";
+                    playerMotionColor = field.player2.motionColor;
+                }
                 if (images[pos.Row, pos.Column].Source == detailsImages[6])
                 {
                     if (str_player1_user != null && str_player2 != null)
@@ -383,7 +397,7 @@ namespace CourseworkWPF
                         int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
                         check_check(check);
                         playerMotionColor = field.player1.motionColor;
-                        hod = "Белый ферзь: ";
+                        // hod = "Белый ферзь на горизонтали: ";
                         field.player1.CheckPat(playerMotionColor);
                     }
                     if (str_player2_user != null && str_player1 != null)
@@ -395,7 +409,7 @@ namespace CourseworkWPF
                         check_check(check);
                         Draw(field);
                         playerMotionColor = field.player2.motionColor;
-                        hod = "Черный ферзь: ";  
+                        // hod = "Черный ферзь на горизонтали: ";  
                     }
                     if ((str_player1_user != null && str_player2_user != null))
                     {
@@ -407,13 +421,13 @@ namespace CourseworkWPF
                             WhoPlay = 2;
                             player = str_player1_user;
                             playerMotionColor = field.player2.motionColor;
-                            hod = "Черный ферзь: ";
+                            // hod = "Черный ферзь на горизонтали: ";
                         }
                         else
                         {
                             WhoPlay = 1;
                             playerMotionColor = field.player1.motionColor;
-                            hod = "Белый ферзь: ";
+                            // hod = "Белый ферзь на горизонтали: ";
                         }
                         int check = field.check_delegate(player, pos, figure, flaghoda);
                         check_check(check);
