@@ -23,8 +23,7 @@ namespace ClassLibrary
         public Position BarrierPositionMiddle { get; set; }
 
 
-
-        // метод премещения, который перемещает блок на заданную позицию
+        // метод премещения блока на заданную позицию
         public virtual void MoveBlock(int rows, int columns)
         {
             if (GameField[rows, columns] >= 0)

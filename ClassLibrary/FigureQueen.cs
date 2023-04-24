@@ -43,11 +43,11 @@ namespace ClassLibrary
         }
 
         /// <summary>
-        /// Проверка: ферзь соперника уже преграждает королю
+        /// Проверка: ферзь соперника преграждает путь королю
         /// </summary>
         /// <param name="king"></param>
         /// <param name="competitorQueen"></param>
-        /// <returns></returns>
+        /// <returns>true - преграждает, false - нет</returns>
         public bool CheckPregradaCompetitorQueen(FigureKing king, FigureQueen competitorQueen)
         {
             int k;
@@ -55,21 +55,35 @@ namespace ClassLibrary
                 k = -1;
             else
                 k = 1;
-            // вправо
-            for (int i = king.Offset.Column + 1; i < 8; i++)
-            {
-                  if (GameField.IsInside(king.Offset.Row - k, i))
-                    if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
-                        return true;
-            }
-            // влево
-            for (int i = king.Offset.Column - 1; i >= 0; i--)
-            {
-                if (GameField.IsInside(king.Offset.Row - k, i))
-                    if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
-                        return true;
-            }
 
+            if (king.Offset.Column < competitorQueen.Offset.Column)
+            {
+                // вправо
+                for (int i = king.Offset.Column + 1; i < 8; i++)
+                {
+                    if (GameField.IsInside(king.Offset.Row - k, i))
+                    {
+                        if (GameField[king.Offset.Row - k, i] == Id)
+                            return false;
+                        if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
+                            return true;
+                    }
+                }
+            }
+            if (king.Offset.Column > competitorQueen.Offset.Column)
+            {
+                // влево
+                for (int i = king.Offset.Column - 1; i >= 0; i--)
+                {
+                    if (GameField.IsInside(king.Offset.Row - k, i))
+                    {
+                        if (GameField[king.Offset.Row - k, i] == Id)
+                            return false;
+                        if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
+                            return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -137,7 +151,6 @@ namespace ClassLibrary
             }
             return false;
         }
-
 
         public bool CheckUnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {

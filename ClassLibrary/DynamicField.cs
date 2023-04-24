@@ -133,7 +133,7 @@ namespace ClassLibrary
                 Count(-3);
                 return true;
             }
-            if (player1.Lose || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
+            if (player2.Lose || (player2.king.LeaveSquareFlag == false && motion_with_player > 16))
             {
                 win = "Белые фигуры";
                 Count(-1);
@@ -203,8 +203,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.Strategy4, field.player2.Strategy4);
+                field.Walls(20);
+                field.check_delegate(field.player1.Strategy4, field.player2.Strategy2);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }

@@ -585,5 +585,131 @@ namespace UnitTestProject
 
             Assert.AreEqual(false, player1.queen.CheckStartingBarriers(player1.history, 0, player2.king.Offset));
         }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(4, 6);
+            player2.king.MoveBlock(5, 3);
+            player2.queen.MoveBlock(4, 5);
+
+            Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest1()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(4, 6);
+            player2.king.MoveBlock(5, 3);
+            player2.queen.MoveBlock(4, 4);
+
+            Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest2()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(4, 6);
+            player2.king.MoveBlock(5, 3);
+            player2.queen.MoveBlock(4, 1);
+
+            Assert.AreEqual(true, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest3()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(3, 1);
+            player2.king.MoveBlock(4, 4);
+            player2.queen.MoveBlock(6, 6);
+
+            Assert.AreEqual(true, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest4()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(2, 1);
+            player2.king.MoveBlock(4, 4);
+            player2.queen.MoveBlock(6, 6);
+
+            Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest5()
+        {
+
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(3, 0);
+            player2.king.MoveBlock(4, 4);
+            player2.queen.MoveBlock(3, 2);
+
+            Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
     }
 }
