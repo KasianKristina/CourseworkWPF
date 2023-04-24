@@ -58,7 +58,7 @@ namespace ClassLibrary
             // вправо
             for (int i = king.Offset.Column + 1; i < 8; i++)
             {
-                if (GameField.IsInside(king.Offset.Row - k, i))
+                  if (GameField.IsInside(king.Offset.Row - k, i))
                     if (GameField[king.Offset.Row - k, i] == competitorQueen.Id)
                         return true;
             }
@@ -141,17 +141,16 @@ namespace ClassLibrary
 
         public bool CheckUnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
-            if (!CheckPregradaCompetitorQueen(king, competitorQueen) && !IsQueenAlreadyBlockingKing(king.Offset))
+            if (!CheckPregradaCompetitorQueen(king, competitorQueen))
                 return false;
 
-            List<Position> listPregradi = GetUnlockingPositions(king.Offset.Row, competitorQueen.Offset);
+            List<Position> listPregradi = GetUnlockingPositions(king.Offset.Column, competitorQueen.Offset);
             List<Position> listAll = GetAllPosition(motionColor, competitorKing);
 
             for (int i = 0; i < listPregradi.Count; i++)
             {
                 for (int j = 0; j < listAll.Count; j++)
                 {
-
                     if (listAll[j].Equals(listPregradi[i]))
                     {
                         MoveBlock(listPregradi[i].Row, listPregradi[i].Column);
@@ -287,10 +286,10 @@ namespace ClassLibrary
             else if (motionColor >= 6 &&
                 ((Color == Color.Black && competitorKing.Offset.Row < RowConst) ||
                  (Color == Color.White && competitorKing.Offset.Row > RowConst)))
-            {
-                bool check = NearbyMove(competitorKing.Offset, motion, history);
-                return check;
-            }
+                 {
+                    bool check = NearbyMove(competitorKing.Offset, motion, history);
+                    return check;
+                 }
             else
                 return false;
         }
