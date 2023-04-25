@@ -20,7 +20,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player2.history, player2.motionColor);
             Assert.AreEqual(true, check);
         }
 
@@ -38,7 +38,7 @@ namespace UnitTestProject
 
             player2.king.MoveBlock(0, 4);
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player2.history, player2.motionColor);
             Assert.AreEqual(true, check);
         }
 
@@ -57,7 +57,7 @@ namespace UnitTestProject
             player2.king.MoveBlock(1, 4);
             GameField[0, 2] = -5; // стена
 
-            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player1.history);
+            bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player2.history, player2.motionColor);
             Assert.AreEqual(false, check);
         }
 
@@ -697,7 +697,6 @@ namespace UnitTestProject
         /// </summary>
         public void CheckPregradaCompetitorQueenTest5()
         {
-
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
             Player player2 = new Player(Color.Black, ref GameField);
@@ -708,6 +707,28 @@ namespace UnitTestProject
             player1.queen.MoveBlock(3, 0);
             player2.king.MoveBlock(4, 4);
             player2.queen.MoveBlock(3, 2);
+
+            Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки CheckPregradaCompetitorQueenTest
+        /// </summary>
+        public void CheckPregradaCompetitorQueenTest6()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[3, 2] = -5;
+
+            player1.king.MoveBlock(0, 1);
+            player1.queen.MoveBlock(3, 1);
+            player2.king.MoveBlock(4, 4);
+            player2.queen.MoveBlock(6, 6);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }

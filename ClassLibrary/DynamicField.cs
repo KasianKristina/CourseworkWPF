@@ -203,8 +203,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(20);
-                field.check_delegate(field.player1.Strategy4, field.player2.Strategy2);
+                field.Walls(30);
+                field.check_delegate(field.player1.Strategy2, field.player2.Strategy4);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }

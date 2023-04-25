@@ -44,8 +44,8 @@ namespace CourseworkWPF
         private DynamicField.StrategyDelegate str_player2 = null;
         private DynamicField.PlayerDelegate str_player1_user = null;
         private DynamicField.PlayerDelegate str_player2_user = null;
-        private Figure figure = null;
-        private Player player;
+        private FigureKing figureKing = null;
+        private FigureQueen figureQueen = null;
 
         public MainWindow()
         {
@@ -112,9 +112,18 @@ namespace CourseworkWPF
                 images[position.Row, position.Column].Source = detailsImages[Math.Abs(id)];
         }
 
-        private void DrawAllPositions(Figure figure, Player player_s, Player enemy)
+        private void DrawAllPositions(FigureKing king, Player player_s, Player enemy)
         {
-            List<Position> list = figure.GetAllPosition(field.player2.history.Count + 1, player_s.motionColor, enemy.queen, enemy.king, player_s.queen);
+            List<Position> list = king.GetAllPosition(field.player2.history.Count + 1, player_s.motionColor, enemy.queen, enemy.king, player_s.queen);
+            foreach (Position pos in list)
+            {
+                images[pos.Row, pos.Column].Source = detailsImages[6];
+            }
+        }
+
+        private void DrawAllPositions(FigureQueen queen, Player player_s, Player enemy)
+        {
+            List<Position> list = queen.GetAllPosition(player_s.motionColor, enemy.king);
             foreach (Position pos in list)
             {
                 images[pos.Row, pos.Column].Source = detailsImages[6];
@@ -304,7 +313,8 @@ namespace CourseworkWPF
             str_player2 = null;
             str_player1_user = null;
             str_player2_user = null;
-            figure = null;
+            figureKing = null;
+            figureQueen = null;
             labelWinner.Content = "Победитель: ";
             count.Content = "Ферзь на горизонтали: 0";
             comboboxick1.IsEnabled = true;
@@ -322,14 +332,16 @@ namespace CourseworkWPF
                 switch (id)
                 {
                     case -1:
-                        figure = field.player1.king;
+                        figureKing = field.player1.king;
                         Draw(field);
-                        DrawAllPositions(figure, field.player1, field.player2);
+                        DrawAllPositions(figureKing, field.player1, field.player2);
+                        figureQueen = null;
                         break;
                     case -2:
-                        figure = field.player1.queen;
+                        figureQueen = field.player1.queen;
                         Draw(field);
-                        DrawAllPositions(figure, field.player1, field.player2);
+                        DrawAllPositions(figureQueen, field.player1, field.player2);
+                        figureKing = null;
                         break;
                     default:
                         Draw(field);
@@ -341,14 +353,16 @@ namespace CourseworkWPF
                 switch (id)
                 {
                     case -3:
-                        figure = field.player2.king;
+                        figureKing = field.player2.king;
                         Draw(field);
-                        DrawAllPositions(figure, field.player2, field.player1);
+                        DrawAllPositions(figureKing, field.player2, field.player1);
+                        figureQueen = null;
                         break;
                     case -4:
-                        figure = field.player2.queen;
+                        figureQueen = field.player2.queen;
                         Draw(field);
-                        DrawAllPositions(figure, field.player2, field.player1);
+                        DrawAllPositions(figureQueen, field.player2, field.player1);
+                        figureKing = null;
                         break;
                     default:
                         Draw(field);
@@ -365,7 +379,6 @@ namespace CourseworkWPF
             }
         }
 
-
         private void focusOn(object sender, MouseButtonEventArgs e)
         {
             int playerMotionColor = 0;
@@ -380,36 +393,45 @@ namespace CourseworkWPF
                 int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
                 int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
                 Position pos = new Position(Row, Coloumn);
-                if (WhoPlay == 1)
-                {
-                    hod = "Белый ферзь на горизонтали: ";
-                    playerMotionColor = field.player1.motionColor;
-                }
-                else
-                {
-                    hod = "Черный ферзь на горизонтали: ";
-                    playerMotionColor = field.player2.motionColor;
-                }
+                
                 if (images[pos.Row, pos.Column].Source == detailsImages[6])
                 {
                     if (str_player1_user != null && str_player2 != null)
                     {
-                        int check = field.check_delegate(str_player1_user, str_player2, pos, figure);
+                        int check;
+                        if (figureKing != null)
+                        {
+                            check = field.check_delegate(str_player1_user, str_player2, pos, figureKing);
+                        }
+                        else
+                        {
+                            check = field.check_delegate(str_player1_user, str_player2, pos, figureQueen);
+                        }
+                        
                         check_check(check);
                         playerMotionColor = field.player1.motionColor;
-                        // hod = "Белый ферзь на горизонтали: ";
                         field.player1.CheckPat(playerMotionColor);
                     }
                     if (str_player2_user != null && str_player1 != null)
                     {
-
-                        int check = field.check_delegate(str_player2_user, pos, figure, true);
+                        int check;
+                        if (figureKing != null)
+                        {
+                            check = field.check_delegate(str_player2_user, pos, figureKing, true);
+                        }
+                        else
+                        {
+                            check = field.check_delegate(str_player2_user, pos, figureQueen, true);
+                        }
                         check_check(check);
-                        check = field.check_delegate(str_player1);
-                        check_check(check);
+                        if (check != 0)
+                        {
+                            check = field.check_delegate(str_player1);
+                            check_check(check);
+                        }
+                        
                         Draw(field);
-                        playerMotionColor = field.player2.motionColor;
-                        // hod = "Черный ферзь на горизонтали: ";  
+                        playerMotionColor = field.player2.motionColor; 
                     }
                     if ((str_player1_user != null && str_player2_user != null))
                     {
@@ -421,15 +443,22 @@ namespace CourseworkWPF
                             WhoPlay = 2;
                             player = str_player1_user;
                             playerMotionColor = field.player2.motionColor;
-                            // hod = "Черный ферзь на горизонтали: ";
                         }
                         else
                         {
                             WhoPlay = 1;
                             playerMotionColor = field.player1.motionColor;
-                            // hod = "Белый ферзь на горизонтали: ";
                         }
-                        int check = field.check_delegate(player, pos, figure, flaghoda);
+                        int check;
+                        if (figureKing != null)
+                        {
+                            check = field.check_delegate(player, pos, figureKing, flaghoda);
+                        }
+                        else
+                        {
+                            check = field.check_delegate(player, pos, figureQueen, flaghoda);
+                        }
+                        
                         check_check(check);
                         Draw(field);
                     }
@@ -442,6 +471,17 @@ namespace CourseworkWPF
                     Click = 1;
                     opot();
                 };
+                
+                if (WhoPlay == 1)
+                {
+                    hod = "Белый ферзь на горизонтали: ";
+                    playerMotionColor = field.player1.motionColor;
+                }
+                else
+                {
+                    hod = "Черный ферзь на горизонтали: ";
+                    playerMotionColor = field.player2.motionColor;
+                }
                 count.Content = hod + playerMotionColor;
             }
         }

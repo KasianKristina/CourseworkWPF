@@ -98,8 +98,18 @@ namespace ClassLibrary
             }
             if (motionColor >= 6)
             {
-                if (!queen.RandomMove(Сompetitor.king, motion, history, 7))
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (check == 1)
                 {
+                    motionColor = 0;
+                    return;
+                }
+                if (check == 2)
+                {
+                    // проверка
+                    return;
+                }
+                if (check == 0) { 
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
                         if (-100 == Wave(king, motion))
@@ -114,13 +124,18 @@ namespace ClassLibrary
                         return;
                     }
                 }
-                else motionColor = 0;
             }
             else
             {
                 if (-100 == Wave(king, motion))
                 {
-                    if (!queen.RandomMove(Сompetitor.king, motion, history, 0))
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (check == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (check == 0)
                     {
                         if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
@@ -133,7 +148,6 @@ namespace ClassLibrary
                             return;
                         }
                     }
-                    else motionColor = 0;
                 }
             }
         }
@@ -154,7 +168,13 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (!queen.RandomMove(Сompetitor.king, motion, history, motion))
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motion);
+                if (check == 1)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (check == 0)
                 {
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
@@ -170,8 +190,6 @@ namespace ClassLibrary
                         return;
                     };
                 }
-                else
-                    motionColor = 0;
             }
             else
             {
@@ -183,8 +201,13 @@ namespace ClassLibrary
                 }
                 if (-100 == Wave(king, motion))
                 {
-                    check = queen.RandomMove(Сompetitor.king, motion, history, motion);
-                    if (check == false)
+                    int checkRandomMove = queen.RandomMove(Сompetitor.king, motion, history, motion);
+                    if (checkRandomMove == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (checkRandomMove == 0)
                     {
                         if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
@@ -197,8 +220,6 @@ namespace ClassLibrary
                             return;
                         }
                     }
-                    else
-                        motionColor = 0;
                 }
             }
         }
@@ -219,23 +240,27 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (queen.RandomMove(Сompetitor.king, motion, history, motionColor))
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (check == 1)
                 {
                     motionColor = 0;
                     return;
                 }
-                if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                if (check == 0)
                 {
-                    if (-100 == Wave(king, motion))
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        Pat = true;
+                        if (-100 == Wave(king, motion))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Lose = true;
                         return;
                     }
-                }
-                else
-                {
-                    Lose = true;
-                    return;
                 }
             }
             else
@@ -247,7 +272,13 @@ namespace ClassLibrary
                 }
                 if (-100 == Wave(king, motion))
                 {
-                    if (!queen.RandomMove(Сompetitor.king, motion, history, motionColor))
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (check == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (check == 0)
                     {
                         if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
@@ -260,8 +291,6 @@ namespace ClassLibrary
                             return;
                         }
                     }
-                    else
-                        motionColor = 0;
                 }
             }
         }
@@ -310,23 +339,27 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (queen.RandomMove(Сompetitor.king, motion, history, motionColor))
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (check == 1)
                 {
                     motionColor = 0;
                     return;
                 }
-                if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                if (check == 0)
                 {
-                    if (-100 == Wave(king, motion))
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        Pat = true;
+                        if (-100 == Wave(king, motion))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Lose = true;
                         return;
                     }
-                }
-                else
-                {
-                    Lose = true;
-                    return;
                 }
             }
             else
@@ -338,20 +371,24 @@ namespace ClassLibrary
                 }
                 if (-100 == Wave(king, motion))
                 {
-                    if (queen.RandomMove(Сompetitor.king, motion, history, motionColor))
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (check == 1)
                     {
                         motionColor = 0;
                         return;
                     }
-                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                    if (check == 0)
                     {
-                        Pat = true;
-                        return;
-                    }
-                    else
-                    {
-                        Lose = true;
-                        return;
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
                     }
                 }
             }

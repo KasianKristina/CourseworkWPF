@@ -156,7 +156,6 @@ namespace ClassLibrary
         /// <param name="y">столбец короля</param>
         /// <param name="competitorQueen">ферзь соперника</param>
         /// <param name="competitorKing">король соперника</param>
-        /// <param name="motionQueen">количество ходов, когда ферзь находится на одной горизонтали</param>
         /// <returns>true - король может сделать ход, false - не может</returns>
         public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
         {
@@ -172,15 +171,13 @@ namespace ClassLibrary
         /// <summary>
         /// Получение всех возможных позиций короля
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
         /// <param name="motion">текущий ход</param>
         /// <param name="motionQueen">сколько ходов ферзь оставался на одной горизонтали</param>
         /// <param name="competitorQueen"></param>
         /// <param name="competitorKing"></param>
         /// <param name="queen"></param>
         /// <returns>список всех возможных позиций</returns>
-        public override List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
+        public List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
         {
             List<Position> list = new List<Position>();
             List<Position> listCheck = new List<Position>() {
@@ -193,10 +190,10 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
-            // здесь блок
+
             if (motionQueen >= 5 &&
                 queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
-                return list; // это все время возращается
+                return list;
 
             foreach (Position pos in listCheck)
             {

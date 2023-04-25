@@ -34,7 +34,5 @@ namespace ClassLibrary
                 GameField[Offset.Row, Offset.Column] = Id;
             }
         }
-
-        public abstract List<Position> GetAllPosition(int motion, int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen);
     }
 }

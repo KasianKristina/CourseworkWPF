@@ -18,17 +18,17 @@
         <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="40,402,0,0" VerticalAlignment="Top" Height="31" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
         <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="163,406,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="24" Height="26" RenderTransformOrigin="0.767,1.6"/>
         <ComboBox x:Name="comboboxick1" SelectedIndex="0" HorizontalAlignment="Left" Margin="40,99,0,0" VerticalAlignment="Top" Width="136">
-            <ComboBoxItem Content="Стратегия 1"/>
-            <ComboBoxItem Content="Стратегия 2"/>
-            <ComboBoxItem Content="Стратегия 3"/>
-            <ComboBoxItem Content="Стратегия 4"/>
+            <ComboBoxItem Content="Кратчайший путь"/>
+            <ComboBoxItem Content="Захват короля соперника"/>
+            <ComboBoxItem Content="Охрана стартовой позиции короля"/>
+            <ComboBoxItem Content="Защита короля"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
         <ComboBox x:Name="comboboxick2" SelectedIndex="0" HorizontalAlignment="Left" Margin="218,99,0,0" VerticalAlignment="Top" Width="136" SelectionChanged="comboboxick2_SelectionChanged" RenderTransformOrigin="0.45,-1.875">
-            <ComboBoxItem Content="Стратегия 1"/>
-            <ComboBoxItem Content="Стратегия 2"/>
-            <ComboBoxItem Content="Стратегия 3"/>
-            <ComboBoxItem Content="Стратегия 4"/>
+            <ComboBoxItem Content="Кратчайший путь"/>
+            <ComboBoxItem Content="Захват короля соперника"/>
+            <ComboBoxItem Content="Охрана стартовой позиции короля"/>
+            <ComboBoxItem Content="Защита короля"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
         <Label Content="Игрок 1" HorizontalAlignment="Left" Margin="40,68,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" Width="162" RenderTransformOrigin="0.484,-0.492"/>
@@ -36,7 +36,7 @@
         <Slider x:Name="sliderCountWalls" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Margin="40,189,0,0" Minimum="1" Maximum="30" VerticalAlignment="Top" Width="255"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="305,189,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderCountWalls, Path=Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.524,-1.304"/>
         <Label Content="Количество преград" HorizontalAlignment="Left" Margin="40,158,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
-        <Button x:Name="btnNewGame" Content="Новая игра" Background="#284268" HorizontalAlignment="Left" Margin="218,265,0,0" VerticalAlignment="Top" Click="btnNewGame_Click" Width="136" Height="37" FontFamily="Courier New" FontSize="16" Foreground="White"/>
+        <Button x:Name="btnNewGame" Content="Новая игра" Background="#284268" HorizontalAlignment="Left" Margin="218,265,0,0" VerticalAlignment="Top" Click="btnNewGame_Click" Width="136" Height="37" FontFamily="Courier New" FontSize="16" Foreground="White" Cursor="Hand"/>
         <Label x:Name="labelWinner" Content="Победитель: " HorizontalAlignment="Left" Margin="40,358,0,0" VerticalAlignment="Top" Width="307" FontFamily="Courier New" FontSize="14"/>
         <Label x:Name="count" Content="Ферзь на горизонтали: " HorizontalAlignment="Left" Margin="404,22,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14"/>
     </Grid>
