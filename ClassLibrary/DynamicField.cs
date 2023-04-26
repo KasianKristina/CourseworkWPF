@@ -64,6 +64,7 @@ namespace ClassLibrary
         {
             GameStrategy(strategy_first, strategy_second);
         }
+
         private int motion_with_player = 1;
         public int check_delegate(PlayerDelegate strategy_first, StrategyDelegate strategy_second, Position pos, Figure figure)
         {
@@ -80,7 +81,8 @@ namespace ClassLibrary
             Console.WriteLine("Конец игры");
             return 1;
         }
-        // ии против игрока
+
+        // компьютер против игрока
         public int check_delegate(StrategyDelegate strategy_first)
         {
 
@@ -91,7 +93,8 @@ namespace ClassLibrary
                 return 0;
             return 1;
         }
-        // cюда отправляет второй игрок
+
+        // cюда отправляется второй игрок
         // Делегат хода игрока
         public int check_delegate(PlayerDelegate strategy_first, Position pos, Figure figure, bool flaghoda)
         {
@@ -104,7 +107,7 @@ namespace ClassLibrary
 
             if (IsGameOver())
                 return 0;
-            
+
             Draw();
             Console.WriteLine("Конец игры");
             return 1;
@@ -195,7 +198,6 @@ namespace ClassLibrary
             countPat = 100 - countWinWhite - countWinBlack;
         }
 
-
         public static void Result()
         {
             int checkwinwhite = 0;
@@ -204,7 +206,7 @@ namespace ClassLibrary
             {
                 DynamicField field = new DynamicField();
                 field.Walls(30);
-                field.check_delegate(field.player1.Strategy2, field.player2.Strategy4);
+                field.check_delegate(field.player1.Strategy4, field.player2.Strategy4);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -213,7 +215,6 @@ namespace ClassLibrary
             Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
             Console.ReadKey();
         }
-
 
 
         // поиск двух непересекающихся путей
@@ -254,7 +255,7 @@ namespace ClassLibrary
                 else if (cMap.IsEmptyWave(x, y + 1) && cMap[x, y + 1] == result - 1)
                 {
                     result = cMap[x, y + 1];
-                    y = y + 1;
+                    y += 1;
                     if (wall)
                         cMap[x, y] = -5;
                 }

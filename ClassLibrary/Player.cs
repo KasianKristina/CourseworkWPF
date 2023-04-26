@@ -311,7 +311,7 @@ namespace ClassLibrary
                 motionColor = 0;
             figure.MoveBlock(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
-            CheckPat(motion);
+            
             if (motionColor > 5)
             {
                 if (!queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
@@ -320,6 +320,7 @@ namespace ClassLibrary
                     return;
                 };
             }
+            CheckPat(motion);
         }
 
         public void Strategy4(int motion)

@@ -32,7 +32,8 @@ namespace CourseworkWPF
             new BitmapImage(new Uri("Assets/kingBlack.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/queenBlack.png", UriKind.Relative)),
             new BitmapImage(new Uri("Assets/squareWall.png", UriKind.Relative)),
-            new BitmapImage(new Uri("Assets/squarePosition.png", UriKind.Relative))
+            new BitmapImage(new Uri("Assets/squarePosition.png", UriKind.Relative)),
+            new BitmapImage(new Uri("Assets/squareCastleBlack.png", UriKind.Relative))
         };
 
 
@@ -306,7 +307,7 @@ namespace CourseworkWPF
             Draw(field);
             btnPlay.IsEnabled = true;
             GameCanvas.IsEnabled = false;
-            slider1.Maximum = 3;
+            slider1.Maximum = 1;
             slider1.Value = 0;
             Click = 0;
             str_player1 = null;

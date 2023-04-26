@@ -287,6 +287,7 @@ namespace ClassLibrary
                         MoveBlock(listObstacles[i].Row, listObstacles[i].Column);
                         history.Add(motion, (Id, new Position(listObstacles[i].Row, listObstacles[i].Column)));
                         return true;
+                        
                     }
                 }
             }
