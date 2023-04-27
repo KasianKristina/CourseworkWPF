@@ -14,7 +14,7 @@
         </Border>
 
         <Button x:Name="btnPlay" Content="Играть" IsEnabled="False" Background="#6994FE" HorizontalAlignment="Left" Margin="40,265,0,0" VerticalAlignment="Top" Width="136" Click="Button_Click_1" Height="37" FontFamily="Courier New" FontSize="16" Cursor="Hand"/>
-        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="10" Margin="40,456,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="307"/>
+        <Slider x:Name="slider1" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" HorizontalAlignment="Left" Minimum="0" Maximum="1" Margin="40,456,0,0" VerticalAlignment="Top" ValueChanged="Slider_ValueChanged" Height="31" Width="307"/>
         <Label x:Name="labelMotion" Content="Текущий ход: " HorizontalAlignment="Left" Margin="40,402,0,0" VerticalAlignment="Top" Height="31" FontFamily="Courier New" FontSize="14" RenderTransformOrigin="0.516,1.29"/>
         <TextBlock x:Name="text1" Foreground="Black" HorizontalAlignment="Left" Margin="163,406,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="24" Height="26" RenderTransformOrigin="0.767,1.6"/>
         <ComboBox x:Name="comboboxick1" SelectedIndex="0" HorizontalAlignment="Left" Margin="40,99,0,0" VerticalAlignment="Top" Width="136">
