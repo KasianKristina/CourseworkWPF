@@ -48,7 +48,7 @@ namespace ClassLibrary
         /// <param name="king"></param>
         /// <param name="competitorQueen"></param>
         /// <returns>true - преграждает, false - нет</returns>
-        public bool CheckPregradaCompetitorQueen(FigureKing king, FigureQueen competitorQueen)
+        private bool CheckPregradaCompetitorQueen(FigureKing king, FigureQueen competitorQueen)
         {
             int k;
             if (competitorQueen.Color == Color.Black)
@@ -158,7 +158,7 @@ namespace ClassLibrary
             {
                 if (GameField[barrierRow, pos.Column] == 0)
                 {
-                    MoveBlock(row, pos.Column);
+                    MoveFigure(row, pos.Column);
                     history.Add(motion, (Id, new Position(row, pos.Column)));
                     return true;
                 }
@@ -178,7 +178,7 @@ namespace ClassLibrary
         /// <param name="king"></param>
         /// <param name="competitorQueen"></param>
         /// <returns>true - ход сделан, false - король не заблокирован или нет возможности его разблокировать</returns>
-        public bool CheckUnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
+        public bool UnlockingMove(FigureKing competitorKing, int motion, int motionColor, Dictionary<int, (int, Position)> history, FigureKing king, FigureQueen competitorQueen)
         {
             if (!CheckPregradaCompetitorQueen(king, competitorQueen))
                 return false;
@@ -192,7 +192,7 @@ namespace ClassLibrary
                 {
                     if (listAll[j].Equals(listPregradi[i]))
                     {
-                        MoveBlock(listPregradi[i].Row, listPregradi[i].Column);
+                        MoveFigure(listPregradi[i].Row, listPregradi[i].Column);
                         history.Add(motion, (Id, new Position(listPregradi[i].Row, listPregradi[i].Column)));
                         return true;
                     }
@@ -222,12 +222,12 @@ namespace ClassLibrary
 
             if (list[position].Row == Offset.Row)
             {
-                MoveBlock(list[position].Row, list[position].Column);
+                MoveFigure(list[position].Row, list[position].Column);
                 history.Add(motion, (Id, new Position(list[position].Row, list[position].Column)));
                 return 2;
             }
 
-            MoveBlock(list[position].Row, list[position].Column);
+            MoveFigure(list[position].Row, list[position].Column);
             history.Add(motion, (Id, new Position(list[position].Row, list[position].Column)));
             return 1;
         }
@@ -238,7 +238,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="kingPosition">позиция короля соперника</param>
         /// <returns>true - блокирует, false - не блокирует</returns>
-        public bool IsQueenAlreadyBlockingKing(Position kingPosition)
+        private bool IsQueenAlreadyBlockingKing(Position kingPosition)
         {
             int k;
             if (Color == Color.Black)
@@ -284,7 +284,7 @@ namespace ClassLibrary
                         listObstacles[i].Row != CheckPreviousPosition(history) &&
                         !IsQueenAlreadyBlockingKing(competitorKing.Offset))
                     {
-                        MoveBlock(listObstacles[i].Row, listObstacles[i].Column);
+                        MoveFigure(listObstacles[i].Row, listObstacles[i].Column);
                         history.Add(motion, (Id, new Position(listObstacles[i].Row, listObstacles[i].Column)));
                         return true;
                         
@@ -300,7 +300,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="history"></param>
         /// <returns>строка предыдущего хода</returns>
-        public int CheckPreviousPosition(Dictionary<int, (int, Position)> history)
+        private int CheckPreviousPosition(Dictionary<int, (int, Position)> history)
         {
             int[] rows = { -10, -10 };
             foreach (var value in history)
@@ -348,7 +348,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="kingPosition"></param>
         /// <returns>список позиций</returns>
-        public List<Position> GetHorizontalPositions(Position kingPosition)
+        private List<Position> GetHorizontalPositions(Position kingPosition)
         {
             List<Position> list = new List<Position>();
             int x = Offset.Row;
@@ -491,7 +491,7 @@ namespace ClassLibrary
         /// <param name="motion"></param>
         /// <param name="history"></param>
         /// <returns>true - ход сделан, false - ферзь не смог сходить</returns>
-        public bool NearbyMove(Position kingPosition, int motion, Dictionary<int, (int, Position)> history, int motionQueen)
+        private bool NearbyMove(Position kingPosition, int motion, Dictionary<int, (int, Position)> history, int motionQueen)
         {
             List<Position> list = new List<Position>() {
                             new Position(1, 0),
@@ -515,7 +515,7 @@ namespace ClassLibrary
                 if (GameField.IsEmpty(row, col)
                     && CheckQueenAttack(new Position(row, col), kingPosition))
                 {
-                    MoveBlock(row, col);
+                    MoveFigure(row, col);
                     history.Add(motion, (Id, new Position(row, col)));
                     return true;
                 }
@@ -530,7 +530,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="competitorKing">король соперника</param>
         /// <returns>список позиций</returns>
-        public List<Position> GetObstaclesPosition(FigureKing competitorKing)
+        private List<Position> GetObstaclesPosition(FigureKing competitorKing)
         {
             List<Position> list = new List<Position>();
             int k;
@@ -563,7 +563,7 @@ namespace ClassLibrary
         /// <param name="kingCol"></param>
         /// <param name="queenCompetitorPosition"></param>
         /// <returns>список позиций</returns>
-        public List<Position> GetUnlockingPositions(int kingCol, Position queenCompetitorPosition)
+        private List<Position> GetUnlockingPositions(int kingCol, Position queenCompetitorPosition)
         {
             int queenCompetitorRow = queenCompetitorPosition.Row;
             int queenCompetitorCol = queenCompetitorPosition.Column;

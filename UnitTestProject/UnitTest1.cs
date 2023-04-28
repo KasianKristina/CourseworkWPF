@@ -36,7 +36,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player2.king.MoveBlock(0, 4);
+            player2.king.MoveFigure(0, 4);
 
             bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player2.history, player2.motionColor);
             Assert.AreEqual(true, check);
@@ -54,7 +54,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player2.king.MoveBlock(1, 4);
+            player2.king.MoveFigure(1, 4);
             GameField[0, 2] = -5; // стена
 
             bool check = player1.queen.NearbyMove(player2.king.Offset, 1, player2.history, player2.motionColor);
@@ -73,7 +73,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(5, 5);
+            player1.king.MoveFigure(5, 5);
             GameField[6, 7] = -5; // стена
             GameField[6, 5] = -5; // стена
 
@@ -100,7 +100,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(5, 5);
+            player1.king.MoveFigure(5, 5);
             GameField[6, 7] = -5; // стена
             GameField[6, 5] = -5; // стена
             GameField[6, 2] = -5; // стена
@@ -125,7 +125,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(5, 5);
+            player1.king.MoveFigure(5, 5);
             GameField[6, 7] = -5; // стена
             GameField[6, 6] = -5;
             GameField[6, 4] = -5;
@@ -153,19 +153,19 @@ namespace UnitTestProject
             int motion = 1;
             GameField[1, 1] = -5;
 
-            player2.king.MoveBlock(2, 4);
+            player2.king.MoveFigure(2, 4);
             player2.history.Add(motion, (player2.king.Id, new Position(2, 4)));
-            player1.queen.MoveBlock(1, 2);
+            player1.queen.MoveFigure(1, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(1, 2)));
             motion++;
 
-            player2.king.MoveBlock(2, 5);
+            player2.king.MoveFigure(2, 5);
             player2.history.Add(motion, (player2.king.Id, new Position(2, 5)));
-            player1.queen.MoveBlock(0, 2);
+            player1.queen.MoveFigure(0, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(0, 2)));
             motion++;
 
-            player2.king.MoveBlock(2, 4);
+            player2.king.MoveFigure(2, 4);
             player2.history.Add(motion, (player2.king.Id, new Position(2, 4)));
 
             bool move = player1.queen.ObstacleMove(player2.king, 0, player1.history, motion);
@@ -185,15 +185,15 @@ namespace UnitTestProject
             player2.Сompetitor = player1;
             int motion = 1;
 
-            player1.king.MoveBlock(1, 5);
+            player1.king.MoveFigure(1, 5);
             player1.history.Add(motion, (player1.king.Id, new Position(1, 5)));
-            player2.king.MoveBlock(6, 5);
+            player2.king.MoveFigure(6, 5);
             player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
             motion++;
 
-            player1.king.MoveBlock(2, 6);
+            player1.king.MoveFigure(2, 6);
             player1.history.Add(motion, (player1.king.Id, new Position(2, 6)));
-            player2.king.MoveBlock(2, 4);
+            player2.king.MoveFigure(2, 4);
             player2.history.Add(motion, (player2.king.Id, new Position(2, 4)));
             motion++;
 
@@ -213,8 +213,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.queen.MoveBlock(4, 1);
-            player2.king.MoveBlock(5, 3);
+            player1.queen.MoveFigure(4, 1);
+            player2.king.MoveFigure(5, 3);
 
             bool check = player1.queen.IsQueenAlreadyBlockingKing(player2.king.Offset);
             Assert.AreEqual(true, check);
@@ -232,8 +232,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.queen.MoveBlock(3, 1);
-            player2.king.MoveBlock(5, 3);
+            player1.queen.MoveFigure(3, 1);
+            player2.king.MoveFigure(5, 3);
 
             bool check = player1.queen.IsQueenAlreadyBlockingKing(player2.king.Offset);
             Assert.AreEqual(false, check);
@@ -251,8 +251,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(5, 6);
+            player1.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(5, 6);
 
             bool check = player2.queen.IsQueenAlreadyBlockingKing(player1.king.Offset);
             Assert.AreEqual(true, check);
@@ -270,8 +270,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(6, 3);
+            player1.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(6, 3);
 
             bool check = player2.queen.IsQueenAlreadyBlockingKing(player1.king.Offset);
             Assert.AreEqual(false, check);
@@ -290,15 +290,15 @@ namespace UnitTestProject
             player2.Сompetitor = player1;
             int motion = 1;
 
-            player1.queen.MoveBlock(1, 2);
+            player1.queen.MoveFigure(1, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(1, 2)));
             motion++;
 
-            player1.queen.MoveBlock(2, 2);
+            player1.queen.MoveFigure(2, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(2, 2)));
             motion++;
 
-            player1.queen.MoveBlock(0, 3);
+            player1.queen.MoveFigure(0, 3);
             player1.history.Add(motion, (player1.queen.Id, new Position(0, 3)));
             motion++;
 
@@ -319,7 +319,7 @@ namespace UnitTestProject
             player2.Сompetitor = player1;
             int motion = 1;
 
-            player1.queen.MoveBlock(1, 2);
+            player1.queen.MoveFigure(1, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(1, 2)));
             motion++;
 
@@ -356,11 +356,11 @@ namespace UnitTestProject
             player2.Сompetitor = player1;
             int motion = 1;
 
-            player1.queen.MoveBlock(1, 2);
+            player1.queen.MoveFigure(1, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(1, 2)));
             motion++;
 
-            player1.queen.MoveBlock(2, 2);
+            player1.queen.MoveFigure(2, 2);
             player1.history.Add(motion, (player1.queen.Id, new Position(2, 2)));
             motion++;
 
@@ -381,11 +381,11 @@ namespace UnitTestProject
             player2.Сompetitor = player1;
             int motion = 1;
 
-            player1.king.MoveBlock(1, 2);
+            player1.king.MoveFigure(1, 2);
             player1.history.Add(motion, (player1.king.Id, new Position(1, 2)));
             motion++;
 
-            player2.queen.MoveBlock(2, 5);
+            player2.queen.MoveFigure(2, 5);
             player2.history.Add(motion, (player2.queen.Id, new Position(2, 5)));
             motion++;
 
@@ -408,8 +408,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(1, 6);
-            player2.queen.MoveBlock(2, 1);
+            player1.king.MoveFigure(1, 6);
+            player2.queen.MoveFigure(2, 1);
 
             List<Position> listObstacles = player1.queen.GetUnlockingPositions(player1.king.Offset.Column, player1.Сompetitor.queen.Offset);
             List<Position> expectedList = new List<Position>() {
@@ -460,7 +460,7 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
            
-            player1.king.MoveBlock(0, 5);
+            player1.king.MoveFigure(0, 5);
             Assert.AreEqual(true, player1.king.LeaveSquareCheck(6, 2));
         }
 
@@ -495,8 +495,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(7, 5);
-            player2.queen.MoveBlock(0, 4);
+            player1.king.MoveFigure(7, 5);
+            player2.queen.MoveFigure(0, 4);
 
             GameField[0, 2] = -5;
             GameField[1, 2] = -5;
@@ -522,8 +522,8 @@ namespace UnitTestProject
             GameField[1, 3] = -5;
             GameField[1, 4] = -5;
 
-            player1.king.MoveBlock(7, 5);
-            player2.queen.MoveBlock(7, 3);
+            player1.king.MoveFigure(7, 5);
+            player2.queen.MoveFigure(7, 3);
             Assert.AreEqual(false, player1.queen.CheckLoseGame(player2.queen.Id, player2.king.Offset));
         }
 
@@ -539,8 +539,8 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(7, 7);
-            player2.king.MoveBlock(2, 6);
+            player1.king.MoveFigure(7, 7);
+            player2.king.MoveFigure(2, 6);
 
             GameField[0, 2] = -5;
             GameField[1, 2] = -5;
@@ -599,10 +599,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(4, 6);
-            player2.king.MoveBlock(5, 3);
-            player2.queen.MoveBlock(4, 5);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(4, 6);
+            player2.king.MoveFigure(5, 3);
+            player2.queen.MoveFigure(4, 5);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -620,10 +620,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(4, 6);
-            player2.king.MoveBlock(5, 3);
-            player2.queen.MoveBlock(4, 4);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(4, 6);
+            player2.king.MoveFigure(5, 3);
+            player2.queen.MoveFigure(4, 4);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -641,10 +641,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(4, 6);
-            player2.king.MoveBlock(5, 3);
-            player2.queen.MoveBlock(4, 1);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(4, 6);
+            player2.king.MoveFigure(5, 3);
+            player2.queen.MoveFigure(4, 1);
 
             Assert.AreEqual(true, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -662,10 +662,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(3, 1);
-            player2.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(6, 6);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(3, 1);
+            player2.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(6, 6);
 
             Assert.AreEqual(true, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -683,10 +683,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(2, 1);
-            player2.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(6, 6);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(2, 1);
+            player2.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(6, 6);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -703,10 +703,10 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(3, 0);
-            player2.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(3, 2);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(3, 0);
+            player2.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(3, 2);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }
@@ -725,10 +725,10 @@ namespace UnitTestProject
 
             GameField[3, 2] = -5;
 
-            player1.king.MoveBlock(0, 1);
-            player1.queen.MoveBlock(3, 1);
-            player2.king.MoveBlock(4, 4);
-            player2.queen.MoveBlock(6, 6);
+            player1.king.MoveFigure(0, 1);
+            player1.queen.MoveFigure(3, 1);
+            player2.king.MoveFigure(4, 4);
+            player2.queen.MoveFigure(6, 6);
 
             Assert.AreEqual(false, player2.queen.CheckPregradaCompetitorQueen(player2.king, player1.queen));
         }

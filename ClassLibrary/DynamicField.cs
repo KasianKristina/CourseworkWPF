@@ -205,8 +205,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.Strategy4, field.player2.Strategy4);
+                field.Walls(20);
+                field.check_delegate(field.player1.StrategyAttack, field.player2.StrategyAttack);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -240,7 +240,7 @@ namespace ClassLibrary
             return true;
         }
 
-        // поиск позиции, на которую нужно идти королю
+        // восстановление пути
         public static (int fx, int fy) Search(int x, int y, int result, ref Field cMap, bool wall)
         {
             while (result != 1)
@@ -314,6 +314,7 @@ namespace ClassLibrary
             return (x, y);
         }
 
+        // распространение волны
         public static Field CreateWave(int startX, int startY, int finishX, int finishY, Field field)
         {
             bool add = true;

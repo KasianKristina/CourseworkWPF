@@ -30,63 +30,6 @@ namespace ClassLibrary
             history = new Dictionary<int, (int, Position)>();
         }
 
-        public int Wave(FigureKing king, int motion)
-        {
-            int result, fx, fy;
-            while (true)
-            {
-                Field cMap = DynamicField.CreateWave(king.Offset.Row, king.Offset.Column, posEnd.Row, posEnd.Column, GameField);
-                result = cMap[posEnd.Row, posEnd.Column];
-
-                (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
-
-                if (fx != -100 &&
-                    king.OpportunityToMakeMove(fx, fy, Сompetitor.queen, Сompetitor.king))
-                {
-                    king.MoveBlock(fx, fy);
-                    history.Add(motion, (king.Id, new Position(fx, fy)));
-                    break;
-                }
-                else
-                {
-                    if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
-                    {
-                        List<Position> allPositions = king.GetAllPosition(motion, motionColor, Сompetitor.queen, Сompetitor.king, queen);
-                        if (allPositions.Count != 0)
-                        {
-                            Position position = king.ChooseRandomPosition(allPositions);
-                            king.MoveBlock(position.Row, position.Column);
-                            history.Add(motion, (king.Id, new Position(position.Row, position.Column)));
-                            fx = position.Row;
-                            break;
-                        }
-                        else
-                        {
-                            fx = -100;
-                            break;
-                        }
-                    }
-                    GameField[fx, fy] = -7;
-                }
-                cMap.Draw();
-            }
-            ClearGameField();
-            return fx;
-        }
-
-        private void ClearGameField()
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (GameField[i, j] == -7)
-                    {
-                        GameField[i, j] = 0;
-                    }
-                }
-            }
-        }
         public void StrategySimple(int motion)
         {
             motionColor++;
@@ -104,15 +47,10 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (check == 2)
-                {
-                    // проверка
-                    return;
-                }
                 if (check == 0) { 
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        if (-100 == Wave(king, motion))
+                        if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                         {
                             Pat = true;
                             return;
@@ -127,7 +65,7 @@ namespace ClassLibrary
             }
             else
             {
-                if (-100 == Wave(king, motion))
+                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                 {
                     int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                     if (check == 1)
@@ -152,7 +90,7 @@ namespace ClassLibrary
             }
         }
 
-        public void Strategy2(int motion)
+        public void StrategyAttack(int motion)
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
@@ -178,7 +116,7 @@ namespace ClassLibrary
                 {
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        if (-100 == Wave(king, motion))
+                        if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                         {
                             Pat = true;
                             return;
@@ -199,7 +137,7 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (-100 == Wave(king, motion))
+                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                 {
                     int checkRandomMove = queen.RandomMove(Сompetitor.king, motion, history, motion);
                     if (checkRandomMove == 1)
@@ -250,7 +188,7 @@ namespace ClassLibrary
                 {
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        if (-100 == Wave(king, motion))
+                        if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                         {
                             Pat = true;
                             return;
@@ -270,7 +208,7 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                if (-100 == Wave(king, motion))
+                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                 {
                     int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                     if (check == 1)
@@ -309,7 +247,7 @@ namespace ClassLibrary
             Console.WriteLine("Ходит {0} ", Color);
             if ((figure.Id == -4 || figure.Id == -2) && pos.Row != figure.Offset.Row)
                 motionColor = 0;
-            figure.MoveBlock(pos.Row, pos.Column);
+            figure.MoveFigure(pos.Row, pos.Column);
             history.Add(motion, (figure.Id, pos));
             
             if (motionColor > 5)
@@ -323,7 +261,7 @@ namespace ClassLibrary
             CheckPat(motion);
         }
 
-        public void Strategy4(int motion)
+        public void StrategyHelp(int motion)
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
@@ -335,7 +273,7 @@ namespace ClassLibrary
 
             if (motionColor >= 6)
             {
-                if (queen.CheckUnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
                 {
                     motionColor = 0;
                     return;
@@ -350,7 +288,7 @@ namespace ClassLibrary
                 {
                     if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                     {
-                        if (-100 == Wave(king, motion))
+                        if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                         {
                             Pat = true;
                             return;
@@ -365,12 +303,12 @@ namespace ClassLibrary
             }
             else
             {
-                if (queen.CheckUnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
                 {
                     motionColor = 0;
                     return;
                 }
-                if (-100 == Wave(king, motion))
+                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen))
                 {
                     int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                     if (check == 1)

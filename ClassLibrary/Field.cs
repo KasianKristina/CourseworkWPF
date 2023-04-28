@@ -31,6 +31,38 @@ namespace ClassLibrary
             field = new int[row, column];
         }
 
+        // находится ли клетка внутри поля
+        public bool IsInside(int row, int column)
+        {
+            if (row >= 0 && row < Rows
+                    && column >= 0 && column < Columns)
+                return true;
+            else return false;
+        }
+
+        // пустая ли клетка
+        public bool IsEmpty(int row, int column)
+        {
+            if (IsInside(row, column) && field[row, column] == 0)
+                return true;
+            else return false;
+        }
+
+        // пустая ли клетка (для проверки на карте cMap, где расставлены значения путей)
+        public bool IsEmptyWave(int row, int column)
+        {
+            if (IsInside(row, column) && field[row, column] >= 0)
+                return true;
+            else return false;
+        }
+
+        public bool IsWall(int row, int column)
+        {
+            if (IsInside(row, column) && field[row, column] != 0)
+                return true;
+            else return false;
+        }
+
         public Field Copy()
         {
             Field NewGameField = new Field(8, 8);
@@ -72,38 +104,6 @@ namespace ClassLibrary
                 Console.WriteLine();
             }
             Console.WriteLine("************************");
-        }
-
-        // находится ли клетка внутри поля
-        public bool IsInside(int row, int column)
-        {
-            if (row >= 0 && row < Rows
-                    && column >= 0 && column < Columns)
-                return true;
-            else return false;
-        }
-
-        // пустая ли клетка
-        public bool IsEmpty(int row, int column)
-        {
-            if (IsInside(row, column) && field[row, column] == 0)
-                return true;
-            else return false;
-        }
-
-        // пустая ли клетка (для проверки на карте cMap, где расставлены значения путей)
-        public bool IsEmptyWave(int row, int column)
-        {
-            if (IsInside(row, column) && field[row, column] >= 0)
-                return true;
-            else return false;
-        }
-
-        public bool IsWall(int row, int column)
-        {
-            if (IsInside(row, column) && field[row, column] != 0)
-                return true;
-            else return false;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="x">строка</param>
         /// <param name="y">столбец</param>
-        public override void MoveBlock(int x, int y)
+        public override void MoveFigure(int x, int y)
         {
             if (GameField[x, y] >= 0)
             {
@@ -76,7 +76,7 @@ namespace ClassLibrary
         /// <param name="x">возможная строка</param>
         /// <param name="y">возможный столбец</param>
         /// <returns>true - можно сходить на эту позицию, false - нельзя</returns>
-        public bool LeaveSquareCheck(int x, int y)
+        private bool LeaveSquareCheck(int x, int y)
         {
             int Row = 0;
             int iterator = 1;
@@ -97,7 +97,7 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="x">строка</param>
         /// <param name="y">столбец</param>
-        public void ChangeFlag(int x, int y)
+        private void ChangeFlag(int x, int y)
         {
             int row = 0;
             int iterator = 1;
@@ -119,7 +119,7 @@ namespace ClassLibrary
         /// <param name="xOpponent">строка короля соперника</param>
         /// <param name="yOpponent">столбец короля соперника</param>
         /// <returns>true - позиция смежная, false - иначе</returns>
-        public bool AdjacentPosition(int x, int y, int xOpponent, int yOpponent)
+        private bool AdjacentPosition(int x, int y, int xOpponent, int yOpponent)
         {
             if ((x, y) == (xOpponent - 1, yOpponent) ||
                (x, y) == (xOpponent - 1, yOpponent - 1) ||
@@ -135,12 +135,13 @@ namespace ClassLibrary
             else return false;
         }
 
+
         /// <summary>
         /// Выбор случайной позиции
         /// </summary>
         /// <param name="list">список возможных позиций</param>
         /// <returns>случайную позицию</returns>
-        public Position ChooseRandomPosition(List<Position> list)
+        private Position ChooseRandomPosition(List<Position> list)
         {
             int position;
             Random random = new Random();
@@ -157,7 +158,7 @@ namespace ClassLibrary
         /// <param name="competitorQueen">ферзь соперника</param>
         /// <param name="competitorKing">король соперника</param>
         /// <returns>true - король может сделать ход, false - не может</returns>
-        public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
+        private bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
         {
             if (GameField.IsEmpty(x, y) &&
                competitorQueen.CheckQueenAttack(competitorQueen.Offset, new Position(x, y)) &&
@@ -167,6 +168,7 @@ namespace ClassLibrary
             else
                 return false;
         }
+
 
         /// <summary>
         /// Получение всех возможных позиций короля
@@ -201,6 +203,64 @@ namespace ClassLibrary
                     list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
             }
             return list;
+        }
+
+        private void ClearGameFieldAfterKingsMove()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (GameField[i, j] == -7)
+                    {
+                        GameField[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+        public int OptimalMove(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
+        {
+            int result, fx, fy;
+            while (true)
+            {
+                Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, posEnd.Row, posEnd.Column, GameField);
+                result = cMap[posEnd.Row, posEnd.Column];
+
+                (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
+
+                if (fx != -100 &&
+                    OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing))
+                {
+                    MoveFigure(fx, fy);
+                    history.Add(motion, (Id, new Position(fx, fy)));
+                    break;
+                }
+                else
+                {
+                    if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
+                    {
+                        List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
+                        if (allPositions.Count != 0)
+                        {
+                            Position position = ChooseRandomPosition(allPositions);
+                            MoveFigure(position.Row, position.Column);
+                            history.Add(motion, (Id, new Position(position.Row, position.Column)));
+                            fx = position.Row;
+                            break;
+                        }
+                        else
+                        {
+                            fx = -100;
+                            break;
+                        }
+                    }
+                    GameField[fx, fy] = -7;
+                }
+                cMap.Draw();
+            }
+            ClearGameFieldAfterKingsMove();
+            return fx;
         }
     }
 }

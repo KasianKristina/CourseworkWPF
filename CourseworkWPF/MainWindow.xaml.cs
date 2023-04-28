@@ -154,13 +154,13 @@ namespace CourseworkWPF
                     str_player1 = field.player1.StrategySimple;
                     break;
                 case 1:
-                    str_player1 = field.player1.Strategy2;
+                    str_player1 = field.player1.StrategyAttack;
                     break;
                 case 2:
                     str_player1 = field.player1.StrategySecurity;
                     break;
                 case 3:
-                    str_player1 = field.player1.Strategy4;
+                    str_player1 = field.player1.StrategyHelp;
                     break;
                 case 4:
                     str_player1_user = field.player1.StrategyUser;
@@ -175,13 +175,13 @@ namespace CourseworkWPF
                     str_player2 = field.player2.StrategySimple;
                     break;
                 case 1:
-                    str_player2 = field.player2.Strategy2;
+                    str_player2 = field.player2.StrategyAttack;
                     break;
                 case 2:
                     str_player2 = field.player2.StrategySecurity;
                     break;
                 case 3:
-                    str_player2 = field.player2.Strategy4;
+                    str_player2 = field.player2.StrategyHelp;
                     break;
                 case 4:
                     str_player2_user = field.player2.StrategyUser;
