@@ -530,8 +530,10 @@ namespace ClassLibrary
         /// </summary>
         /// <param name="competitorKing">король соперника</param>
         /// <returns>список позиций</returns>
-        private List<Position> GetObstaclesPosition(FigureKing competitorKing)
+        public List<Position> GetObstaclesPosition(FigureKing competitorKing)
         {
+            List<Position> listRight = new List<Position>();
+            List<Position> listLeft = new List<Position>();
             List<Position> list = new List<Position>();
             int k;
             if (Color == Color.Black)
@@ -543,7 +545,7 @@ namespace ClassLibrary
                 if (GameField.IsWall(competitorKing.Offset.Row - k, i))
                     break;
                 if (GameField.IsInside(competitorKing.Offset.Row - k, i) && GameField[competitorKing.Offset.Row - k, i] == 0)
-                    list.Add(new Position(competitorKing.Offset.Row - k, i));
+                    listRight.Add(new Position(competitorKing.Offset.Row - k, i));
             }
             // влево
             for (int i = competitorKing.Offset.Column - 1; i >= 0; i--)
@@ -551,7 +553,27 @@ namespace ClassLibrary
                 if (GameField.IsWall(competitorKing.Offset.Row - k, i))
                     break;
                 if (GameField.IsInside(competitorKing.Offset.Row - k, i) && GameField[competitorKing.Offset.Row - k, i] == 0)
-                    list.Add(new Position(competitorKing.Offset.Row - k, i));
+                    listLeft.Add(new Position(competitorKing.Offset.Row - k, i));
+            }
+            int limit = Math.Min(listRight.Count, listLeft.Count);
+            for (int i = 0; i < limit; i++)
+            {
+                list.Add(listRight[i]);
+                list.Add(listLeft[i]);
+            }
+            if (listLeft.Count < listRight.Count)
+            {
+                for (int i = listLeft.Count; i < listRight.Count; i++)
+                {
+                    list.Add(listRight[i]);
+                }
+            }
+            if (listLeft.Count > listRight.Count)
+            {
+                for (int i = listRight.Count; i < listLeft.Count; i++)
+                {
+                    list.Add(listLeft[i]);
+                }
             }
             return list;
         }
