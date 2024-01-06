@@ -163,6 +163,12 @@ namespace CourseworkWPF
                     str_player1 = field.player1.StrategyHelp;
                     break;
                 case 4:
+                    str_player1 = field.player1.StrategySimpleSameWay;
+                    break;
+                case 5:
+                    str_player1 = field.player1.StrategySimpleNonPregradaWay;
+                    break;
+                case 6:
                     str_player1_user = field.player1.StrategyUser;
                     break;
                 default:
@@ -184,6 +190,12 @@ namespace CourseworkWPF
                     str_player2 = field.player2.StrategyHelp;
                     break;
                 case 4:
+                    str_player2 = field.player2.StrategySimpleSameWay;
+                    break;
+                case 5:
+                    str_player2 = field.player2.StrategySimpleNonPregradaWay;
+                    break;
+                case 6:
                     str_player2_user = field.player2.StrategyUser;
                     break;
                 default:

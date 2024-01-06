@@ -137,6 +137,61 @@ namespace ClassLibrary
 
 
         /// <summary>
+        /// Выбор позиции, для которой не будет преград на следующем ходе
+        /// </summary>
+        /// <param name="list">список возможных позиций</param>
+        /// <returns>выгодную позицию или (-10, -10), если такой позиции не существует</returns>
+        public List<Position> ChooseNonPregradaPosition(FigureQueen competitorQueen, FigureKing competitorKing, int motionQueen, FigureQueen queen)
+        {
+            List<Position> listPositions = new List<Position>();
+            List<Position> listPositionsAround;
+            if (motionQueen >= 5 &&
+                queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
+                return listPositions;
+            if (this.Color == Color.White)
+                listPositionsAround = new List<Position>() {
+                            new Position(1, 0),
+                            new Position(1, 1),
+                            new Position(1, -1),
+                        };
+            else listPositionsAround = new List<Position>() {
+                            new Position(-1, -1),
+                            new Position(-1, 0),
+                            new Position(-1, 1),
+                        };
+
+            for (int j = 0; j < listPositionsAround.Count; j++)
+            {
+                if (OpportunityToMakeMove(this.Offset.Row + listPositionsAround[j].Row, this.Offset.Column + listPositionsAround[j].Column, competitorQueen, competitorKing))
+                {
+                    List<Position> checkPregradaPositions = competitorQueen.GetObstaclesPosition(null, new Position(this.Offset.Row + listPositionsAround[j].Row, this.Offset.Column + listPositionsAround[j].Column));
+                    List<Position> checkAllPositions = competitorQueen.GetAllPosition(motionQueen, null, new Position(this.Offset.Row + listPositionsAround[j].Row, this.Offset.Column + listPositionsAround[j].Column));
+                    if (checkPregradaPositions.Count == 0 || !CheckElementsMatch(checkPregradaPositions, checkAllPositions))
+                    {
+                        listPositions.Add(new Position(this.Offset.Row + listPositionsAround[j].Row, this.Offset.Column + listPositionsAround[j].Column));
+                    }
+                }
+            }
+            return listPositions;
+        }
+
+        private bool CheckElementsMatch(List<Position> firstList, List<Position> secondList)
+        {
+            for (int i = 0; i < firstList.Count; i++)
+            {
+                for (int j = 0; j < secondList.Count; j++)
+                {
+                    if (firstList[i].Equals(secondList[j]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// Выбор случайной позиции
         /// </summary>
         /// <param name="list">список возможных позиций</param>
@@ -219,7 +274,60 @@ namespace ClassLibrary
             }
         }
 
-        public int OptimalMove(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
+        public int OptimalMove(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen, bool isNonPregradaWay)
+        {
+            int result, fx, fy;
+            while (true)
+            {
+                Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, posEnd.Row, posEnd.Column, GameField);
+                result = cMap[posEnd.Row, posEnd.Column];
+
+                (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
+
+                if (fx != -100 &&
+                    OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing))
+                {
+                    MoveFigure(fx, fy);
+                    history.Add(motion, (Id, new Position(fx, fy)));
+                    break;
+                }
+                else
+                {
+                    if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
+                    {
+                        List<Position> allPositions;
+                        if (isNonPregradaWay)
+                        {
+                            allPositions = ChooseNonPregradaPosition(competitorQueen, competitorKing, motionColor, queen);
+                        }
+                        else
+                        {
+                            allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
+                        }
+                        if (allPositions.Count != 0)
+                        {
+                            Position position = ChooseRandomPosition(allPositions);
+                            MoveFigure(position.Row, position.Column);
+                            history.Add(motion, (Id, new Position(position.Row, position.Column)));
+                            fx = position.Row;
+                            break;
+                        }
+                        else
+                        {
+                            fx = -100;
+                            break;
+                        }
+                    }
+                    GameField[fx, fy] = -7;
+                }
+                cMap.Draw();
+            }
+            ClearGameFieldAfterKingsMove();
+            return fx;
+        }
+
+        // TODO удалить дублирование
+        public int OptimalMoveWith(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
         {
             int result, fx, fy;
             while (true)
@@ -261,6 +369,96 @@ namespace ClassLibrary
             }
             ClearGameFieldAfterKingsMove();
             return fx;
+        }
+
+        public List<Position> SameWayMoveGetPath(Position posEnd)
+        {
+            int result;
+
+            Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, posEnd.Row, posEnd.Column, GameField);
+            result = cMap[posEnd.Row, posEnd.Column];
+
+            List<Position> path = DynamicField.FindKingPath(posEnd.Row, posEnd.Column, result, ref cMap, false);
+            path.Reverse();
+            path.Add(posEnd);
+            return path;
+        }
+
+        public int RandomMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
+        {
+            int fx;
+            List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
+            if (allPositions.Count != 0)
+            {
+                Position position = ChooseRandomPosition(allPositions);
+                MoveFigure(position.Row, position.Column);
+                history.Add(motion, (Id, new Position(position.Row, position.Column)));
+                fx = position.Row;
+            }
+            else
+                fx = -100;
+            return fx;
+        }
+
+        public int SameWayMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, List<Position> path)
+        {
+            int fx = 0;
+            int pathLength = path.Count();
+            while (true)
+            {
+                if (pathLength != 0 &&
+                   OpportunityToMakeMove(path[0].Row, path[0].Column, competitorQueen, competitorKing))
+                {
+                    MoveFigure(path[0].Row, path[0].Column);
+                    history.Add(motion, (Id, new Position(path[0].Row, path[0].Column)));
+                    // TODO удалить первый элемент массива path
+                    path.RemoveAt(0);
+                    break;
+                }
+                // TODO проеврить работу
+                //else
+                //{
+                //if (pathLength == 0 || (path[0].Row, path[0].Column) == (posEnd.Row, posEnd.Column))
+                //{
+                //List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
+                //if (allPositions.Count != 0)
+                //{
+                // Position position = ChooseRandomPosition(allPositions);
+                // MoveFigure(position.Row, position.Column);
+                // history.Add(motion, (Id, new Position(position.Row, position.Column)));
+                // fx = position.Row;
+                // break;
+                //}
+                else
+                {
+                    fx = -100;
+                    break;
+                }
+                //}
+                //GameField[path[0].Row, path[0].Column] = -7;
+                //}
+                //cMap.Draw();
+            }
+            ClearGameFieldAfterKingsMove();
+            return fx;
+        }
+
+        public int NextPositionMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history)
+        {
+            List<Position> defaultPath = SameWayMoveGetPath(EndingPosition);
+            int index = defaultPath.IndexOf(Offset);
+            int result;
+            if (index + 1 != defaultPath.Count && OpportunityToMakeMove(defaultPath[index + 1].Row, defaultPath[index + 1].Column, competitorQueen, competitorKing)) // если это не последний элемент в массиве
+            {
+                MoveFigure(defaultPath[index + 1].Row, defaultPath[index + 1].Column); // сдвиг фигуры на следующую позицию
+                history.Add(motion, (Id, new Position(defaultPath[index + 1].Row, defaultPath[index + 1].Column)));
+                result = 1;
+            }
+            else
+            {
+                result = 0 ;
+            }
+            return result;
         }
     }
 }

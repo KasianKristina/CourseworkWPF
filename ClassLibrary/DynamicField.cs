@@ -206,7 +206,7 @@ namespace ClassLibrary
             {
                 DynamicField field = new DynamicField();
                 field.Walls(30);
-                field.check_delegate(field.player1.StrategySecurity, field.player2.StrategyAttack);
+                field.check_delegate(field.player1.StrategySecuritySameWay, field.player2.StrategySecurity);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -238,6 +238,90 @@ namespace ClassLibrary
             if (result == -6)
                 return false;
             return true;
+        }
+
+        // нахождение всего оптимального пути до стартовой позиции короля соперника
+        public static List<Position> FindKingPath(int x, int y, int result, ref Field cMap, bool wall)
+        {
+            List<Position> path = new List<Position>();
+            while (result != 1)
+            {
+                if (cMap.IsEmptyWave(x, y - 1) && cMap[x, y - 1] == result - 1)
+                {
+                    result = cMap[x, y - 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x, y - 1));
+                    y -= 1;
+                }
+                else if (cMap.IsEmptyWave(x, y + 1) && cMap[x, y + 1] == result - 1)
+                {
+                    result = cMap[x, y + 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x, y + 1));
+                    y += 1;
+                }
+                else if (cMap.IsEmptyWave(x + 1, y) && cMap[x + 1, y] == result - 1)
+                {
+                    result = cMap[x + 1, y];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x + 1, y));
+                    x += 1;
+                }
+                else if (cMap.IsEmptyWave(x - 1, y) && cMap[x - 1, y] == result - 1)
+                {
+                    result = cMap[x - 1, y];
+                    //x = x - 1;
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x - 1, y));
+                    x -= 1;
+                }
+                else if (cMap.IsEmptyWave(x + 1, y + 1) && cMap[x + 1, y + 1] == result - 1)
+                {
+                    result = cMap[x + 1, y + 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x + 1, y + 1));
+                    x += 1;
+                    y += 1;
+                }
+                else if (cMap.IsEmptyWave(x + 1, y - 1) && cMap[x + 1, y - 1] == result - 1)
+                {
+                    result = cMap[x + 1, y - 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x + 1, y - 1));
+                    x += 1;
+                    y -= 1;
+                }
+                else if (cMap.IsEmptyWave(x - 1, y - 1) && cMap[x - 1, y - 1] == result - 1)
+                {
+                    result = cMap[x - 1, y - 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x - 1, y - 1));
+                    x -= 1;
+                    y -= 1;
+                }
+                else if (cMap.IsEmptyWave(x - 1, y + 1) && cMap[x - 1, y + 1] == result - 1)
+                {
+                    result = cMap[x - 1, y + 1];
+                    if (wall)
+                        cMap[x, y] = -5;
+                    path.Add(new Position(x - 1, y + 1));
+                    x -= 1;
+                    y += 1;
+                }
+                else
+                {
+                    Console.WriteLine("оптимальный путь не найден");
+                    return (new List<Position>());
+                }
+            }
+            return path;
         }
 
         // восстановление пути

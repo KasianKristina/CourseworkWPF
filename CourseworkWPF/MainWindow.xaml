@@ -22,6 +22,8 @@
             <ComboBoxItem Content="Захват короля соперника"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля"/>
             <ComboBoxItem Content="Защита короля"/>
+            <ComboBoxItem Content="Кратчайший путь + SameWay"/>
+            <ComboBoxItem Content="NonPregradaWay + Simple"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
         <ComboBox x:Name="comboboxick2" SelectedIndex="0" HorizontalAlignment="Left" Margin="218,99,0,0" VerticalAlignment="Top" Width="136" SelectionChanged="comboboxick2_SelectionChanged" RenderTransformOrigin="0.45,-1.875">
@@ -29,6 +31,8 @@
             <ComboBoxItem Content="Захват короля соперника"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля"/>
             <ComboBoxItem Content="Защита короля"/>
+            <ComboBoxItem Content="Кратчайший путь + SameWay"/>
+            <ComboBoxItem Content="NonPregradaWay + Simple"/>
             <ComboBoxItem Content="Пользователь"/>
         </ComboBox>
         <Label Content="Игрок 1" HorizontalAlignment="Left" Margin="40,68,0,0" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14" Width="162" RenderTransformOrigin="0.484,-0.492"/>
