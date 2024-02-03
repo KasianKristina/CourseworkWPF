@@ -205,8 +205,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySecuritySameWay, field.player2.StrategySecurity);
+                field.Walls(10);
+                field.check_delegate(field.player1.StrategySecurity, field.player2.StrategyAttackNoTurningBack);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -399,7 +399,14 @@ namespace ClassLibrary
         }
 
         // распространение волны
-        public static Field CreateWave(int startX, int startY, int finishX, int finishY, Field field)
+        public static Field CreateWave(
+            int startX,
+            int startY,
+            int finishX,
+            int finishY,
+            Field field,
+            Player player = null
+            )
         {
             bool add = true;
             int MapX = 8;
@@ -415,6 +422,9 @@ namespace ClassLibrary
                         cMap[x, y] = -5; // индикатор стены
                     else
                         cMap[x, y] = -6; // индикатор: еще не были здесь
+
+                    if (player != null && !player.king.OpportunityToMakeMove(x, y, player.Сompetitor.queen, player.Сompetitor.king))
+                        cMap[x, y] = -5;
                 }
             }
 
@@ -461,6 +471,132 @@ namespace ClassLibrary
                     add = false;
             }
             return cMap;
+        }
+
+        public static int minMax(Player player, int level, Position whiteKingStart, Position whiteQueenStart, Position blackKingStart, Position blackQueenStart)
+        {
+            int MIN_VALUE = 0;
+            int MAX_VALUE = 0;
+            int MinMax = player.Color == Color.White ? MAX_VALUE : MIN_VALUE;
+            if (level == 0)
+                return getResult(player);
+            bool isWhitePlayer = (player.Color == Color.White);
+
+            Position whiteQueenPosition = new Position(whiteQueenStart.Row, whiteQueenStart.Column);
+            Position whiteKingPosition = new Position(whiteKingStart.Row, whiteKingStart.Column);
+            Position blackQueenPosition = new Position(blackQueenStart.Row, blackQueenStart.Column);
+            Position blackKingPosition = new Position(blackKingStart.Row, blackKingStart.Column);
+
+            int bestMove = -1;
+            bool isKingBestMove = true;
+
+            List<Position> allPositionsQueen = player.queen.GetAllPosition(player.motionColor, player.Сompetitor.king);
+            List<Position> allPositionsKing = player.king.GetAllPosition(1, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen);
+
+            for (int i = 0; i < allPositionsQueen.Count; i++)
+            {
+                player.queen.MoveFigure(allPositionsQueen[i].Row, allPositionsQueen[i].Column);
+                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenPosition, blackKingStart, blackQueenStart);
+                if ((test > MinMax && isWhitePlayer) || (test < MinMax && !isWhitePlayer))
+                {
+                    MinMax = test;
+                    bestMove = i;
+                    isKingBestMove = false;
+                }
+                if (player.Color == Color.White)
+                    player.queen.MoveFigure(whiteQueenPosition.Row, whiteQueenPosition.Column);
+                else player.queen.MoveFigure(blackQueenPosition.Row, blackQueenPosition.Column);
+            }
+            for (int i = 0; i < allPositionsKing.Count; i++)
+            {
+                player.king.MoveFigure(allPositionsKing[i].Row, allPositionsKing[i].Column);
+                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenStart, blackKingStart, blackQueenStart);
+                if ((test > MinMax && isWhitePlayer) || (test < MinMax && !isWhitePlayer)) // проверить
+                {
+                    MinMax = test;
+                    bestMove = i;
+                    isKingBestMove = true;
+                }
+                if (player.Color == Color.White)
+                    player.king.MoveFigure(whiteKingPosition.Row, whiteKingPosition.Column);
+                else player.king.MoveFigure(blackKingPosition.Row, blackKingPosition.Column);
+            }
+
+            if (bestMove == -1)
+                return getResult(player);
+            //if (true) // написать другое условие if(level == 0)
+                if (isKingBestMove)
+                    player.king.MoveFigure(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column);
+                else player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsKing[bestMove].Column);
+
+            return MinMax;
+        }
+
+        public int minMax2(Player player, int depth, int alpha, int beta, bool maximizingPlayer)
+        {
+            if (depth == 0 || IsGameOver())
+            {
+                return getResult(player);
+            }
+
+            if (maximizingPlayer)
+            {
+                int maxEval = int.MinValue;
+                foreach (var move in player.king.GetAllPosition(player.motionColor, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen))
+                {
+                    player.king.MoveFigure(move.Row, move.Column);
+                    int eval = minMax2(player.Сompetitor, depth - 1, alpha, beta, false);
+                    //player.king.UndoMove(move);
+                    maxEval = Math.Max(maxEval, eval);
+                    alpha = Math.Max(alpha, eval);
+                    if (beta <= alpha)
+                        break; // Альфа-бета отсечение
+                }
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                foreach (var move in player.king.GetAllPosition(player.motionColor, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen))
+                {
+                    player.king.MoveFigure(move.Row, move.Column);
+                    int eval = minMax2(player.Сompetitor, depth - 1, alpha, beta, true);
+                    //player.king.UndoMove(move);
+                    minEval = Math.Min(minEval, eval);
+                    beta = Math.Min(beta, eval);
+                    if (beta <= alpha)
+                        break; // Альфа-бета отсечение
+                }
+                return minEval;
+            }
+        }
+
+        // получение результата для minMax
+        public static int getResult(Player player)
+        {
+            Field cMap = CreateWave(player.king.Offset.Row, player.king.Offset.Column,
+                player.Сompetitor.king.StartOffset.Row, player.Сompetitor.king.StartOffset.Column, player.GameField, player);
+            int minimumNumberOfMoves = cMap[player.Сompetitor.king.StartOffset.Row, player.Сompetitor.king.StartOffset.Column];
+
+            Field cMap2 = CreateWave(player.Сompetitor.king.Offset.Row, player.Сompetitor.king.Offset.Column,
+                player.king.StartOffset.Row, player.king.StartOffset.Column, player.GameField, player.Сompetitor);
+            int minimumNumberOfCompetitorMoves = cMap2[player.king.StartOffset.Row, player.king.StartOffset.Column];
+
+            if (minimumNumberOfMoves == -6)
+                minimumNumberOfMoves = 100;
+            else if (minimumNumberOfMoves == 1)
+                minimumNumberOfMoves = -200;
+            else if (minimumNumberOfMoves == 2)
+                minimumNumberOfMoves = -100;
+
+            if (minimumNumberOfCompetitorMoves == -6)
+                minimumNumberOfCompetitorMoves = 100;
+            else if (minimumNumberOfCompetitorMoves == 1)
+                minimumNumberOfCompetitorMoves = -200;
+            else if (minimumNumberOfCompetitorMoves == 2)
+                minimumNumberOfCompetitorMoves = -100;
+
+            return minimumNumberOfMoves - minimumNumberOfCompetitorMoves;
         }
     }
 }

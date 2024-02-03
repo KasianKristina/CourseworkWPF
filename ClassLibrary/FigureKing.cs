@@ -213,7 +213,7 @@ namespace ClassLibrary
         /// <param name="competitorQueen">ферзь соперника</param>
         /// <param name="competitorKing">король соперника</param>
         /// <returns>true - король может сделать ход, false - не может</returns>
-        private bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
+        public bool OpportunityToMakeMove(int x, int y, FigureQueen competitorQueen, FigureKing competitorKing)
         {
             if (GameField.IsEmpty(x, y) &&
                competitorQueen.CheckQueenAttack(competitorQueen.Offset, new Position(x, y)) &&
@@ -247,6 +247,50 @@ namespace ClassLibrary
                             new Position(-1, 1),
                             new Position(-1, -1),
                         };
+
+            if (motionQueen >= 5 &&
+                queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
+                return list;
+
+            foreach (Position pos in listCheck)
+            {
+                if (OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing))
+                    list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Получение всех возможных позиций, исключая позиции назад
+        /// </summary>
+        /// <param name="motionQueen">сколько ходов ферзь оставался на одной горизонтали</param>
+        /// <param name="competitorQueen"></param>
+        /// <param name="competitorKing"></param>
+        /// <param name="queen"></param>
+        /// <returns>список всех возможных позиций</returns>
+        public List<Position> GetAllPositionNoTurningBack(int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
+        {
+            List<Position> list = new List<Position>();
+            List<Position> listCheck;
+            if (Color == Color.White)
+            {
+                listCheck = new List<Position>() {
+                            new Position(0, 1),
+                            new Position(0, -1),
+                            new Position(1, 0),
+                            new Position(1, 1),
+                            new Position(1, -1)
+                        };
+            } else
+            {
+                listCheck = new List<Position>() {
+                            new Position(0, 1),
+                            new Position(0, -1),
+                            new Position(-1, 0),
+                            new Position(-1, 1),
+                            new Position(-1, -1),
+                        };
+            }
 
             if (motionQueen >= 5 &&
                 queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
@@ -326,8 +370,7 @@ namespace ClassLibrary
             return fx;
         }
 
-        // TODO удалить дублирование
-        public int OptimalMoveWith(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
+        public int OptimalMoveIsNoTurningBack(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
         {
             int result, fx, fy;
             while (true)
@@ -338,7 +381,8 @@ namespace ClassLibrary
                 (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
 
                 if (fx != -100 &&
-                    OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing))
+                    OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing) &&
+                    ((Color == Color.Black && fx <= Offset.Row) || (Color == Color.White && fx >= Offset.Row)))
                 {
                     MoveFigure(fx, fy);
                     history.Add(motion, (Id, new Position(fx, fy)));
@@ -348,7 +392,8 @@ namespace ClassLibrary
                 {
                     if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
                     {
-                        List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
+                        List<Position> allPositions = GetAllPositionNoTurningBack(motionColor, competitorQueen, competitorKing, queen);
+                        
                         if (allPositions.Count != 0)
                         {
                             Position position = ChooseRandomPosition(allPositions);
@@ -456,7 +501,7 @@ namespace ClassLibrary
             }
             else
             {
-                result = 0 ;
+                result = 0;
             }
             return result;
         }
