@@ -428,7 +428,8 @@ namespace ClassLibrary
                 }
             }
 
-            cMap[finishX, finishY] = -6;
+            if (player == null)
+                cMap[finishX, finishY] = -6;
 
             cMap[startX, startY] = 0;
             while (add == true)
@@ -473,11 +474,11 @@ namespace ClassLibrary
             return cMap;
         }
 
-        public static int minMax(Player player, int level, Position whiteKingStart, Position whiteQueenStart, Position blackKingStart, Position blackQueenStart)
+        public static int minMax(Player player, int level, Position whiteKingStart, Position whiteQueenStart, Position blackKingStart, Position blackQueenStart, int alpha, int beta, int maxDepth)
         {
-            int MIN_VALUE = 0;
-            int MAX_VALUE = 0;
-            int MinMax = player.Color == Color.White ? MAX_VALUE : MIN_VALUE;
+            int MIN_VALUE = 400;// проеврить
+            int MAX_VALUE = -400;
+            int MinMax = player.Color == Color.White ? MIN_VALUE : MAX_VALUE;
             if (level == 0)
                 return getResult(player);
             bool isWhitePlayer = (player.Color == Color.White);
@@ -496,8 +497,15 @@ namespace ClassLibrary
             for (int i = 0; i < allPositionsQueen.Count; i++)
             {
                 player.queen.MoveFigure(allPositionsQueen[i].Row, allPositionsQueen[i].Column);
-                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenPosition, blackKingStart, blackQueenStart);
-                if ((test > MinMax && isWhitePlayer) || (test < MinMax && !isWhitePlayer))
+                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenPosition, blackKingStart, blackQueenStart, alpha, beta, maxDepth); 
+                // test - разница положения между фигурами соперника и своими фигурами. Чем меньше test, тем меньше выгода у соперника => тем выше выгода игрока
+                if (isWhitePlayer)
+                    alpha = Math.Max(alpha, test);
+                else
+                    beta = Math.Min(beta, test);
+                if (beta <= alpha)
+                    break; // Альфа-бета отсечение
+                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer)) // каждый игрок пытается максимизировать свою выгоду
                 {
                     MinMax = test;
                     bestMove = i;
@@ -507,11 +515,21 @@ namespace ClassLibrary
                     player.queen.MoveFigure(whiteQueenPosition.Row, whiteQueenPosition.Column);
                 else player.queen.MoveFigure(blackQueenPosition.Row, blackQueenPosition.Column);
             }
+
+            alpha = int.MinValue;
+            beta = int.MaxValue;
+
             for (int i = 0; i < allPositionsKing.Count; i++)
             {
                 player.king.MoveFigure(allPositionsKing[i].Row, allPositionsKing[i].Column);
-                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenStart, blackKingStart, blackQueenStart);
-                if ((test > MinMax && isWhitePlayer) || (test < MinMax && !isWhitePlayer)) // проверить
+                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenStart, blackKingStart, blackQueenStart, alpha, beta, maxDepth);
+                if (isWhitePlayer)
+                    alpha = Math.Max(alpha, test);
+                else
+                    beta = Math.Min(beta, test);
+                if (beta <= alpha)
+                    break; // Альфа-бета отсечение
+                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer)) // белые - максимизируют, черные - минимизируют
                 {
                     MinMax = test;
                     bestMove = i;
@@ -524,10 +542,10 @@ namespace ClassLibrary
 
             if (bestMove == -1)
                 return getResult(player);
-            //if (true) // написать другое условие if(level == 0)
+            if (level == maxDepth) // написать другое условие if(level == 1 || level == 2)
                 if (isKingBestMove)
                     player.king.MoveFigure(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column);
-                else player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsKing[bestMove].Column);
+                else player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column);
 
             return MinMax;
         }
@@ -588,6 +606,8 @@ namespace ClassLibrary
                 minimumNumberOfMoves = -200;
             else if (minimumNumberOfMoves == 2)
                 minimumNumberOfMoves = -100;
+            else if (minimumNumberOfMoves == 0)
+                minimumNumberOfMoves = -300;
 
             if (minimumNumberOfCompetitorMoves == -6)
                 minimumNumberOfCompetitorMoves = 100;
@@ -595,8 +615,12 @@ namespace ClassLibrary
                 minimumNumberOfCompetitorMoves = -200;
             else if (minimumNumberOfCompetitorMoves == 2)
                 minimumNumberOfCompetitorMoves = -100;
+            else if (minimumNumberOfCompetitorMoves == 0)
+                minimumNumberOfCompetitorMoves = -300;
 
-            return minimumNumberOfMoves - minimumNumberOfCompetitorMoves;
+            if (player.Color == Color.White)
+                return minimumNumberOfMoves - minimumNumberOfCompetitorMoves; // белые - черные
+            else return minimumNumberOfCompetitorMoves - minimumNumberOfMoves; // черные.competitor (белые) - черные
         }
     }
 }

@@ -807,5 +807,11 @@ namespace ClassLibrary
                 }
             }
         }
+
+        public void StrategyMinMax(int motion)
+        {
+            //Player player = new Player(Color.White, ref GameField);
+            //DynamicField.minMax(player, 2, king.Offset, Сompetitor.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 2);
+        }
     }
 }

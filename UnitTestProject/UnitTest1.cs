@@ -644,7 +644,7 @@ namespace UnitTestProject
 
         [TestMethod]
         /// <summary>
-        /// Тест для проверки метода minMax. Result: (-200, 100) === -300. Для первого игрока 300
+        /// Тест для проверки метода minMax. Result: (-300, 100) === -400
         /// </summary>
         public void getMinMaxTest1()
         {
@@ -674,9 +674,9 @@ namespace UnitTestProject
             GameField[6, 6] = -5;
             GameField[6, 7] = -5;
 
-            int result = DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset);
+            int result = DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 1);
 
-            Assert.AreEqual(300, result);
+            Assert.AreEqual(-400, result);
         }
 
         [TestMethod]
@@ -711,9 +711,9 @@ namespace UnitTestProject
             GameField[6, 6] = -5;
             GameField[6, 7] = -5;
 
-            int result = DynamicField.minMax(player2, 0, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset);
+            int result = DynamicField.minMax(player2, 0, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 0);
 
-            Assert.AreEqual(300, result);
+            Assert.AreEqual(-300, result);
         }
 
         [TestMethod]
@@ -738,9 +738,74 @@ namespace UnitTestProject
             GameField[6, 0] = -5;
             GameField[6, 1] = -5;
 
-            int result = DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset);
+            int result = DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 1);
 
-            Assert.AreEqual(204, result);
+            Assert.AreEqual(-204, result);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода minMax. Позиция для хода к1 = (6, 5). 4-(-200) = 204. Проверка позиции
+        /// </summary>
+        public void getMinMaxTest1CheckPosition()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+            player1.king.MoveFigure(5, 5);
+            player1.queen.MoveFigure(7, 0);
+            player2.king.MoveFigure(4, 1);
+            player2.queen.MoveFigure(0, 0);
+
+            GameField[1, 1] = -5; // стена
+            GameField[5, 0] = -5;
+            GameField[6, 0] = -5;
+            GameField[6, 1] = -5;
+
+            DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 1);
+            Assert.AreEqual(6, player1.king.Offset.Row);
+            Assert.AreEqual(5, player1.king.Offset.Column);
+
+             DynamicField.minMax(player2, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 1);
+            Assert.AreEqual(0, player2.queen.Offset.Row);
+            Assert.AreEqual(4, player2.queen.Offset.Column);
+
+            DynamicField.minMax(player1, 1, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 1);
+            Assert.AreEqual(6, player1.king.Offset.Row);
+            Assert.AreEqual(5, player1.king.Offset.Column);
+            Assert.AreEqual(7, player1.queen.Offset.Row);
+            Assert.AreEqual(1, player1.queen.Offset.Column);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода minMax. Позиция для хода к1 = (6, 5). 4-(-200) = 204. Проверка позиции. Level 2.
+        /// </summary>
+        public void getMinMaxTest3Level2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+            player1.king.MoveFigure(5, 5);
+            player1.queen.MoveFigure(7, 0);
+            player2.king.MoveFigure(4, 1);
+            player2.queen.MoveFigure(0, 0);
+
+            GameField[1, 1] = -5; // стена
+            GameField[5, 0] = -5;
+            GameField[6, 0] = -5;
+            GameField[6, 1] = -5;
+
+            DynamicField.minMax(player1, 2, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 2);
+
+            Assert.AreEqual(6, player1.king.Offset.Row);
+            Assert.AreEqual(5, player1.king.Offset.Column);
         }
     }
 }
