@@ -810,8 +810,27 @@ namespace ClassLibrary
 
         public void StrategyMinMax(int motion)
         {
-            //Player player = new Player(Color.White, ref GameField);
-            //DynamicField.minMax(player, 2, king.Offset, Сompetitor.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 2);
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+
+            if (motion < 5)
+            {
+                if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
+                    return;
+            }
+
+            Position posWhiteKing = (Color == Color.White) ? new Position(king.Offset.Row, king.Offset.Column) : new Position(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column);
+            Position posWhiteQueen = (Color == Color.White) ? new Position(queen.Offset.Row, queen.Offset.Column) : new Position(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column);
+            Position posBlackKing = (Color == Color.Black) ? new Position(king.Offset.Row, king.Offset.Column) : new Position(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column);
+            Position posBlackQueen = (Color == Color.Black) ? new Position(queen.Offset.Row, queen.Offset.Column) : new Position(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column);
+
+            
+            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, 1, 1, 1, history, motion, GameField, motionColor);
+            if (res == 1000)
+            {
+                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
+                    queen.RandomMove(Сompetitor.king, motion, history, motion);
+            }
         }
     }
 }

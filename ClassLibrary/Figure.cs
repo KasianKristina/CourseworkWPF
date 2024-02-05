@@ -34,5 +34,16 @@ namespace ClassLibrary
                 GameField[Offset.Row, Offset.Column] = Id;
             }
         }
+
+        public virtual void MoveFigureVirtualField(int rows, int columns, Field virtualFieled)
+        {
+            if (virtualFieled[rows, columns] >= 0)
+            {
+                virtualFieled[Offset.Row, Offset.Column] = 0;
+                Offset.Row = rows;
+                Offset.Column = columns;
+                virtualFieled[Offset.Row, Offset.Column] = Id;
+            }
+        }
     }
 }

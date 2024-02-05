@@ -474,7 +474,21 @@ namespace ClassLibrary
             return cMap;
         }
 
-        public static int minMax(Player player, int level, Position whiteKingStart, Position whiteQueenStart, Position blackKingStart, Position blackQueenStart, int alpha, int beta, int maxDepth)
+        public static int minMax(
+            Player player, 
+            int level, 
+            Position whiteKingStart, 
+            Position whiteQueenStart, 
+            Position blackKingStart, 
+            Position blackQueenStart, 
+            int alpha, 
+            int beta, 
+            int maxDepth, 
+            Dictionary<int, (int, Position)> history, 
+            int motion, 
+            Field field,
+            int motionColor
+            )
         {
             int MIN_VALUE = 400;// проеврить
             int MAX_VALUE = -400;
@@ -482,6 +496,7 @@ namespace ClassLibrary
             if (level == 0)
                 return getResult(player);
             bool isWhitePlayer = (player.Color == Color.White);
+            Field virtualField = field.Copy(); ;
 
             Position whiteQueenPosition = new Position(whiteQueenStart.Row, whiteQueenStart.Column);
             Position whiteKingPosition = new Position(whiteKingStart.Row, whiteKingStart.Column);
@@ -492,12 +507,28 @@ namespace ClassLibrary
             bool isKingBestMove = true;
 
             List<Position> allPositionsQueen = player.queen.GetAllPosition(player.motionColor, player.Сompetitor.king);
-            List<Position> allPositionsKing = player.king.GetAllPosition(1, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen);
+            List<Position> allPositionsKing = motionColor < 6 || (motionColor >= 6 && player.queen.CheckLoseGame(player.Сompetitor.queen.Id, player.king.Offset)) ?
+                player.king.GetAllPosition(1, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen) :
+                new List<Position>();
 
             for (int i = 0; i < allPositionsQueen.Count; i++)
             {
-                player.queen.MoveFigure(allPositionsQueen[i].Row, allPositionsQueen[i].Column);
-                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenPosition, blackKingStart, blackQueenStart, alpha, beta, maxDepth); 
+                player.queen.MoveFigureVirtualField(allPositionsQueen[i].Row, allPositionsQueen[i].Column, virtualField);
+                int test = minMax(
+                    player.Сompetitor, 
+                    level - 1, 
+                    whiteKingStart, 
+                    whiteQueenPosition, 
+                    blackKingStart, 
+                    blackQueenStart, 
+                    alpha, 
+                    beta, 
+                    maxDepth, 
+                    history, 
+                    motion, 
+                    field, 
+                    motionColor);
+
                 // test - разница положения между фигурами соперника и своими фигурами. Чем меньше test, тем меньше выгода у соперника => тем выше выгода игрока
                 if (isWhitePlayer)
                     alpha = Math.Max(alpha, test);
@@ -512,8 +543,10 @@ namespace ClassLibrary
                     isKingBestMove = false;
                 }
                 if (player.Color == Color.White)
-                    player.queen.MoveFigure(whiteQueenPosition.Row, whiteQueenPosition.Column);
-                else player.queen.MoveFigure(blackQueenPosition.Row, blackQueenPosition.Column);
+                    player.queen.MoveFigureVirtualField(whiteQueenPosition.Row, whiteQueenPosition.Column, virtualField);
+                else
+                    player.queen.MoveFigureVirtualField(blackQueenPosition.Row, blackQueenPosition.Column, virtualField);
+
             }
 
             alpha = int.MinValue;
@@ -521,8 +554,22 @@ namespace ClassLibrary
 
             for (int i = 0; i < allPositionsKing.Count; i++)
             {
-                player.king.MoveFigure(allPositionsKing[i].Row, allPositionsKing[i].Column);
-                int test = minMax(player.Сompetitor, level - 1, whiteKingStart, whiteQueenStart, blackKingStart, blackQueenStart, alpha, beta, maxDepth);
+                player.king.MoveFigureVirtualField(allPositionsKing[i].Row, allPositionsKing[i].Column, virtualField);
+                int test = minMax(
+                    player.Сompetitor, 
+                    level - 1, 
+                    whiteKingStart, 
+                    whiteQueenStart, 
+                    blackKingStart, 
+                    blackQueenStart, 
+                    alpha, 
+                    beta, 
+                    maxDepth, 
+                    history, 
+                    motion, 
+                    field, 
+                    motionColor);
+
                 if (isWhitePlayer)
                     alpha = Math.Max(alpha, test);
                 else
@@ -536,57 +583,28 @@ namespace ClassLibrary
                     isKingBestMove = true;
                 }
                 if (player.Color == Color.White)
-                    player.king.MoveFigure(whiteKingPosition.Row, whiteKingPosition.Column);
-                else player.king.MoveFigure(blackKingPosition.Row, blackKingPosition.Column);
+                    player.king.MoveFigureVirtualField(whiteKingPosition.Row, whiteKingPosition.Column, virtualField);
+                else
+                    player.king.MoveFigureVirtualField(blackKingPosition.Row, blackKingPosition.Column, virtualField);
             }
 
             if (bestMove == -1)
-                return getResult(player);
-            if (level == maxDepth) // написать другое условие if(level == 1 || level == 2)
+                //return getResult(player);
+                return 1000;
+            if (level == maxDepth)
                 if (isKingBestMove)
+                {
                     player.king.MoveFigure(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column);
-                else player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column);
+                    history.Add(motion, (player.king.Id, new Position(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column)));
+                }
+
+                else
+                {
+                    player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column);
+                    history.Add(motion, (player.queen.Id, new Position(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column)));
+                }
 
             return MinMax;
-        }
-
-        public int minMax2(Player player, int depth, int alpha, int beta, bool maximizingPlayer)
-        {
-            if (depth == 0 || IsGameOver())
-            {
-                return getResult(player);
-            }
-
-            if (maximizingPlayer)
-            {
-                int maxEval = int.MinValue;
-                foreach (var move in player.king.GetAllPosition(player.motionColor, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen))
-                {
-                    player.king.MoveFigure(move.Row, move.Column);
-                    int eval = minMax2(player.Сompetitor, depth - 1, alpha, beta, false);
-                    //player.king.UndoMove(move);
-                    maxEval = Math.Max(maxEval, eval);
-                    alpha = Math.Max(alpha, eval);
-                    if (beta <= alpha)
-                        break; // Альфа-бета отсечение
-                }
-                return maxEval;
-            }
-            else
-            {
-                int minEval = int.MaxValue;
-                foreach (var move in player.king.GetAllPosition(player.motionColor, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen))
-                {
-                    player.king.MoveFigure(move.Row, move.Column);
-                    int eval = minMax2(player.Сompetitor, depth - 1, alpha, beta, true);
-                    //player.king.UndoMove(move);
-                    minEval = Math.Min(minEval, eval);
-                    beta = Math.Min(beta, eval);
-                    if (beta <= alpha)
-                        break; // Альфа-бета отсечение
-                }
-                return minEval;
-            }
         }
 
         // получение результата для minMax

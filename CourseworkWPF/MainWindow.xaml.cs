@@ -171,6 +171,9 @@ namespace CourseworkWPF
                 case 6:
                     str_player1_user = field.player1.StrategyUser;
                     break;
+                case 7:
+                    str_player1 = field.player1.StrategyMinMax;
+                    break;
                 default:
                     break;
             }
@@ -197,6 +200,9 @@ namespace CourseworkWPF
                     break;
                 case 6:
                     str_player2_user = field.player2.StrategyUser;
+                    break;
+                case 7:
+                    str_player2 = field.player2.StrategyMinMax;
                     break;
                 default:
                     break;
