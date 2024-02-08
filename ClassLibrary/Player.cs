@@ -749,7 +749,7 @@ namespace ClassLibrary
                     motionColor = 0;
                     return;
                 }
-                int check = queen.RandomMove(Сompetitor.king, motion, history, motion);
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motion);//motionClor?
                 if (check == 1)
                 {
                     motionColor = 0;
@@ -813,6 +813,14 @@ namespace ClassLibrary
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
+            if (motion > 1000)
+            {
+
+                Pat = true;
+                return;
+
+            }
+
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
@@ -824,12 +832,61 @@ namespace ClassLibrary
             Position posBlackKing = (Color == Color.Black) ? new Position(king.Offset.Row, king.Offset.Column) : new Position(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column);
             Position posBlackQueen = (Color == Color.Black) ? new Position(queen.Offset.Row, queen.Offset.Column) : new Position(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column);
 
-            
-            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, 1, 1, 1, history, motion, GameField, motionColor);
-            if (res == 1000)
+
+            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, int.MinValue, int.MaxValue, 1, history, motion, GameField, motionColor);
+            if (res == 1000) // если minmax не дал результатов
             {
-                if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
-                    queen.RandomMove(Сompetitor.king, motion, history, motion);
+                if (motionColor >= 6) // ферзь более 5 ходов на одной горизонтали
+                {
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor); // рандомный ход ферзя
+                    if (check == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    else if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                }
+                else
+                {
+                    if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
+                    {
+                        int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                        if (check == 1)
+                        {
+                            motionColor = 0;
+                            return;
+                        }
+                        if (check == 0)
+                        {
+                            if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                            {
+                                Pat = true;
+                                return;
+                            }
+                            else
+                            {
+                                Lose = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                if (res == 3) // Ферзь сменил диагональ
+            {
+                motionColor = 0;
+                return;
             }
         }
     }
