@@ -813,18 +813,16 @@ namespace ClassLibrary
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
-            if (motion > 1000)
-            {
-
-                Pat = true;
-                return;
-
-            }
-
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
                     return;
+            }
+
+            if (motion < 6)
+            {
+                king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false);
+                return;
             }
 
             Position posWhiteKing = (Color == Color.White) ? new Position(king.Offset.Row, king.Offset.Column) : new Position(Сompetitor.king.Offset.Row, Сompetitor.king.Offset.Column);
@@ -833,7 +831,7 @@ namespace ClassLibrary
             Position posBlackQueen = (Color == Color.Black) ? new Position(queen.Offset.Row, queen.Offset.Column) : new Position(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column);
 
 
-            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, int.MinValue, int.MaxValue, 1, history, motion, GameField, motionColor);
+            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, int.MinValue, int.MaxValue, 1, motion, GameField);
             if (res == 1000) // если minmax не дал результатов
             {
                 if (motionColor >= 6) // ферзь более 5 ходов на одной горизонтали

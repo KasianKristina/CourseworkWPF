@@ -202,7 +202,7 @@ namespace ClassLibrary
         {
             int checkwinwhite = 0;
             int checkwinblack = 0;
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
                 field.Walls(10);
@@ -212,7 +212,7 @@ namespace ClassLibrary
             }
             Console.WriteLine("Количество побед белых {0}", checkwinwhite);
             Console.WriteLine("Количество побед черных {0}", checkwinblack);
-            Console.WriteLine("Пат {0}", 50 - checkwinwhite - checkwinblack);
+            Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
             Console.ReadKey();
         }
 
@@ -484,13 +484,13 @@ namespace ClassLibrary
             int alpha,
             int beta,
             int maxDepth,
-            Dictionary<int, (int, Position)> history,
+            //Dictionary<int, (int, Position)> history,
             int motion,
-            Field field,
-            int motionColor
+            Field field
+            //int motionColor
             )
         {
-            int MIN_VALUE = 400;// проеврить
+            int MIN_VALUE = 400;
             int MAX_VALUE = -400;
             int MinMax = player.Color == Color.White ? MIN_VALUE : MAX_VALUE;
             if (level == 0)
@@ -507,9 +507,10 @@ namespace ClassLibrary
             bool isKingBestMove = true;
 
             List<Position> allPositionsQueen = player.queen.GetAllPosition(player.motionColor, player.Сompetitor.king);
-            List<Position> allPositionsKing = motionColor < 6 || (motionColor >= 6 && player.queen.CheckLoseGame(player.Сompetitor.queen.Id, player.king.Offset)) ?
+            List<Position> allPositionsKing = player.motionColor < 6 || (player.motionColor >= 6 && player.queen.CheckLoseGame(player.Сompetitor.queen.Id, player.king.Offset)) ?
                 player.king.GetAllPosition(1, player.motionColor, player.Сompetitor.queen, player.Сompetitor.king, player.queen) :
                 new List<Position>();
+
             for (int i = 0; i < allPositionsKing.Count; i++)
             {
                 player.king.MoveFigureVirtualField(allPositionsKing[i].Row, allPositionsKing[i].Column, virtualField);
@@ -523,19 +524,26 @@ namespace ClassLibrary
                     alpha,
                     beta,
                     maxDepth,
-                    history,
+                    //history,
                     motion,
-                    field,
-                    motionColor);
+                    field
+                    //motionColor
+                    );
 
                 //if (isWhitePlayer)
                 //    alpha = Math.Max(alpha, test);
                 //else
                 //    beta = Math.Min(beta, test);
                 //if (beta <= alpha)
+                //{
+                //    if (player.Color == Color.White)
+                //        player.king.MoveFigureVirtualField(whiteKingPosition.Row, whiteKingPosition.Column, virtualField);
+                //    else
+                //        player.king.MoveFigureVirtualField(blackKingPosition.Row, blackKingPosition.Column, virtualField);
                 //    break; // Альфа-бета отсечение
+                //}
 
-                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer)) // белые - максимизируют, черные - минимизируют
+                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer))
                 {
                     MinMax = test;
                     bestMove = i;
@@ -563,21 +571,26 @@ namespace ClassLibrary
                     alpha,
                     beta,
                     maxDepth,
-                    history,
+                    //history,
                     motion,
-                    field,
-                    motionColor);
+                    field
+                    //motionColor
+                    );
 
-                // test - разница положения между фигурами соперника и своими фигурами. Чем меньше test, тем меньше выгода у соперника => тем выше выгода игрока
-                
                 //if (isWhitePlayer)
                 //    alpha = Math.Max(alpha, test);
                 //else
                 //    beta = Math.Min(beta, test);
                 //if (beta <= alpha)
+                //{
+                //    if (player.Color == Color.White)
+                //        player.queen.MoveFigureVirtualField(whiteQueenPosition.Row, whiteQueenPosition.Column, virtualField);
+                //    else
+                //        player.queen.MoveFigureVirtualField(blackQueenPosition.Row, blackQueenPosition.Column, virtualField);
                 //    break; // Альфа-бета отсечение
+                //}
 
-                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer)) // каждый игрок пытается максимизировать свою выгоду
+                if ((test < MinMax && isWhitePlayer) || (test > MinMax && !isWhitePlayer))
                 {
                     MinMax = test;
                     bestMove = i;
@@ -597,17 +610,17 @@ namespace ClassLibrary
                 if (isKingBestMove)
                 {
                     player.king.MoveFigure(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column);
-                    history.Add(motion, (player.king.Id, new Position(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column)));
-                    return 1; // заменить возвращаемое значение
+                    player.history.Add(motion, (player.king.Id, new Position(allPositionsKing[bestMove].Row, allPositionsKing[bestMove].Column)));
+                    return 1;
                 }
 
                 else
                 {
                     player.queen.MoveFigure(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column);
-                    history.Add(motion, (player.queen.Id, new Position(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column)));
+                    player.history.Add(motion, (player.queen.Id, new Position(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column)));
                     if (allPositionsQueen[bestMove].Row == whiteQueenStart.Row && player.Color == Color.White ||
                         allPositionsQueen[bestMove].Row == blackQueenStart.Row && player.Color == Color.Black)
-                        return 2; // та же диагональ, заменить возврщвемое значение
+                        return 2; // та же диагональ
                     else return 3; // смена диагонали 
                 }
 
