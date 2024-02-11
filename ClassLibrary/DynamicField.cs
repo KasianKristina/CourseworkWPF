@@ -202,7 +202,7 @@ namespace ClassLibrary
         {
             int checkwinwhite = 0;
             int checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 DynamicField field = new DynamicField();
                 field.Walls(10);
@@ -212,7 +212,7 @@ namespace ClassLibrary
             }
             Console.WriteLine("Количество побед белых {0}", checkwinwhite);
             Console.WriteLine("Количество побед черных {0}", checkwinblack);
-            Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
+            Console.WriteLine("Пат {0}", 1000 - checkwinwhite - checkwinblack);
             Console.ReadKey();
         }
 
@@ -638,7 +638,7 @@ namespace ClassLibrary
                 player.king.StartOffset.Row, player.king.StartOffset.Column, player.GameField, player.Сompetitor);
             int minimumNumberOfCompetitorMoves = cMap2[player.king.StartOffset.Row, player.king.StartOffset.Column];
 
-            if (minimumNumberOfMoves == -6)
+            if (minimumNumberOfMoves == -6) // перекрывают путь
                 minimumNumberOfMoves = 100;
             else if (minimumNumberOfMoves == 1)
                 minimumNumberOfMoves = -200;

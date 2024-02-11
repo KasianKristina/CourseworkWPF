@@ -813,6 +813,12 @@ namespace ClassLibrary
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
+            if (motion > 1500)
+            {
+                Pat = true;
+                return;
+            }
+
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
