@@ -22,8 +22,8 @@
             <ComboBoxItem Content="Захват короля соперника"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля"/>
             <ComboBoxItem Content="Защита короля"/>
-            <ComboBoxItem Content="Кратчайший путь + SameWay"/>
-            <ComboBoxItem Content="NonPregradaWay + Simple"/>
+            <ComboBoxItem Content="Единственный путь + Защита короля"/>
+            <ComboBoxItem Content="Кратчайший путь + Выгодный ход"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>
@@ -32,8 +32,8 @@
             <ComboBoxItem Content="Захват короля соперника"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля"/>
             <ComboBoxItem Content="Защита короля"/>
-            <ComboBoxItem Content="Кратчайший путь + SameWay"/>
-            <ComboBoxItem Content="NonPregradaWay + Simple"/>
+            <ComboBoxItem Content="Единственный путь + Защита короля"/>
+            <ComboBoxItem Content="Кратчайший путь + Выгодный ход"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>

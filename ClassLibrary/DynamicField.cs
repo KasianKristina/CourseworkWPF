@@ -620,7 +620,7 @@ namespace ClassLibrary
                     player.history.Add(motion, (player.queen.Id, new Position(allPositionsQueen[bestMove].Row, allPositionsQueen[bestMove].Column)));
                     if (allPositionsQueen[bestMove].Row == whiteQueenStart.Row && player.Color == Color.White ||
                         allPositionsQueen[bestMove].Row == blackQueenStart.Row && player.Color == Color.Black)
-                        return 2; // та же диагональ
+                        return 2; // та же диагональ   TODO: сделать другие возвращаемые значения
                     else return 3; // смена диагонали 
                 }
 

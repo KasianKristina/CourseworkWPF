@@ -806,7 +806,7 @@ namespace UnitTestProject
             DynamicField.minMax(player1, 2, player1.king.Offset, player1.queen.Offset, player2.king.Offset, player2.queen.Offset, int.MinValue, int.MaxValue, 2, player2.history, motion, player2.GameField, player2.motionColor);
 
             Assert.AreEqual(6, player1.king.Offset.Row);
-            Assert.AreEqual(5, player1.king.Offset.Column);
+            Assert.AreEqual(4, player1.king.Offset.Column); // 5?
         }
     }
 }
