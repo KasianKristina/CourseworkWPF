@@ -413,6 +413,7 @@ namespace ClassLibrary
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
                     return;
             }
+            
             if (motionColor >= 6)
             {
                 int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
@@ -542,6 +543,7 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
+            
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
@@ -812,12 +814,6 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
-
-            if (motion > 1500)
-            {
-                Pat = true;
-                return;
-            }
 
             if (motion < 5)
             {

@@ -202,17 +202,17 @@ namespace ClassLibrary
         {
             int checkwinwhite = 0;
             int checkwinblack = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(10);
-                field.check_delegate(field.player1.StrategyMinMax, field.player2.StrategyAttack);
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyHelp, field.player2.StrategyMinMax);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
             Console.WriteLine("Количество побед белых {0}", checkwinwhite);
             Console.WriteLine("Количество побед черных {0}", checkwinblack);
-            Console.WriteLine("Пат {0}", 1000 - checkwinwhite - checkwinblack);
+            Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
             Console.ReadKey();
         }
 
