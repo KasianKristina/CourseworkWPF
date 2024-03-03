@@ -148,17 +148,18 @@ namespace ClassLibrary
             if (motionQueen >= 5 &&
                 queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
                 return listPositions;
-            if (this.Color == Color.White)
-                listPositionsAround = new List<Position>() {
+
+            listPositionsAround = new List<Position>() {
+                            new Position(0, 1),
+                            new Position(0, -1),
                             new Position(1, 0),
                             new Position(1, 1),
                             new Position(1, -1),
-                        };
-            else listPositionsAround = new List<Position>() {
-                            new Position(-1, -1),
                             new Position(-1, 0),
                             new Position(-1, 1),
+                            new Position(-1, -1),
                         };
+
 
             for (int j = 0; j < listPositionsAround.Count; j++)
             {
@@ -281,7 +282,8 @@ namespace ClassLibrary
                             new Position(1, 1),
                             new Position(1, -1)
                         };
-            } else
+            }
+            else
             {
                 listCheck = new List<Position>() {
                             new Position(0, 1),
@@ -393,7 +395,7 @@ namespace ClassLibrary
                     if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
                     {
                         List<Position> allPositions = GetAllPositionNoTurningBack(motionColor, competitorQueen, competitorKing, queen);
-                        
+
                         if (allPositions.Count != 0)
                         {
                             Position position = ChooseRandomPosition(allPositions);

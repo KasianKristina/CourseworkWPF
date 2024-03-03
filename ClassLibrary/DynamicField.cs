@@ -206,7 +206,7 @@ namespace ClassLibrary
             {
                 DynamicField field = new DynamicField();
                 field.Walls(30);
-                field.check_delegate(field.player1.StrategyHelp, field.player2.StrategyMinMax);
+                field.check_delegate(field.player1.StrategyHelpNonPregradaWay, field.player2.StrategySecurityNonPregradaWay);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
