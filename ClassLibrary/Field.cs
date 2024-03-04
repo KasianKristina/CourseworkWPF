@@ -63,6 +63,18 @@ namespace ClassLibrary
             else return false;
         }
 
+        public bool IsCorridor(int row, int column)
+        {
+            if ((column == 0 && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||
+                (column == 1 && IsWall(row, column + 1)) ||
+                (IsWall(row, column - 1) && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||
+                (IsWall(row, column + 1) && IsWall(row, column - 2)) ||
+                (column == 7 && (IsWall(row, column - 1) || IsWall(row, column - 2))) ||
+                (column == 6 && IsWall(row, column - 1)))
+                return true;
+            return false;
+        }
+
         public Field Copy()
         {
             Field NewGameField = new Field(8, 8);
