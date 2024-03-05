@@ -690,6 +690,13 @@ namespace ClassLibrary
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
 
+            // проверка, что конфигурация поля повторяется 5 раз. Если это так, то пат.
+            if (GameField.HasConfigurationOccurredFiveTimes(history, Сompetitor.history))
+            {
+                Pat = true;
+                return;
+            }
+
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))

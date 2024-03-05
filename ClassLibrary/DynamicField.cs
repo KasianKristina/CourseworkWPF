@@ -205,8 +205,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyHelpNonPregradaWay, field.player2.StrategySecurityNonPregradaWay);
+                field.Walls(20);
+                field.check_delegate(field.player1.StrategySimpleNonPregradaWay, field.player2.StrategyMinMax);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -215,7 +215,6 @@ namespace ClassLibrary
             Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
             Console.ReadKey();
         }
-
 
         // поиск двух непересекающихся путей
         // первый найденный путь отмечаем -5 (стены)

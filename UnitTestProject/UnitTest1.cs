@@ -1044,5 +1044,427 @@ namespace UnitTestProject
             Assert.AreEqual(true, GameField.IsCorridor(5, 6));
             Assert.AreEqual(true, GameField.IsCorridor(5, 7));
         }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest1()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 3)));
+            player2.king.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 2)));
+
+            Assert.AreEqual(false, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes. Конфигурация повторялась 5 раз.
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 4);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 4)));
+            player2.king.MoveFigure(6, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
+            motion++;
+
+            // ход 2
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 3
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 4 конфигурация
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 5
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 6 повтор конфигурации (1)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 7
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 8 повтор конфигурации (2)
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 9
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 10 повтор конфигурации (3)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 11
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 12 повтор конфигурации (4)
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 13
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 14 повтор конфигурации (5)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+
+            Assert.AreEqual(true, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes. Конфигурация повторялась 4 раза.
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest3()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 4);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 4)));
+            player2.king.MoveFigure(6, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
+            motion++;
+
+            // ход 2
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 3
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 4 конфигурация
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 5
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 6 повтор конфигурации (1)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 7
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 8 повтор конфигурации (2)
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 9
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 10 повтор конфигурации (3)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 11
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 12 повтор конфигурации (4)
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            Assert.AreEqual(true, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes. Конфигурация повторялась 3 раза.
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest6()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 4);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 4)));
+            player2.king.MoveFigure(6, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
+            motion++;
+
+            // ход 2
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 3
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 4 конфигурация
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 5
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 6 повтор конфигурации (1)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 7
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 8 повтор конфигурации (2)
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 9
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 10 повтор конфигурации (3)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            Assert.AreEqual(false, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes. Конфигурация не повторялась.
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest4()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 4);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 4)));
+            player2.king.MoveFigure(6, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
+            motion++;
+
+            // ход 2
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 3
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 4 конфигурация
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+
+            Assert.AreEqual(false, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода HasConfigurationOccurredFiveTimes. Конфигурация повторилась 1 раз.
+        /// </summary> 
+        public void HasConfigurationOccurredFiveTimesTest5()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+            int motion = 1;
+
+            // ход 1
+            player1.king.MoveFigure(1, 4);
+            player1.history.Add(motion, (player1.king.Id, new Position(1, 4)));
+            player2.king.MoveFigure(6, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(6, 5)));
+            motion++;
+
+            // ход 2
+            player1.king.MoveFigure(2, 5);
+            player1.history.Add(motion, (player1.king.Id, new Position(2, 5)));
+            player2.king.MoveFigure(5, 5);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 5)));
+            motion++;
+
+            // ход 3
+            player1.king.MoveFigure(3, 6);
+            player1.history.Add(motion, (player1.king.Id, new Position(3, 6)));
+            player2.king.MoveFigure(5, 6);
+            player2.history.Add(motion, (player2.king.Id, new Position(5, 6)));
+            motion++;
+
+            // ход 4 конфигурация
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            // ход 5
+            player1.queen.MoveFigure(3, 1);
+            player1.history.Add(motion, (player1.queen.Id, new Position(3, 1)));
+            player2.queen.MoveFigure(7, 1);
+            player2.history.Add(motion, (player2.queen.Id, new Position(7, 1)));
+            motion++;
+
+            // ход 6 повтор конфигурации (1)
+            player1.queen.MoveFigure(1, 3);
+            player1.history.Add(motion, (player1.queen.Id, new Position(1, 3)));
+            player2.queen.MoveFigure(6, 2);
+            player2.history.Add(motion, (player2.queen.Id, new Position(6, 2)));
+            motion++;
+
+            Assert.AreEqual(false, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
     }
 }

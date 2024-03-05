@@ -201,11 +201,6 @@ namespace ClassLibrary
             return false;
         }
 
-        public void MoveBack(Position position)
-        {
-              
-        }
-
         /// <summary>
         /// Сходить на случайную позицию
         /// </summary>
