@@ -960,9 +960,9 @@ namespace UnitTestProject
             Assert.AreEqual(false, GameField.IsCorridor(1, 7));
             Assert.AreEqual(true, GameField.IsCorridor(2, 0));
             Assert.AreEqual(true, GameField.IsCorridor(3, 0));
-            Assert.AreEqual(true, GameField.IsCorridor(0, 4));
+            Assert.AreEqual(false, GameField.IsCorridor(0, 4)); // король стоит на этом месте
             Assert.AreEqual(true, GameField.IsCorridor(0, 5));
-            Assert.AreEqual(true, GameField.IsCorridor(7, 4));
+            Assert.AreEqual(false, GameField.IsCorridor(7, 4)); // король стоит на этом месте
         }
 
         [TestMethod]
@@ -1026,23 +1026,27 @@ namespace UnitTestProject
             player1.Сompetitor = player2;
             player2.Сompetitor = player1;
 
-            player1.king.MoveFigure(2, 2);
-            player1.queen.MoveFigure(5, 2);
-            player2.king.MoveFigure(2, 4);
-            player2.queen.MoveFigure(5, 5);
+            GameField[1, 1] = -5; // стена
+            GameField[1, 3] = -5;
+            GameField[1, 6] = -5;
+            GameField[2, 3] = -5;
+            GameField[2, 5] = -5;
+            GameField[2, 6] = -5;
+            GameField[2, 7] = -5;
 
-            Assert.AreEqual(true, GameField.IsCorridor(2, 0));
-            Assert.AreEqual(true, GameField.IsCorridor(2, 1));
-            Assert.AreEqual(true, GameField.IsCorridor(2, 3));
-            Assert.AreEqual(false, GameField.IsCorridor(2, 5));
-            Assert.AreEqual(false, GameField.IsCorridor(2, 6));
+            Assert.AreEqual(true, GameField.IsCorridor(1, 0));
+            Assert.AreEqual(true, GameField.IsCorridor(1, 2));
+            Assert.AreEqual(true, GameField.IsCorridor(1, 4));
+            Assert.AreEqual(true, GameField.IsCorridor(1, 5));
+            Assert.AreEqual(true, GameField.IsCorridor(1, 7));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 0));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 1));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 2));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 3));
+            Assert.AreEqual(true, GameField.IsCorridor(2, 4));
             Assert.AreEqual(false, GameField.IsCorridor(2, 7));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 0));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 1));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 3));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 4));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 6));
-            Assert.AreEqual(true, GameField.IsCorridor(5, 7));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 6));
+            Assert.AreEqual(false, GameField.IsCorridor(2, 5));
         }
 
         [TestMethod]
@@ -1465,6 +1469,199 @@ namespace UnitTestProject
             motion++;
 
             Assert.AreEqual(false, GameField.HasConfigurationOccurredFiveTimes(player1.history, player2.history));
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода getAllCoridorPositions. (для белого короля)
+        /// </summary>
+        public void getAllCoridorPositionsTest1()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[1, 1] = -5; // стена
+            GameField[1, 3] = -5;
+            GameField[1, 6] = -5;
+            GameField[2, 3] = -5;
+            GameField[2, 5] = -5;
+            GameField[2, 6] = -5;
+            GameField[2, 7] = -5;
+
+            GameField[5, 0] = -5; // стена
+            GameField[5, 2] = -5;
+            GameField[5, 4] = -5;
+            GameField[5, 6] = -5;
+            GameField[6, 0] = -5;
+            GameField[6, 1] = -5;
+            GameField[6, 2] = -5;
+            GameField[6, 5] = -5;
+            GameField[6, 6] = -5;
+
+            List<Position> positions = player1.king.GetAllCoridorPositions(player1.Сompetitor.queen, player1.Сompetitor.king);
+            List<Position> list = new List<Position>() { new Position(1, 0), new Position(1, 2), new Position(1, 4), new Position(1, 5), new Position(1, 7), new Position(2, 4) };
+            List<Position> positionsForBlackKing = player2.king.GetAllCoridorPositions(player2.Сompetitor.queen, player2.Сompetitor.king);
+            List<Position> listForBlackKing = new List<Position>() { new Position(6, 3), new Position(6, 4), new Position(6, 7), new Position(5, 1), new Position(5, 3), new Position(5, 5), new Position(5, 7) };
+            CollectionAssert.AreEqual(list, positions);
+            CollectionAssert.AreEqual(listForBlackKing, positionsForBlackKing);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода getAllCoridorPositions. (для белого короля)
+        /// </summary>
+        public void getAllCoridorPositionsTest2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(3, 1);
+            player2.king.MoveFigure(5, 5);
+            player2.queen.MoveFigure(7, 2);
+
+            GameField[3, 2] = -5; // стена
+            GameField[3, 4] = -5;
+            GameField[4, 2] = -5;
+            GameField[4, 5] = -5;
+            GameField[5, 3] = -5;
+            GameField[5, 6] = -5;
+
+            List<Position> positions = player1.king.GetAllCoridorPositions(player1.Сompetitor.queen, player1.Сompetitor.king);
+            List<Position> list = new List<Position>() { new Position(4, 0), new Position(4, 1), new Position(4, 3), new Position(4, 7), new Position(5, 7)};
+            List<Position> positionsForBlackKing = player2.king.GetAllCoridorPositions(player2.Сompetitor.queen, player2.Сompetitor.king);
+            List<Position> listForBlackKing = new List<Position>() { new Position(4, 4), new Position(4, 6)};
+            CollectionAssert.AreEqual(list, positions);
+            CollectionAssert.AreEqual(listForBlackKing, positionsForBlackKing);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода getAllCoridorPositions. (для белого короля)
+        /// </summary>
+        public void getAllCoridorPositionsTest3()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(7, 2);
+            player2.king.MoveFigure(1, 3);
+            player1.queen.MoveFigure(2, 0);
+            player2.queen.MoveFigure(5, 7);
+
+            GameField[0, 3] = -5; // стена
+            GameField[0, 5] = -5;
+            GameField[0, 6] = -5;
+
+            List<Position> positions = player1.king.GetAllCoridorPositions(player1.Сompetitor.queen, player1.Сompetitor.king);
+            List<Position> list = new List<Position>();
+            List<Position> positionsForBlackKing = player2.king.GetAllCoridorPositions(player2.Сompetitor.queen, player2.Сompetitor.king);
+            List<Position> listForBlackKing = new List<Position>() { new Position(0, 4), new Position(0, 7)};
+            CollectionAssert.AreEqual(list, positions);
+            CollectionAssert.AreEqual(listForBlackKing, positionsForBlackKing);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода findNearestPointCorridorStartegyTest1.
+        /// </summary>
+        public void findNearestPointCorridorStartegyTest1()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(3, 1);
+            player2.king.MoveFigure(5, 5);
+            player2.queen.MoveFigure(7, 2);
+
+            GameField[3, 2] = -5; // стена
+            GameField[3, 4] = -5;
+            GameField[4, 2] = -5;
+            GameField[4, 5] = -5;
+            GameField[5, 3] = -5;
+            GameField[5, 6] = -5;
+
+            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Assert.AreEqual(4, pos.Row);
+            Assert.AreEqual(0, pos.Column);
+
+            Position pos2 = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Assert.AreEqual(4, pos2.Row);
+            Assert.AreEqual(4, pos2.Column);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода findNearestPointCorridorStartegyTest1.
+        /// </summary>
+        public void findNearestPointCorridorStartegyTest2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(1, 4);
+            player2.king.MoveFigure(4, 5);
+            player2.queen.MoveFigure(6, 2);
+
+            GameField[2, 2] = -5;
+            GameField[2, 3] = -5;
+            GameField[2, 5] = -5;
+            GameField[2, 7] = -5;
+            GameField[3, 1] = -5;
+            GameField[3, 2] = -5;
+            GameField[4, 1] = -5;
+            GameField[4, 3] = -5;
+            GameField[4, 4] = -5;
+            GameField[4, 7] = -5;
+            GameField[5, 5] = -5;
+            GameField[5, 6] = -5;
+
+            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Assert.AreEqual(2, pos.Row);
+            Assert.AreEqual(4, pos.Column);
+
+            Position pos2 = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Assert.AreEqual(2, pos2.Row);
+            Assert.AreEqual(6, pos2.Column);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода findNearestPointCorridorStartegyTest1.
+        /// </summary>
+        public void findNearestPointCorridorStartegyTest3()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(2, 6);
+            player2.king.MoveFigure(4, 5);
+            player1.queen.MoveFigure(2, 0);
+
+            GameField[3, 2] = -5;
+            GameField[3, 3] = -5;
+            GameField[3, 4] = -5;
+
+            Position pos = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Assert.AreEqual(-1, pos.Row);
+            Assert.AreEqual(-1, pos.Column);
         }
     }
 }

@@ -771,5 +771,76 @@ namespace ClassLibrary
                 return;
             }
         }
+
+        public void StrategyCorridor(int motion)
+        {
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+
+            if (motion > 2500)
+            {
+                Pat = true;
+                return;
+            }
+
+            if (motion < 5)
+            {
+                if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
+                    return;
+            }
+            if (motionColor >= 6)
+            {
+                int checkRandomMove = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (checkRandomMove == 1)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (checkRandomMove == 0)
+                {
+                    int check = king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen);
+                    if (check == 0)
+                    {
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                int check = king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen);
+
+                if (check == 0)
+                {
+                    int checkRandomMove = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (checkRandomMove == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (checkRandomMove == 0)
+                    {
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

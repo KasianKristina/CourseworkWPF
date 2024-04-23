@@ -24,6 +24,7 @@
             <ComboBoxItem Content="Защита короля"/>
             <ComboBoxItem Content="Единственный путь + Защита короля"/>
             <ComboBoxItem Content="Кратчайший путь + Выгодный ход"/>
+            <ComboBoxItem Content="Коридор"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>
@@ -34,6 +35,7 @@
             <ComboBoxItem Content="Защита короля"/>
             <ComboBoxItem Content="Единственный путь + Защита короля"/>
             <ComboBoxItem Content="Кратчайший путь + Выгодный ход"/>
+            <ComboBoxItem Content="Коридор"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>

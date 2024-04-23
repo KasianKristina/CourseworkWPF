@@ -205,8 +205,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(20);
-                field.check_delegate(field.player1.StrategySimpleNonPregradaWay, field.player2.StrategyMinMax);
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyCorridor, field.player2.StrategySimple);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }

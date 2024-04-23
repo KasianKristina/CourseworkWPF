@@ -67,6 +67,7 @@ namespace ClassLibrary
 
         public bool IsCorridor(int row, int column)
         {
+            if (IsWall(row, column)) return false;
             if ((column == 0 && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||
                 (column == 1 && IsWall(row, column + 1)) ||
                 (IsWall(row, column - 1) && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||

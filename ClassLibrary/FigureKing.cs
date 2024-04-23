@@ -507,5 +507,89 @@ namespace ClassLibrary
             }
             return result;
         }
+
+        public List<Position> GetAllCoridorPositions(FigureQueen competitorQueen, FigureKing competitorKing)
+        {
+            List<Position> list = new List<Position>();
+
+            if (Color == Color.Black)
+            {
+                for (int i = Offset.Row - 1; i >= Offset.Row - 2; i--)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing))
+                            list.Add(new Position(i, j));
+                    }
+                }
+            }
+            else
+            {
+
+                for (int i = Offset.Row + 1; i <= Offset.Row + 2; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing))
+                            list.Add(new Position(i, j));
+                    }
+                }
+            }
+            return list;
+        }
+
+        public Position findNearestPointCorridorStartegy(FigureQueen competitorQueen, FigureKing competitorKing)
+        {
+            List<Position> list = GetAllCoridorPositions(competitorQueen, competitorKing);
+            if (list.Count > 0)
+            {
+                Field cMapStart = DynamicField.CreateWave(Offset.Row, Offset.Column, list[0].Row, list[0].Column, GameField);
+                int finalResult = cMapStart[list[0].Row, list[0].Column];
+                int index = 0;
+
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, list[i].Row, list[i].Column, GameField);
+                    int result = cMap[list[i].Row, list[i].Column];
+                    if (finalResult > result)
+                    {
+                        finalResult = result; // выбыираем точку, до которой меньше идти
+                        index = i;
+                    }
+                    //(list[i].Row, list[i].Column) = DynamicField.Search(list[i].Row, list[i].Column, result, ref cMap, false);
+                }
+                return new Position(list[index].Row, list[index].Column);
+            }
+            return new Position(-1, -1);
+        }
+
+        public int MoveKingCorridorStartegy(int motion, Position posEnd, FigureQueen competitorQueen, FigureKing competitorKing, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
+        {
+            int fx, fy;
+            Position pos = findNearestPointCorridorStartegy(competitorQueen, competitorKing);
+            if (pos.Row == -1)
+            {
+                //(list[i].Row, list[i].Column) = DynamicField.Search(list[i].Row, list[i].Column, result, ref cMap, false);
+                OptimalMove(motion, posEnd, competitorKing, competitorQueen, history, motionColor, queen, false);
+                return 1;
+            }
+            else
+            {
+                Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, pos.Row, pos.Column, GameField);
+                int result = cMap[pos.Row, pos.Column];
+
+                (fx, fy) = DynamicField.Search(pos.Row, pos.Column, result, ref cMap, false);
+                if (fx != -100 && OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing))
+                {
+                    MoveFigure(fx, fy);
+                    history.Add(motion, (Id, new Position(fx, fy)));
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
     }
 }

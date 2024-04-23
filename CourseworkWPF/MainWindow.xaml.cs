@@ -169,9 +169,12 @@ namespace CourseworkWPF
                     str_player1 = field.player1.StrategySimpleNonPregradaWay;
                     break;
                 case 6:
-                    str_player1_user = field.player1.StrategyUser;
+                    str_player1 = field.player1.StrategyCorridor;
                     break;
                 case 7:
+                    str_player1_user = field.player1.StrategyUser;
+                    break;
+                case 8:
                     str_player1 = field.player1.StrategyMinMax;
                     break;
                 default:
@@ -199,9 +202,12 @@ namespace CourseworkWPF
                     str_player2 = field.player2.StrategySimpleNonPregradaWay;
                     break;
                 case 6:
-                    str_player2_user = field.player2.StrategyUser;
+                    str_player2 = field.player2.StrategyCorridor;
                     break;
                 case 7:
+                    str_player2_user = field.player2.StrategyUser;
+                    break;
+                case 8:
                     str_player2 = field.player2.StrategyMinMax;
                     break;
                 default:
