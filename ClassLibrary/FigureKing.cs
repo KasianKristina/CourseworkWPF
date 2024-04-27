@@ -567,7 +567,7 @@ namespace ClassLibrary
         {
             int fx, fy;
             Position pos = findNearestPointCorridorStartegy(competitorQueen, competitorKing);
-            if (pos.Row == -1)
+            if (pos.Row == -1 || (pos.Row >= 5 && Color == Color.White) || (pos.Row <= 2 && Color == Color.Black))
             {
                 //(list[i].Row, list[i].Column) = DynamicField.Search(list[i].Row, list[i].Column, result, ref cMap, false);
                 OptimalMove(motion, posEnd, competitorKing, competitorQueen, history, motionColor, queen, false);

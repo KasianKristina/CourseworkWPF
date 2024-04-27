@@ -65,9 +65,58 @@ namespace ClassLibrary
             else return false;
         }
 
+        public bool IsIsolatedPosition(int row, int column, int kingPositionRow, int kingPositionColumn, ref Field GameField)
+        {
+            int result;
+
+            Field cMap = DynamicField.CreateWave(row, column, kingPositionRow, kingPositionColumn, GameField);
+            result = cMap[kingPositionRow, kingPositionColumn];
+
+            List<Position> path = DynamicField.FindKingPath(kingPositionRow, kingPositionColumn, result, ref cMap, false);
+
+            if (path.Count == 0)
+                return true;
+            return false;
+        }
+
+        public bool IsIsolatedPosition2(int row, int column)
+        {
+            List<Position> listCheck = new List<Position>() {
+                            new Position(0, 1),
+                            new Position(0, -1),
+                            new Position(1, 0),
+                            new Position(1, 1),
+                            new Position(1, -1),
+                            new Position(-1, 0),
+                            new Position(-1, 1),
+                            new Position(-1, -1),
+                        };
+            int countWall = 0;
+
+            for (int i = 0; i < listCheck.Count(); i++)
+            {
+                if (IsInside(row + listCheck[i].Row, column + listCheck[i].Column) == false)
+                {
+                    listCheck.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < listCheck.Count(); i++)
+            {
+                if (IsWall(row + listCheck[i].Row, column + listCheck[i].Column))
+                {
+                    countWall++;
+                }
+            }
+            if (countWall == listCheck.Count())
+                return true;
+            return false;
+        }
+
         public bool IsCorridor(int row, int column)
         {
             if (IsWall(row, column)) return false;
+            if (IsIsolatedPosition(row, column)) return false;
             if ((column == 0 && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||
                 (column == 1 && IsWall(row, column + 1)) ||
                 (IsWall(row, column - 1) && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||

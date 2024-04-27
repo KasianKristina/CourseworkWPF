@@ -1663,5 +1663,123 @@ namespace UnitTestProject
             Assert.AreEqual(-1, pos.Row);
             Assert.AreEqual(-1, pos.Column);
         }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода
+        /// </summary>
+        public void StartegyCorridorTest()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[0, 6] = -5;
+            GameField[0, 7] = -5;
+
+            GameField[1, 1] = -5;
+            GameField[1, 4] = -5;
+            GameField[1, 6] = -5;
+
+            GameField[2, 0] = -5;
+            GameField[2, 1] = -5;
+            GameField[2, 4] = -5;
+            GameField[2, 6] = -5;
+            GameField[2, 7] = -5;
+
+            GameField[3, 0] = -5;
+            GameField[3, 1] = -5;
+            GameField[3, 6] = -5;
+            GameField[3, 7] = -5;
+
+            GameField[4, 1] = -5;
+            GameField[4, 5] = -5;
+            GameField[4, 7] = -5;
+
+            GameField[5, 1] = -5;
+            GameField[5, 2] = -5;
+            GameField[5, 3] = -5;
+            GameField[5, 5] = -5;
+
+            GameField[6, 0] = -5;
+            GameField[6, 1] = -5;
+            GameField[6, 5] = -5;
+            GameField[6, 7] = -5;
+
+            GameField[6, 0] = -5;
+            GameField[6, 1] = -5;
+            GameField[6, 5] = -5;
+            GameField[6, 7] = -5;
+
+            GameField[7, 0] = -5;
+            GameField[7, 2] = -5;
+            GameField[7, 6] = -5;
+            GameField[7, 7] = -5;
+
+            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Assert.AreEqual(1, pos.Row);
+            Assert.AreEqual(3, pos.Column);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода
+        /// </summary>
+        public void StartegyCorridorTest2()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            player1.king.MoveFigure(2, 6);
+            player2.king.MoveFigure(5, 3);
+            player1.queen.MoveFigure(0, 3);
+            player2.queen.MoveFigure(7, 3);
+
+            GameField[0, 1] = -5;
+            GameField[0, 2] = -5;
+
+            GameField[1, 0] = -5;
+            GameField[1, 4] = -5;
+            GameField[1, 6] = -5;
+
+            GameField[2, 0] = -5;
+            GameField[2, 1] = -5;
+            GameField[2, 3] = -5;
+            GameField[2, 4] = -5;
+            GameField[2, 5] = -5;
+            GameField[2, 7] = -5;
+
+            GameField[3, 0] = -5;
+            GameField[3, 1] = -5;
+            GameField[3, 6] = -5;
+
+            GameField[4, 1] = -5;
+            GameField[4, 3] = -5;
+            GameField[4, 4] = -5;
+            GameField[4, 5] = -5;
+            GameField[4, 7] = -5;
+
+            GameField[5, 1] = -5;
+            GameField[5, 2] = -5;
+            GameField[5, 7] = -5;
+
+            GameField[6, 1] = -5;
+            GameField[6, 2] = -5;
+            GameField[6, 3] = -5;
+            GameField[6, 6] = -5;
+
+            GameField[7, 1] = -5;
+            GameField[7, 2] = -5;
+            GameField[7, 6] = -5;
+            GameField[7, 7] = -5;
+
+            int result = player1.king.MoveKingCorridorStartegy(1, player1.posEnd, player1.Сompetitor.queen, player1.Сompetitor.king, player1.history, 1, player1.queen);
+            Assert.AreEqual(1, result);
+        }
     }
 }
