@@ -328,7 +328,7 @@ namespace ClassLibrary
                 (Color == Color.White && competitorKing.Offset.Row <= RowConst))
             {
                 bool check = ObstacleMove(competitorKing, motionColor, history, motion);
-                return check;
+               return check;
             }
             else if (motionColor >= 6 &&
                 ((Color == Color.Black && competitorKing.Offset.Row < RowConst) ||
@@ -502,7 +502,7 @@ namespace ClassLibrary
         /// <param name="motion"></param>
         /// <param name="history"></param>
         /// <returns>true - ход сделан, false - ферзь не смог сходить</returns>
-        private bool NearbyMove(Position kingPosition, int motion, Dictionary<int, (int, Position)> history, int motionQueen)
+        public bool NearbyMove(Position kingPosition, int motion, Dictionary<int, (int, Position)> history, int motionQueen)
         {
             List<Position> list = new List<Position>() {
                             new Position(1, 0),

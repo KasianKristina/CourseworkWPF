@@ -65,58 +65,71 @@ namespace ClassLibrary
             else return false;
         }
 
-        public bool IsIsolatedPosition(int row, int column, int kingPositionRow, int kingPositionColumn, ref Field GameField)
+        public List<Position> IsIsolatedPositions()
+        {
+            int result;
+            List<Position> listCheck = new List<Position>();
+
+            List<Position> list = new List<Position>() {
+                            new Position(0, 3),
+                            new Position(0, 5),
+                            new Position(1, 3),
+                            new Position(1, 4),
+                            new Position(1, 5),
+                            new Position(0, 4)
+                        };
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (list.Contains(new Position(i, j)) == false)
+                    {
+                        Field cMap = DynamicField.CreateWave(i, j, 0, 4, this);
+                        result = cMap[0, 4];
+
+                        List<Position> path = DynamicField.FindKingPath(0, 4, result, ref cMap, false);
+
+                        if (path.Count == 0)
+                            listCheck.Add(new Position(i, j));
+                    }
+                }
+            }
+            return listCheck;
+        }
+
+        public bool IsIsolatedPositionIndividual(int row, int column)
         {
             int result;
 
-            Field cMap = DynamicField.CreateWave(row, column, kingPositionRow, kingPositionColumn, GameField);
-            result = cMap[kingPositionRow, kingPositionColumn];
-
-            List<Position> path = DynamicField.FindKingPath(kingPositionRow, kingPositionColumn, result, ref cMap, false);
-
-            if (path.Count == 0)
-                return true;
-            return false;
-        }
-
-        public bool IsIsolatedPosition2(int row, int column)
-        {
-            List<Position> listCheck = new List<Position>() {
-                            new Position(0, 1),
-                            new Position(0, -1),
-                            new Position(1, 0),
-                            new Position(1, 1),
-                            new Position(1, -1),
-                            new Position(-1, 0),
-                            new Position(-1, 1),
-                            new Position(-1, -1),
+            List<Position> list = new List<Position>() {
+                            new Position(0, 3),
+                            new Position(0, 5),
+                            new Position(1, 3),
+                            new Position(1, 4),
+                            new Position(1, 5),
+                            new Position(0, 4)
                         };
-            int countWall = 0;
 
-            for (int i = 0; i < listCheck.Count(); i++)
-            {
-                if (IsInside(row + listCheck[i].Row, column + listCheck[i].Column) == false)
-                {
-                    listCheck.RemoveAt(i);
-                }
-            }
 
-            for (int i = 0; i < listCheck.Count(); i++)
+            if (list.Contains(new Position(row, column)) == false)
             {
-                if (IsWall(row + listCheck[i].Row, column + listCheck[i].Column))
-                {
-                    countWall++;
-                }
+                Field cMap = DynamicField.CreateWave(row, column, 0, 4, this);
+                result = cMap[0, 4];
+
+                List<Position> path = DynamicField.FindKingPath(0, 4, result, ref cMap, false);
+
+                if (path.Count == 0)
+                    return true;
+                else return false;
             }
-            if (countWall == listCheck.Count())
-                return true;
             return false;
         }
 
         public bool IsCorridor(int row, int column)
         {
             if (IsWall(row, column)) return false;
-            if (IsIsolatedPosition(row, column)) return false;
+            //if (IsIsolatedPosition(row, column, kingRow, kingColumn)) return false;
             if ((column == 0 && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||
                 (column == 1 && IsWall(row, column + 1)) ||
                 (IsWall(row, column - 1) && (IsWall(row, column + 1) || IsWall(row, column + 2))) ||

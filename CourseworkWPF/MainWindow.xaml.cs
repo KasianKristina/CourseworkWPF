@@ -169,12 +169,30 @@ namespace CourseworkWPF
                     str_player1 = field.player1.StrategySimpleNonPregradaWay;
                     break;
                 case 6:
-                    str_player1 = field.player1.StrategyCorridor;
+                    str_player1 = field.player1.StrategyAttackNonPregradaWay;
                     break;
                 case 7:
-                    str_player1_user = field.player1.StrategyUser;
+                    str_player1 = field.player1.StrategySecurityNonPregradaWay;
                     break;
                 case 8:
+                    str_player1 = field.player1.StrategyHelpNonPregradaWay;
+                    break;
+                case 9:
+                    str_player1 = field.player1.StrategyCorridor;
+                    break;
+                case 10:
+                    str_player1 = field.player1.StrategyAttackCorridor;
+                    break;
+                case 11:
+                    str_player1 = field.player1.StrategySecurityCorridor;
+                    break;
+                case 12:
+                    str_player1 = field.player1.StrategyHelpCorridor;
+                    break;
+                case 13:
+                    str_player1_user = field.player1.StrategyUser;
+                    break;
+                case 14:
                     str_player1 = field.player1.StrategyMinMax;
                     break;
                 default:
@@ -202,12 +220,30 @@ namespace CourseworkWPF
                     str_player2 = field.player2.StrategySimpleNonPregradaWay;
                     break;
                 case 6:
-                    str_player2 = field.player2.StrategyCorridor;
+                    str_player2 = field.player2.StrategyAttackNonPregradaWay;
                     break;
                 case 7:
-                    str_player2_user = field.player2.StrategyUser;
+                    str_player2 = field.player2.StrategySecurityNonPregradaWay;
                     break;
                 case 8:
+                    str_player2 = field.player2.StrategyHelpNonPregradaWay;
+                    break;
+                case 9:
+                    str_player2 = field.player2.StrategyCorridor;
+                    break;
+                case 10:
+                    str_player2 = field.player2.StrategyAttackCorridor;
+                    break;
+                case 11:
+                    str_player2 = field.player2.StrategySecurityCorridor;
+                    break;
+                case 12:
+                    str_player2 = field.player2.StrategyHelpCorridor;
+                    break;
+                case 13:
+                    str_player2_user = field.player2.StrategyUser;
+                    break;
+                case 14:
                     str_player2 = field.player2.StrategyMinMax;
                     break;
                 default:
@@ -418,7 +454,7 @@ namespace CourseworkWPF
                 int Coloumn = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).X / 50);
                 int Row = (int)Math.Truncate(Mouse.GetPosition(GameCanvas).Y / 50);
                 Position pos = new Position(Row, Coloumn);
-                
+
                 if (images[pos.Row, pos.Column].Source == detailsImages[6])
                 {
                     if (str_player1_user != null && str_player2 != null)
@@ -432,7 +468,7 @@ namespace CourseworkWPF
                         {
                             check = field.check_delegate(str_player1_user, str_player2, pos, figureQueen);
                         }
-                        
+
                         check_check(check);
                         playerMotionColor = field.player1.motionColor;
                         field.player1.CheckPat(playerMotionColor);
@@ -454,9 +490,9 @@ namespace CourseworkWPF
                             check = field.check_delegate(str_player1);
                             check_check(check);
                         }
-                        
+
                         Draw(field);
-                        playerMotionColor = field.player2.motionColor; 
+                        playerMotionColor = field.player2.motionColor;
                     }
                     if ((str_player1_user != null && str_player2_user != null))
                     {
@@ -483,7 +519,7 @@ namespace CourseworkWPF
                         {
                             check = field.check_delegate(player, pos, figureQueen, flaghoda);
                         }
-                        
+
                         check_check(check);
                         Draw(field);
                     }
@@ -496,7 +532,7 @@ namespace CourseworkWPF
                     Click = 1;
                     opot();
                 };
-                
+
                 if (WhoPlay == 1)
                 {
                     hod = "Белый ферзь на горизонтали: ";

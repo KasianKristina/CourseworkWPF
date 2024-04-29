@@ -518,7 +518,7 @@ namespace ClassLibrary
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing))
+                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing) && GameField.IsIsolatedPositionIndividual(i, j) == false)
                             list.Add(new Position(i, j));
                     }
                 }
@@ -530,7 +530,7 @@ namespace ClassLibrary
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing))
+                        if (GameField.IsCorridor(i, j) && OpportunityToMakeMove(i, j, competitorQueen, competitorKing) && GameField.IsIsolatedPositionIndividual(i, j) == false)
                             list.Add(new Position(i, j));
                     }
                 }
@@ -569,9 +569,10 @@ namespace ClassLibrary
             Position pos = findNearestPointCorridorStartegy(competitorQueen, competitorKing);
             if (pos.Row == -1 || (pos.Row >= 5 && Color == Color.White) || (pos.Row <= 2 && Color == Color.Black))
             {
-                //(list[i].Row, list[i].Column) = DynamicField.Search(list[i].Row, list[i].Column, result, ref cMap, false);
-                OptimalMove(motion, posEnd, competitorKing, competitorQueen, history, motionColor, queen, false);
-                return 1;
+                int check = OptimalMove(motion, posEnd, competitorKing, competitorQueen, history, motionColor, queen, false);
+                if (check == -100)
+                    return 0;
+                else return 1;
             }
             else
             {

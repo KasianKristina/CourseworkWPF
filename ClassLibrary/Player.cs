@@ -842,5 +842,246 @@ namespace ClassLibrary
                 }
             }
         }
+
+        public void StrategyAttackCorridor(int motion)
+        {
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+            if (motion < 5)
+            {
+                if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
+                    return;
+            }
+            if (motion > 2500)
+            {
+                Pat = true;
+                return;
+            }
+            if (motionColor >= 6)
+            {
+                if (queen.ObstacleMove(Сompetitor.king, motionColor, history, motion))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motion);
+                if (check == 1)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (check == 0)
+                {
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                    {
+                        if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Lose = true;
+                        return;
+                    };
+                }
+            }
+            else
+            {
+                bool check = queen.ObstacleMove(Сompetitor.king, motionColor, history, motion);
+                if (check)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                {
+                    int checkRandomMove = queen.RandomMove(Сompetitor.king, motion, history, motion);
+                    if (checkRandomMove == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (checkRandomMove == 0)
+                    {
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void StrategySecurityCorridor(int motion)
+        {
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+            if (motion < 5)
+            {
+                if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
+                    return;
+            }
+            if (motion > 2500)
+            {
+                Pat = true;
+                return;
+            }
+            if (motionColor >= 6)
+            {
+                if (queen.ObstacleOrNearbyMove(Сompetitor.king, motionColor, history, motion))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (queen.NearbyMove(Сompetitor.king.Offset, motion, history, motionColor))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (check == 1)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (check == 0)
+                {
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                    {
+                        if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Lose = true;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (queen.ObstacleOrNearbyMove(Сompetitor.king, motionColor, history, motion))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                {
+                    if(queen.NearbyMove(Сompetitor.king.Offset, motion, history, motionColor))
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (check == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (check == 0)
+                    {
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void StrategyHelpCorridor(int motion)
+        {
+            motionColor++;
+            Console.WriteLine("Ходит {0} ", Color);
+            if (motion < 5)
+            {
+                if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
+                    return;
+            }
+
+            if (motion > 3000)
+            {
+                Pat = true;
+                return;
+            }
+
+            if (motionColor >= 6)
+            {
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                if (check == 1)
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (check == 0)
+                {
+                    if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                    {
+                        if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Lose = true;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                {
+                    motionColor = 0;
+                    return;
+                }
+                if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
+                {
+                    int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
+                    if (check == 1)
+                    {
+                        motionColor = 0;
+                        return;
+                    }
+                    if (check == 0)
+                    {
+                        if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
+                        {
+                            Pat = true;
+                            return;
+                        }
+                        else
+                        {
+                            Lose = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

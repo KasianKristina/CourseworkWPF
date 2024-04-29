@@ -200,19 +200,181 @@ namespace ClassLibrary
 
         public static void Result()
         {
+            List<string> dsa = new List<string>();
+
             int checkwinwhite = 0;
             int checkwinblack = 0;
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
                 field.Walls(30);
-                field.check_delegate(field.player1.StrategyCorridor, field.player2.StrategySimple);
+                field.check_delegate(field.player1.StrategySimple, field.player2.StrategyHelpCorridor);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
-            Console.WriteLine("Количество побед белых {0}", checkwinwhite);
-            Console.WriteLine("Количество побед черных {0}", checkwinblack);
-            Console.WriteLine("Пат {0}", 100 - checkwinwhite - checkwinblack);
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyAttack, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategySecurity, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyHelp, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategySimpleNonPregradaWay, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategySimpleSameWay, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyMinMax, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyAttackNonPregradaWay, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategySecurityNonPregradaWay, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyHelpNonPregradaWay, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyCorridor, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyAttackCorridor, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategySecurityCorridor, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            checkwinwhite = 0;
+            checkwinblack = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                DynamicField field = new DynamicField();
+                field.Walls(30);
+                field.check_delegate(field.player1.StrategyHelpCorridor, field.player2.StrategyHelpCorridor);
+                checkwinwhite += field.countWinWhite;
+                checkwinblack += field.countWinBlack;
+            }
+            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
+
+            foreach (var name in dsa)
+            {
+
+                Console.WriteLine($"{name}");
+            }
+            
             Console.ReadKey();
         }
 
