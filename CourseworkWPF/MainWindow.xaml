@@ -27,10 +27,10 @@
             <ComboBoxItem Content="Захват короля соперника + Выгодный ход"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля + Выгодный ход"/>
             <ComboBoxItem Content="Защита короля + Выгодный ход"/>
-            <ComboBoxItem Content="Коридор"/>
-            <ComboBoxItem Content="Коридор + Захват короля соперника"/>
-            <ComboBoxItem Content="Коридор + Охрана стартовой позиции короля"/>
-            <ComboBoxItem Content="Коридор + Защита короля"/>
+            <ComboBoxItem Content="Обходной маневр"/>
+            <ComboBoxItem Content="Обходной маневр + Захват короля соперника"/>
+            <ComboBoxItem Content="Обходной маневр + Охрана стартовой позиции короля"/>
+            <ComboBoxItem Content="Обходной маневр + Защита короля"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>
@@ -44,10 +44,10 @@
             <ComboBoxItem Content="Захват короля соперника + Выгодный ход"/>
             <ComboBoxItem Content="Охрана стартовой позиции короля + Выгодный ход"/>
             <ComboBoxItem Content="Защита короля + Выгодный ход"/>
-            <ComboBoxItem Content="Коридор"/>
-            <ComboBoxItem Content="Коридор + Захват короля соперника"/>
-            <ComboBoxItem Content="Коридор + Охрана стартовой позиции короля"/>
-            <ComboBoxItem Content="Коридор + Защита короля"/>
+            <ComboBoxItem Content="Обходной маневр"/>
+            <ComboBoxItem Content="Обходной маневр + Захват короля соперника"/>
+            <ComboBoxItem Content="Обходной маневр + Охрана стартовой позиции короля"/>
+            <ComboBoxItem Content="Обходной маневр + Защита короля"/>
             <ComboBoxItem Content="Пользователь"/>
             <ComboBoxItem Content="MinMax"/>
         </ComboBox>
