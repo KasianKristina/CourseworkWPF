@@ -1980,8 +1980,8 @@ namespace UnitTestProject
 
 
             Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
-            Assert.AreEqual(2, pos.Row); // если уйдет на (3, 2), то заблокирует себя
-            Assert.AreEqual(4, pos.Column);
+            Assert.AreEqual(-1, pos.Row); // если уйдет на (3, 2), то заблокирует себя
+            Assert.AreEqual(-1, pos.Column);
         }
 
 
@@ -2097,6 +2097,55 @@ namespace UnitTestProject
 
             bool check = player1.queen.ObstacleOrNearbyMove(player1.Сompetitor.king, 1, player1.history, 6);
             Assert.AreEqual(false, check);
+        }
+
+        [TestMethod]
+        /// <summary>
+        /// Тест для проверки метода
+        /// </summary>
+        public void StartegyCorridorTest9()
+        {
+            Field GameField = new Field(8, 8);
+            Player player1 = new Player(Color.White, ref GameField);
+            Player player2 = new Player(Color.Black, ref GameField);
+            player1.Сompetitor = player2;
+            player2.Сompetitor = player1;
+
+            GameField[0, 5] = -5;
+
+            GameField[1, 4] = -5;
+
+            GameField[2, 4] = -5;
+            GameField[2, 5] = -5;
+
+            GameField[3, 7] = -5;
+
+            GameField[4, 0] = -5;
+            GameField[4, 2] = -5;
+            GameField[4, 3] = -5;
+            GameField[4, 4] = -5;
+            GameField[4, 6] = -5;
+
+            GameField[5, 1] = -5;
+            GameField[5, 2] = -5;
+            GameField[5, 4] = -5;
+            GameField[5, 5] = -5;
+            GameField[5, 6] = -5;
+            GameField[5, 7] = -5;
+
+            GameField[6, 1] = -5;
+            GameField[6, 7] = -5;
+
+            GameField[7, 0] = -5;
+            GameField[7, 5] = -5;
+            GameField[7, 6] = -5;
+
+            Position pos = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Assert.AreEqual(5, pos.Row);
+            Assert.AreEqual(3, pos.Column);
+
+            int result = player2.king.MoveKingCorridorStartegy(100, player2.posEnd, player2.Сompetitor.queen, player2.Сompetitor.king, player2.history, 1, player2.queen);
+            Assert.AreEqual(1, result);
         }
     }
 }

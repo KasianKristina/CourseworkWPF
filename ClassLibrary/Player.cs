@@ -344,7 +344,7 @@ namespace ClassLibrary
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
                     return;
             }
-            
+
             if (motionColor >= 6)
             {
                 int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
@@ -474,7 +474,7 @@ namespace ClassLibrary
         {
             motionColor++;
             Console.WriteLine("Ходит {0} ", Color);
-            
+
             if (motion < 5)
             {
                 if (queen.CheckStartingBarriers(history, motion, Сompetitor.king.Offset))
@@ -482,6 +482,11 @@ namespace ClassLibrary
             }
             if (motionColor >= 6)
             {
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                {
+                    motionColor = 0;
+                    return;
+                }
                 int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
                 if (check == 1)
                 {
@@ -494,8 +499,11 @@ namespace ClassLibrary
                     {
                         if (0 == king.NextPositionMove(motion, Сompetitor.king, Сompetitor.queen, history))
                         {
-                            Pat = true;
-                            return;
+                            if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
+                            {
+                                Pat = true;
+                                return;
+                            }
                         }
                     }
                     else
@@ -507,6 +515,11 @@ namespace ClassLibrary
             }
             else
             {
+                if (queen.UnlockingMove(Сompetitor.king, motion, motionColor, history, king, Сompetitor.queen))
+                {
+                    motionColor = 0;
+                    return;
+                }
                 if (0 == king.NextPositionMove(motion, Сompetitor.king, Сompetitor.queen, history))
                 {
                     int check = queen.RandomMove(Сompetitor.king, motion, history, motionColor);
@@ -519,8 +532,11 @@ namespace ClassLibrary
                     {
                         if (queen.CheckLoseGame(Сompetitor.queen.Id, Сompetitor.king.Offset))
                         {
-                            Pat = true;
-                            return;
+                            if (-100 == king.OptimalMove(motion, posEnd, Сompetitor.king, Сompetitor.queen, history, motionColor, queen, false))
+                            {
+                                Pat = true;
+                                return;
+                            }
                         }
                         else
                         {
@@ -978,7 +994,7 @@ namespace ClassLibrary
                 }
                 if (0 == king.MoveKingCorridorStartegy(motion, posEnd, Сompetitor.queen, Сompetitor.king, history, motionColor, queen))
                 {
-                    if(queen.NearbyMove(Сompetitor.king.Offset, motion, history, motionColor))
+                    if (queen.NearbyMove(Сompetitor.king.Offset, motion, history, motionColor))
                     {
                         motionColor = 0;
                         return;

@@ -541,6 +541,7 @@ namespace ClassLibrary
         public Position findNearestPointCorridorStartegy(FigureQueen competitorQueen, FigureKing competitorKing)
         {
             List<Position> list = GetAllCoridorPositions(competitorQueen, competitorKing);
+
             if (list.Count > 0)
             {
                 Field cMapStart = DynamicField.CreateWave(Offset.Row, Offset.Column, list[0].Row, list[0].Column, GameField);
@@ -556,7 +557,6 @@ namespace ClassLibrary
                         finalResult = result; // выбыираем точку, до которой меньше идти
                         index = i;
                     }
-                    //(list[i].Row, list[i].Column) = DynamicField.Search(list[i].Row, list[i].Column, result, ref cMap, false);
                 }
                 return new Position(list[index].Row, list[index].Column);
             }
