@@ -478,7 +478,7 @@ namespace UnitTestProject
             GameField[3, 3] = -5;
             GameField[2, 3] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(0, result);
         }
@@ -515,7 +515,7 @@ namespace UnitTestProject
             GameField[3, 3] = -5;
             GameField[2, 3] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(0, result);
         }
@@ -541,7 +541,7 @@ namespace UnitTestProject
             GameField[5, 1] = -5;
             GameField[5, 2] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(-200, result);
         }
@@ -570,7 +570,7 @@ namespace UnitTestProject
             GameField[6, 5] = -5;
             GameField[6, 6] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(-96, result);
         }
@@ -600,7 +600,7 @@ namespace UnitTestProject
             GameField[6, 6] = -5;
             GameField[2, 1] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(-2, result);
         }
@@ -637,7 +637,7 @@ namespace UnitTestProject
             GameField[6, 6] = -5;
             GameField[6, 7] = -5;
 
-            int result = DynamicField.getResult(player1);
+            int result = DynamicField.GetResultMinMax(player1);
 
             Assert.AreEqual(-300, result);
         }
@@ -1573,7 +1573,7 @@ namespace UnitTestProject
         /// <summary>
         /// Тест для проверки метода findNearestPointCorridorStartegyTest1.
         /// </summary>
-        public void findNearestPointCorridorStartegyTest1()
+        public void FindNearestPointCorridorStartegyTest1()
         {
             Field GameField = new Field(8, 8);
             Player player1 = new Player(Color.White, ref GameField);
@@ -1592,11 +1592,11 @@ namespace UnitTestProject
             GameField[5, 3] = -5;
             GameField[5, 6] = -5;
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(4, pos.Row);
             Assert.AreEqual(0, pos.Column);
 
-            Position pos2 = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Position pos2 = player2.king.FindNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
             Assert.AreEqual(4, pos2.Row);
             Assert.AreEqual(4, pos2.Column);
         }
@@ -1630,11 +1630,11 @@ namespace UnitTestProject
             GameField[5, 5] = -5;
             GameField[5, 6] = -5;
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(2, pos.Row);
             Assert.AreEqual(4, pos.Column);
 
-            Position pos2 = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Position pos2 = player2.king.FindNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
             Assert.AreEqual(2, pos2.Row);
             Assert.AreEqual(6, pos2.Column);
         }
@@ -1659,7 +1659,7 @@ namespace UnitTestProject
             GameField[3, 3] = -5;
             GameField[3, 4] = -5;
 
-            Position pos = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Position pos = player2.king.FindNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
             Assert.AreEqual(-1, pos.Row);
             Assert.AreEqual(-1, pos.Column);
         }
@@ -1718,7 +1718,7 @@ namespace UnitTestProject
             GameField[7, 6] = -5;
             GameField[7, 7] = -5;
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(1, pos.Row);
             Assert.AreEqual(3, pos.Column);
         }
@@ -1824,7 +1824,6 @@ namespace UnitTestProject
             Assert.AreEqual(true, GameField.IsIsolatedPositionIndividual(7, 0));
             Assert.AreEqual(false, GameField.IsIsolatedPositionIndividual(5, 0));
             Assert.AreEqual(true, GameField.IsIsolatedPositionIndividual(3, 5));
-
         }
 
         [TestMethod]
@@ -1920,7 +1919,7 @@ namespace UnitTestProject
             GameField[6, 7] = -5;
             GameField[7, 2] = -5;
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(2, pos.Row);
             Assert.AreEqual(3, pos.Column);
         }
@@ -1979,7 +1978,7 @@ namespace UnitTestProject
             GameField[7, 7] = -5;
 
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(-1, pos.Row); // если уйдет на (3, 2), то заблокирует себя
             Assert.AreEqual(-1, pos.Column);
         }
@@ -2041,7 +2040,7 @@ namespace UnitTestProject
             GameField[7, 6] = -5;
 
 
-            Position pos = player1.king.findNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
+            Position pos = player1.king.FindNearestPointCorridorStartegy(player1.Сompetitor.queen, player1.Сompetitor.king);
             Assert.AreEqual(-1, pos.Row);
             Assert.AreEqual(-1, pos.Column);
 
@@ -2140,7 +2139,7 @@ namespace UnitTestProject
             GameField[7, 5] = -5;
             GameField[7, 6] = -5;
 
-            Position pos = player2.king.findNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
+            Position pos = player2.king.FindNearestPointCorridorStartegy(player2.Сompetitor.queen, player2.Сompetitor.king);
             Assert.AreEqual(5, pos.Row);
             Assert.AreEqual(3, pos.Column);
 

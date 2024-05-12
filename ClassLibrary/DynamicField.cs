@@ -207,8 +207,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySimple, field.player2.StrategyHelpCorridor);
+                field.Walls(10);
+                field.check_delegate(field.player1.StrategySimpleSameWay, field.player2.StrategySimple);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -218,20 +218,8 @@ namespace ClassLibrary
             for (int i = 0; i < 100; i++)
             {
                 DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyAttack, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySecurity, field.player2.StrategyHelpCorridor);
+                field.Walls(20);
+                field.check_delegate(field.player1.StrategySimpleSameWay, field.player2.StrategySimple);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -243,127 +231,7 @@ namespace ClassLibrary
             {
                 DynamicField field = new DynamicField();
                 field.Walls(30);
-                field.check_delegate(field.player1.StrategyHelp, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySimpleNonPregradaWay, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySimpleSameWay, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyMinMax, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyAttackNonPregradaWay, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySecurityNonPregradaWay, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyHelpNonPregradaWay, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyCorridor, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyAttackCorridor, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategySecurityCorridor, field.player2.StrategyHelpCorridor);
-                checkwinwhite += field.countWinWhite;
-                checkwinblack += field.countWinBlack;
-            }
-            dsa.Add($"{checkwinwhite}/{checkwinblack}/{100 - checkwinwhite - checkwinblack}");
-
-            checkwinwhite = 0;
-            checkwinblack = 0;
-            for (int i = 0; i < 100; i++)
-            {
-                DynamicField field = new DynamicField();
-                field.Walls(30);
-                field.check_delegate(field.player1.StrategyHelpCorridor, field.player2.StrategyHelpCorridor);
+                field.check_delegate(field.player1.StrategySimpleSameWay, field.player2.StrategySimple);
                 checkwinwhite += field.countWinWhite;
                 checkwinblack += field.countWinBlack;
             }
@@ -371,7 +239,6 @@ namespace ClassLibrary
 
             foreach (var name in dsa)
             {
-
                 Console.WriteLine($"{name}");
             }
             
@@ -635,7 +502,7 @@ namespace ClassLibrary
             return cMap;
         }
 
-        public static int minMax(
+        public static int MinMax(
             Player player,
             int level,
             Position whiteKingStart,
@@ -655,7 +522,7 @@ namespace ClassLibrary
             int MAX_VALUE = -400;
             int MinMax = player.Color == Color.White ? MIN_VALUE : MAX_VALUE;
             if (level == 0)
-                return getResult(player);
+                return GetResultMinMax(player);
             bool isWhitePlayer = (player.Color == Color.White);
             Field virtualField = field.Copy();
 
@@ -675,7 +542,7 @@ namespace ClassLibrary
             for (int i = 0; i < allPositionsKing.Count; i++)
             {
                 player.king.MoveFigureVirtualField(allPositionsKing[i].Row, allPositionsKing[i].Column, virtualField);
-                int test = minMax(
+                int test = DynamicField.MinMax(
                     player.Сompetitor,
                     level - 1,
                     whiteKingStart,
@@ -722,7 +589,7 @@ namespace ClassLibrary
             for (int i = 0; i < allPositionsQueen.Count; i++)
             {
                 player.queen.MoveFigureVirtualField(allPositionsQueen[i].Row, allPositionsQueen[i].Column, virtualField);
-                int test = minMax(
+                int test = DynamicField.MinMax(
                     player.Сompetitor,
                     level - 1,
                     whiteKingStart,
@@ -789,7 +656,7 @@ namespace ClassLibrary
         }
 
         // получение результата для minMax
-        public static int getResult(Player player)
+        public static int GetResultMinMax(Player player)
         {
             Field cMap = CreateWave(player.king.Offset.Row, player.king.Offset.Column,
                 player.Сompetitor.king.StartOffset.Row, player.Сompetitor.king.StartOffset.Column, player.GameField, player);

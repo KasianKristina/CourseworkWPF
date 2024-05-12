@@ -65,39 +65,7 @@ namespace ClassLibrary
             else return false;
         }
 
-        public List<Position> IsIsolatedPositions()
-        {
-            int result;
-            List<Position> listCheck = new List<Position>();
-
-            List<Position> list = new List<Position>() {
-                            new Position(0, 3),
-                            new Position(0, 5),
-                            new Position(1, 3),
-                            new Position(1, 4),
-                            new Position(1, 5),
-                            new Position(0, 4)
-                        };
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (list.Contains(new Position(i, j)) == false)
-                    {
-                        Field cMap = DynamicField.CreateWave(i, j, 0, 4, this);
-                        result = cMap[0, 4];
-
-                        List<Position> path = DynamicField.FindKingPath(0, 4, result, ref cMap, false);
-
-                        if (path.Count == 0)
-                            listCheck.Add(new Position(i, j));
-                    }
-                }
-            }
-            return listCheck;
-        }
-
+        // является ли клетка изолированной
         public bool IsIsolatedPositionIndividual(int row, int column)
         {
             int result;
@@ -138,20 +106,6 @@ namespace ClassLibrary
                 (column == 6 && IsWall(row, column - 1)))
                 return true;
             return false;
-        }
-
-        public bool Equals(Field other)
-        {
-            if (other == null || Positions.Count != other.Positions.Count)
-                return false;
-
-            foreach (var kvp in Positions)
-            {
-                if (!other.Positions.TryGetValue(kvp.Key, out var position) || !kvp.Value.Equals(position))
-                    return false;
-            }
-
-            return true;
         }
 
         public bool HasConfigurationOccurredFiveTimes(Dictionary<int, (int, Position)> history1, Dictionary<int, (int, Position)> history2)
@@ -218,6 +172,7 @@ namespace ClassLibrary
             }
             return NewGameField;
         }
+
         public void Clone(Field NewGameField)
         {
             for (int i = 0; i < 8; i++)

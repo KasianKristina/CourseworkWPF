@@ -731,7 +731,7 @@ namespace ClassLibrary
             Position posBlackQueen = (Color == Color.Black) ? new Position(queen.Offset.Row, queen.Offset.Column) : new Position(Сompetitor.queen.Offset.Row, Сompetitor.queen.Offset.Column);
 
 
-            int res = DynamicField.minMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, int.MinValue, int.MaxValue, 1, motion, GameField);
+            int res = DynamicField.MinMax(this, 1, posWhiteKing, posWhiteQueen, posBlackKing, posBlackQueen, int.MinValue, int.MaxValue, 1, motion, GameField);
             if (res == 1000) // если minmax не дал результатов
             {
                 if (motionColor >= 6) // ферзь более 5 ходов на одной горизонтали

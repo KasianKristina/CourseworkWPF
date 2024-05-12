@@ -261,51 +261,6 @@ namespace ClassLibrary
             return list;
         }
 
-        /// <summary>
-        /// Получение всех возможных позиций, исключая позиции назад
-        /// </summary>
-        /// <param name="motionQueen">сколько ходов ферзь оставался на одной горизонтали</param>
-        /// <param name="competitorQueen"></param>
-        /// <param name="competitorKing"></param>
-        /// <param name="queen"></param>
-        /// <returns>список всех возможных позиций</returns>
-        public List<Position> GetAllPositionNoTurningBack(int motionQueen, FigureQueen competitorQueen, FigureKing competitorKing, FigureQueen queen)
-        {
-            List<Position> list = new List<Position>();
-            List<Position> listCheck;
-            if (Color == Color.White)
-            {
-                listCheck = new List<Position>() {
-                            new Position(0, 1),
-                            new Position(0, -1),
-                            new Position(1, 0),
-                            new Position(1, 1),
-                            new Position(1, -1)
-                        };
-            }
-            else
-            {
-                listCheck = new List<Position>() {
-                            new Position(0, 1),
-                            new Position(0, -1),
-                            new Position(-1, 0),
-                            new Position(-1, 1),
-                            new Position(-1, -1),
-                        };
-            }
-
-            if (motionQueen >= 5 &&
-                queen.GetAllPosition(motionQueen, competitorKing).Count != 0)
-                return list;
-
-            foreach (Position pos in listCheck)
-            {
-                if (OpportunityToMakeMove(Offset.Row + pos.Row, Offset.Column + pos.Column, competitorQueen, competitorKing))
-                    list.Add(new Position(Offset.Row + pos.Row, Offset.Column + pos.Column));
-            }
-            return list;
-        }
-
         private void ClearGameFieldAfterKingsMove()
         {
             for (int i = 0; i < 8; i++)
@@ -372,52 +327,6 @@ namespace ClassLibrary
             return fx;
         }
 
-        public int OptimalMoveIsNoTurningBack(int motion, Position posEnd, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
-        {
-            int result, fx, fy;
-            while (true)
-            {
-                Field cMap = DynamicField.CreateWave(Offset.Row, Offset.Column, posEnd.Row, posEnd.Column, GameField);
-                result = cMap[posEnd.Row, posEnd.Column];
-
-                (fx, fy) = DynamicField.Search(posEnd.Row, posEnd.Column, result, ref cMap, false);
-
-                if (fx != -100 &&
-                    OpportunityToMakeMove(fx, fy, competitorQueen, competitorKing) &&
-                    ((Color == Color.Black && fx <= Offset.Row) || (Color == Color.White && fx >= Offset.Row)))
-                {
-                    MoveFigure(fx, fy);
-                    history.Add(motion, (Id, new Position(fx, fy)));
-                    break;
-                }
-                else
-                {
-                    if (fx == -100 || (fx, fy) == (posEnd.Row, posEnd.Column))
-                    {
-                        List<Position> allPositions = GetAllPositionNoTurningBack(motionColor, competitorQueen, competitorKing, queen);
-
-                        if (allPositions.Count != 0)
-                        {
-                            Position position = ChooseRandomPosition(allPositions);
-                            MoveFigure(position.Row, position.Column);
-                            history.Add(motion, (Id, new Position(position.Row, position.Column)));
-                            fx = position.Row;
-                            break;
-                        }
-                        else
-                        {
-                            fx = -100;
-                            break;
-                        }
-                    }
-                    GameField[fx, fy] = -7;
-                }
-                cMap.Draw();
-            }
-            ClearGameFieldAfterKingsMove();
-            return fx;
-        }
-
         public List<Position> SameWayMoveGetPath(Position posEnd)
         {
             int result;
@@ -429,65 +338,6 @@ namespace ClassLibrary
             path.Reverse();
             path.Add(posEnd);
             return path;
-        }
-
-        public int RandomMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
-        {
-            int fx;
-            List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
-            if (allPositions.Count != 0)
-            {
-                Position position = ChooseRandomPosition(allPositions);
-                MoveFigure(position.Row, position.Column);
-                history.Add(motion, (Id, new Position(position.Row, position.Column)));
-                fx = position.Row;
-            }
-            else
-                fx = -100;
-            return fx;
-        }
-
-        public int SameWayMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history, List<Position> path)
-        {
-            int fx = 0;
-            int pathLength = path.Count();
-            while (true)
-            {
-                if (pathLength != 0 &&
-                   OpportunityToMakeMove(path[0].Row, path[0].Column, competitorQueen, competitorKing))
-                {
-                    MoveFigure(path[0].Row, path[0].Column);
-                    history.Add(motion, (Id, new Position(path[0].Row, path[0].Column)));
-                    // TODO удалить первый элемент массива path
-                    path.RemoveAt(0);
-                    break;
-                }
-                // TODO проеврить работу
-                //else
-                //{
-                //if (pathLength == 0 || (path[0].Row, path[0].Column) == (posEnd.Row, posEnd.Column))
-                //{
-                //List<Position> allPositions = GetAllPosition(motion, motionColor, competitorQueen, competitorKing, queen);
-                //if (allPositions.Count != 0)
-                //{
-                // Position position = ChooseRandomPosition(allPositions);
-                // MoveFigure(position.Row, position.Column);
-                // history.Add(motion, (Id, new Position(position.Row, position.Column)));
-                // fx = position.Row;
-                // break;
-                //}
-                else
-                {
-                    fx = -100;
-                    break;
-                }
-                //}
-                //GameField[path[0].Row, path[0].Column] = -7;
-                //}
-                //cMap.Draw();
-            }
-            ClearGameFieldAfterKingsMove();
-            return fx;
         }
 
         public int NextPositionMove(int motion, FigureKing competitorKing, FigureQueen competitorQueen, Dictionary<int, (int, Position)> history)
@@ -538,7 +388,13 @@ namespace ClassLibrary
             return list;
         }
 
-        public Position findNearestPointCorridorStartegy(FigureQueen competitorQueen, FigureKing competitorKing)
+        /// <summary>
+        /// Поиск ближайшего коридора
+        /// </summary>
+        /// <param name="competitorQueen"></param>
+        /// <param name="competitorKing"></param>
+        /// <returns>ближайший коридор или (-1, -1), если такой позиции нет</returns>
+        public Position FindNearestPointCorridorStartegy(FigureQueen competitorQueen, FigureKing competitorKing)
         {
             List<Position> list = GetAllCoridorPositions(competitorQueen, competitorKing);
 
@@ -554,7 +410,7 @@ namespace ClassLibrary
                     int result = cMap[list[i].Row, list[i].Column];
                     if (finalResult > result)
                     {
-                        finalResult = result; // выбыираем точку, до которой меньше идти
+                        finalResult = result; // выбираем точку, до которой меньше идти
                         index = i;
                     }
                 }
@@ -566,7 +422,7 @@ namespace ClassLibrary
         public int MoveKingCorridorStartegy(int motion, Position posEnd, FigureQueen competitorQueen, FigureKing competitorKing, Dictionary<int, (int, Position)> history, int motionColor, FigureQueen queen)
         {
             int fx, fy;
-            Position pos = findNearestPointCorridorStartegy(competitorQueen, competitorKing);
+            Position pos = FindNearestPointCorridorStartegy(competitorQueen, competitorKing);
             if (pos.Row == -1 || (pos.Row >= 5 && Color == Color.White) || (pos.Row <= 2 && Color == Color.Black))
             {
                 int check = OptimalMove(motion, posEnd, competitorKing, competitorQueen, history, motionColor, queen, false);

@@ -720,13 +720,5 @@ namespace ClassLibrary
             }
             return true;
         }
-
-
-        public int DefenderMove(FigureKing king, int motion, Dictionary<int, (int, Position)> history, int motionQueen, List<Position> path)
-        {
-            int currPositionKingIndex = path.IndexOf(king.Offset);
-            //List<Position> list = GetUnlockingPositions(path[currPositionKingIndex + 1].Column, );
-            return 0;
-        }
     }
 }
